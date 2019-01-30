@@ -3,6 +3,20 @@
  * @version  V1.00
  * @brief    Secure sample code for TrustZone
  *
+ * @mainpage    mTower - TrustZone implementation for MCUs
+ *
+ * Bare-metal sample application that demonstrates control of GPIO pin (LED on/off)
+ * from normal world through secure world.
+ *
+ * @section     plat_spprtd_sec Platforms supported
+ *
+ * Several platforms are supported. In order to manage slight differences
+ * between platforms, a `PLATFORM` flag has been introduced.
+ *
+ * | Platform           | Composite PLATFORM flag     | Published | Maintained |
+ * |--------------------|-----------------------------|-----------|------------|
+ * | NuMaker-PFM-M2351  |`PLATFORM=numaker_pfm_m2351` | Yes       | v0.1       |
+ *
  * @note
  * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
  *
@@ -15,8 +29,10 @@
 #include "xom0_func.h"
 #include "xom1_func.h"
 
+/** Start address for non-secure boot image */
 #define NEXT_BOOT_BASE  0x10040000
-#define JUMP_HERE       0xe7fee7ff      /* Instruction Code of "B ." */
+/** Instruction Code of "B ."  */
+#define JUMP_HERE       0xe7fee7ff
 
 /* typedef for NonSecure callback functions */
 typedef __NONSECURE_CALL int32_t (*NonSecure_funcptr)(uint32_t);
