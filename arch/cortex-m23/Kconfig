@@ -1,0 +1,63 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the docs folder of mTower repository.
+#
+
+choice
+	prompt "MCU Family"
+	default M2351
+
+config ARCH_FAMILY_M2351
+	bool "M2351"
+	---help---
+		The M2351 architecture
+
+endchoice
+
+config ARCH_FAMILY
+	string
+	default "m2351"            if ARCH_FAMILY_M2351
+
+if ARCH_FAMILY_M2351
+comment "M2351 Configuration Options"
+source arch/cortex-m23/m2351/Kconfig
+endif
+
+comment "Toolchain Configuration Options"
+choice
+	prompt "Toolchain Selection"
+	default	GCC_VERSION_6_1_2017Q1
+
+config GCC_VERSION_6_1_2017Q1
+	depends on ARCH_FAMILY_M2351 
+	bool "GCC compiler Version: 6.1 q1"
+
+config GCC_VERSION_6_1_2017Q2
+	depends on ARCH_FAMILY_M2351 
+	bool "GCC compiler Version: 6.1 q2"
+
+config GCC_VERSION_8_2018Q4
+	depends on ARCH_FAMILY_M2351 
+	bool "GCC compiler Version: 8 q4"
+
+endchoice
+
+config GCC_VERSION
+	string
+	default arm-none-eabi-6-2017-q1-update-linux   if GCC_VERSION_6_1_2017Q1
+	default arm-none-eabi-6-2017-q2-update-linux   if GCC_VERSION_6_1_2017Q2
+	default arm-none-eabi-8-2018-q4-major-linux    if GCC_VERSION_8_2018Q4
+
+config GCC_SITE
+	string
+	default "https://developer.arm.com/-/media/Files/downloads/gnu-rm/6_1-2017q1"   if GCC_VERSION_6_1_2017Q1
+	default "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/6-2017q2"   if GCC_VERSION_6_1_2017Q2
+	default "https://developer.arm.com/-/media/Files/downloads/gnu-rm/8-2018q4" if GCC_VERSION_8_2018Q4
+	
+
+config GCC_FOLDER 
+	string
+	default "gcc-arm-none-eabi-6-2017-q1-update"   if GCC_VERSION_6_1_2017Q1
+	default "gcc-arm-none-eabi-6-2017-q2-update"   if GCC_VERSION_6_1_2017Q2
+	default "gcc-arm-none-eabi-8-2018-q4-major"    if GCC_VERSION_8_2018Q4
+

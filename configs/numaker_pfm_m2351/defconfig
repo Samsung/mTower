@@ -1,0 +1,44 @@
+#
+# Automatically generated file; DO NOT EDIT.
+# mTower/ Configuration
+#
+
+#
+# Build Setup
+#
+# CONFIG_DEFAULT_SMALL is not set
+
+#
+# Debug Options
+#
+# CONFIG_DEBUG_ALERT is not set
+# CONFIG_DEBUG_FEATURES is not set
+# CONFIG_DEBUG_SYMBOLS is not set
+
+#
+# System Type
+#
+CONFIG_ARCH_CORTEX_M23=y
+CONFIG_ARCH="cortex-m23"
+CONFIG_ARCH_FAMILY_M2351=y
+CONFIG_ARCH_FAMILY="m2351"
+
+#
+# M2351 Configuration Options
+#
+CONFIG_PLATFORM_NUMAKER_PFM_M2351=y
+CONFIG_PLATFORM="numaker_pfm_m2351"
+
+#
+# NuMaker-PFM-M2351 Peripheral Configuration Options
+#
+
+#
+# Toolchain Configuration Options
+#
+# CONFIG_GCC_VERSION_6_1_2017Q1 is not set
+CONFIG_GCC_VERSION_6_1_2017Q2=y
+# CONFIG_GCC_VERSION_8_2018Q4 is not set
+CONFIG_GCC_VERSION="arm-none-eabi-6-2017-q2-update-linux"
+CONFIG_GCC_SITE="https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/6-2017q2"
+CONFIG_GCC_FOLDER="gcc-arm-none-eabi-6-2017-q2-update"

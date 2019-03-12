@@ -1,0 +1,99 @@
+############################################################################
+# Make.defs
+#
+# Copyright (c) 2019 Samsung Electronics Co., Ltd. All Rights Reserved.
+# Author: Taras Drozdovskyi t.drozdovsky@samsung.com
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+############################################################################
+
+-include ${TOPDIR}/.config
+
+GCC_OFFICIAL_VER:=$(CONFIG_GCC_VERSION)
+GCC_SITE:=$(CONFIG_GCC_SITE)
+GCC_SOURCE:=gcc-$(GCC_OFFICIAL_VER).tar.bz2
+
+TOOLCHAINPATH=$(TOPDIR)/toolchain/$(CONFIG_GCC_FOLDER)
+
+CROSSDEV =$(TOOLCHAINPATH)/bin/arm-none-eabi-
+
+CC = $(CROSSDEV)gcc
+LD = $(CROSSDEV)ld
+AR = $(ARCROSSDEV)ar rcs
+NM = $(ARCROSSDEV)nm
+OBJCOPY = $(CROSSDEV)objcopy
+OBJDUMP = $(CROSSDEV)objdump
+SIZE=$(BINPATH)/arm-none-eabi-size
+
+JC = javac
+
+ARCHWARNINGS = -Wall -Wextra -Wstrict-prototypes -Wshadow -Wundef
+
+ifeq ($(CONFIG_DEBUG_SYMBOLS),y)
+  ARCHOPTIMIZATION = -g
+  LDFLAGS += -g
+endif
+
+# Produce debugging information for use by GDB.
+ifeq ($(CONFIG_DEBUG_INF_GDB),y)
+  ARCHOPTIMIZATION += -ggdb
+endif
+
+ifneq ($(CONFIG_DEBUG_NOOPT),y)
+  ARCHOPTIMIZATION += -O1
+endif
+
+ARCHPICFLAGS = -fpic
+
+ARCHCPUFLAGS = -std=gnu99 -mlittle-endian -mthumb -mcpu=cortex-m23 -march=armv8-m.base -mthumb-interwork
+
+ARCHINCLUDES = -I$(TOPDIR)/include
+
+ARCHDEFINES =
+
+CFLAGS = $(ARCHWARNINGS) $(ARCHOPTIMIZATION) $(ARCHCPUFLAGS) $(ARCHINCLUDES) $(ARCHDEFINES) -pipe
+
+ifeq ($(FLOAT_TYPE), hard)
+CFLAGS += -fsingle-precision-constant -Wdouble-promotion
+CFLAGS += -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+#CFLAGS += -mfloat-abi=softfp
+else
+CFLAGS += -msoft-float
+endif
+
+AFLAGS = $(CFLAGS) -D__ASSEMBLY__
+LDFLAGS = $(ARCHOPTIMIZATION)
+
+ASMEXT = .S
+OBJEXT = .o
+LIBEXT = .a
+JCLEXT = .class
+EXEEXT = .elf
+
+ECHO = `which echo`
+
+HOSTCC = gcc
+HOSTINCLUDES = -I.
+HOSTCFLAGS = -Wall -Wstrict-prototypes -Wshadow -Wundef -g -pipe
+HOSTLDFLAGS =
+
+GREEN=\033[0;32m
+NORMAL=\033[0m
+BLACK=\033[0;30m1
+RED=\033[0;31m
+YELLOW=\033[0;33m
+BLUE=\033[0;34m
+MAGENTA=\033[0;35m
+CYAN=\033[0;36m
+GRAY=\033[0;37m

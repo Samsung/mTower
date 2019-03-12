@@ -1,0 +1,122 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the docs folder of mTower repository.
+#
+
+mainmenu "mTower/$ARCH Configuration"
+
+menu "Build Setup"
+
+config DEFAULT_SMALL
+	bool "Default to smallest size"
+	default n
+	---help---
+		When options are present, the default value for certain options will
+		be the one the results in the smallest size (at a loss of featurs).
+		The default is a fuller feature set at a larger size.
+
+		NOTE: This option does not prevent you from overriding the default
+		to select another alternative.  Nor does it affect the settings that
+		have already been selected in your configuration file.  This applies
+		only to new settings that require a default value.
+
+menu "Debug Options"
+
+config DEBUG_ALERT
+	bool
+	default n
+
+config DEBUG_FEATURES
+	bool "Enable Debug Features"
+	default n
+	select DEBUG_ALERT
+	---help---
+		Enables built-in debug features.  Selecting this option will (1) Enable
+		debug assertions in the code, (2) enable extended parameter testing in
+		many functions, and (3) enable support for debug output to the SYSLOG.
+		Note that enabling this option by itself does not produce debug output.
+		Debug output must also be selected on a subsystem-by-subsystem basis.
+
+if DEBUG_FEATURES
+
+comment "Debug mTower LOG Output Controls"
+
+config DEBUG_ERROR
+	bool "Enable Error Output"
+	default n
+	---help---
+		Enables output from [subsystem]err() statements.  Errors are significant
+		system exceptions that require immediate attention.
+
+config DEBUG_WARN
+	bool "Enable Warnings Output"
+	default n
+	depends on DEBUG_ERROR
+	---help---
+		Enables output from [subsystem-z]warn() statements.  Warnings are
+		considered to be various unexpected conditions, potential errors or
+		errors that will not have serious consequences.
+
+config DEBUG_INFO
+	bool "Enable Informational Debug Output"
+	default n
+	depends on DEBUG_WARN
+	---help---
+		Enables verbose "informational" debug output.  If you enable
+		CONFIG_DEBUG_INFO, then very chatty (and often annoying) output
+		will be generated.
+
+config DEBUG_DBG
+	bool "Enable Debug Informational Output"
+	default n
+	depends on DEBUG_INFO
+	---help---
+		Enables verbose "debug" output.  If you enable
+		CONFIG_DEBUG_DBG, then very chatty (and often annoying) output
+		will be generated.
+
+config DEBUG_ASSERTIONS
+	bool "Enable Debug Assertions"
+	default n
+	---help---
+		Enables the DEBUGASSERT() macro.  When CONFIG_DEBUG_ASSERTIONS is
+		defined, DEBUGASSERT() will cause the system to halt if the
+		assertion fails.  If CONFIG_DEBUG_ASSERTIONS is not defined
+		DEBUGASSERT() compiled out of the system.  In general, you would
+		set CONFIG_DEBUG_ASSERTIONS=y during debug, but disable the
+		assertions on a final, buckled up system.
+
+config DEBUG_INCLUDE_FILE_FUNCTION_NAME
+	bool "Enable include File and Function name to output"
+	default n
+	---help---
+		Enables include file and function name to debug messages.
+
+config DEBUG_COLORIZED_OUTPUT
+	bool "Enable colorized output"
+	default n
+	---help---
+		Enables colorize debug messages.
+
+comment "Subsystem Debug Options"
+
+endif # DEBUG_FEATURES
+
+config DEBUG_SYMBOLS
+	bool "Generate Debug Symbols"
+	default n
+	---help---
+		Build with debug symbols (needed for use with a debugger).
+
+endmenu # Debug Options
+
+endmenu # Build Setup
+
+menu "System Type"
+source "arch/Kconfig"
+endmenu
+
+#menu "Standard Libc Configuration"
+#source "libc/Kconfig"
+#endmenu
+

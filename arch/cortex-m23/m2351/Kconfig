@@ -1,0 +1,25 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the docs folder of mTower repository.
+#
+
+choice
+	prompt "M2351 platform selection"
+	default PLATFORM_NUMAKER_PFM_M2351
+
+config PLATFORM_NUMAKER_PFM_M2351
+	bool "NuMaker-PFM-M2351 board"
+	---help---
+		nuvoTon NuMaker-PFM-M2351 board.
+
+endchoice
+
+config PLATFORM
+	string
+	default "numaker_pfm_m2351"  if PLATFORM_NUMAKER_PFM_M2351
+
+if PLATFORM_NUMAKER_PFM_M2351
+comment "NuMaker-PFM-M2351 Peripheral Configuration Options"
+#source arch/cortex-m23/m2351/src/numaker_pfm_m2351/Kconfig
+endif # PLATFORM_NUMAKER_PFM_M2351
+

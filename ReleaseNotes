@@ -1,0 +1,16 @@
+mTower Release Notes
++===================
+
+This file contains are the release notes for the mTower for every release.
+The text is just as was written at the time of release
+
+mTower 0.1.0
+------------
+
+This is the initial. This initial includes the complete mTower with support for
+the arm cortex-m23 architectures.
+
+Work in progress
+----------------
+  Support new platform:
+  cortex-m23 - NuMaker-PFM-M2351

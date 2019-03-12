@@ -1,0 +1,24 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the docs folder of mTower repository.
+#
+
+choice
+	prompt "MCU Architecture"
+	default ARCH_CORTEX_M23
+
+config ARCH_CORTEX_M23
+	bool "cortex-m23"
+	---help---
+		The ARM architecture
+
+endchoice
+
+config ARCH
+	string
+	default "cortex-m23"    if ARCH_CORTEX_M23
+
+if ARCH_CORTEX_M23
+source arch/cortex-m23/Kconfig
+endif
+
