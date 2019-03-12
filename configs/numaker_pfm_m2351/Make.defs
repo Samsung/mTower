@@ -40,9 +40,12 @@ JC = javac
 
 ARCHWARNINGS = -Wall -Wextra -Wstrict-prototypes -Wshadow -Wundef
 
+ARCHOPTIMIZATION = $(subst ",,$(CONFIG_OPTIMIZATION_LEVEL))
+
 ifeq ($(CONFIG_DEBUG_SYMBOLS),y)
-  ARCHOPTIMIZATION = -g
-  LDFLAGS += -g
+  ARCHOPTIMIZATION += -g
+else
+  ARCHOPTIMIZATION += -ffunction-sections -fdata-sections
 endif
 
 # Produce debugging information for use by GDB.
@@ -50,27 +53,19 @@ ifeq ($(CONFIG_DEBUG_INF_GDB),y)
   ARCHOPTIMIZATION += -ggdb
 endif
 
-ARCHOPTIMIZATION += $(subst ",,$(CONFIG_OPTIMIZATION_LEVEL))
+ARCHCPUFLAGS  = -mlittle-endian -mthumb
+ARCHCPUFLAGS += -mcpu=cortex-m23 -march=armv8-m.base
 
-ARCHPICFLAGS = -fpic
+ARCHINCLUDES  = -I$(TOPDIR)/include
 
-ARCHCPUFLAGS = -std=gnu99 -mlittle-endian -mthumb -mcpu=cortex-m23 -march=armv8-m.base -mthumb-interwork
+ARCHDEFINES = 
 
-ARCHINCLUDES = -I$(TOPDIR)/include
+CFLAGS  = -std=gnu99 -pipe -Wl,--gc-sections
 
-ARCHDEFINES =
-
-CFLAGS = $(ARCHWARNINGS) $(ARCHOPTIMIZATION) $(ARCHCPUFLAGS) $(ARCHINCLUDES) $(ARCHDEFINES) -pipe
-
-ifeq ($(FLOAT_TYPE), hard)
-CFLAGS += -fsingle-precision-constant -Wdouble-promotion
-CFLAGS += -mfpu=fpv4-sp-d16 -mfloat-abi=hard
-#CFLAGS += -mfloat-abi=softfp
-else
-CFLAGS += -msoft-float
-endif
+CFLAGS += $(ARCHWARNINGS) $(ARCHOPTIMIZATION) $(ARCHCPUFLAGS) $(ARCHINCLUDES) $(ARCHDEFINES)
 
 AFLAGS = $(CFLAGS) -D__ASSEMBLY__
+
 LDFLAGS = $(ARCHOPTIMIZATION)
 
 ASMEXT = .S

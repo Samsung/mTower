@@ -1,7 +1,7 @@
 ############################################################################
-# arch/cortex-m23/m2351/src/numaker_pfm_m2351/Secure/Make.defs
+# arch/cortex-m23/m2351/src/numaker_pfm_m2351/secure/Make.defs
 #
-# Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
+# Copyright (c) 2018-2019 Samsung Electronics Co., Ltd. All Rights Reserved.
 # Author: Taras Drozdovskyi t.drozdovsky@samsung.com
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,15 +22,17 @@ HEAD_ASRC =
 
 # Common m2351 files
 
-CMN_ASRCS  = 
-CMN_CSRCS += 
+CMN_ASRCS = 
+
+CMN_CSRCS = 
 
 # Required CHIP files
 
-CHIP_ASRCS_S  = ../../Device/Nuvoton/M2351/Source/GCC/startup_M2351.S 
-CHIP_CSRCS_S  = ../../Device/Nuvoton/M2351/Source/system_M2351.c \
-                ../../Device/Nuvoton/M2351/Source/GCC/_syscalls.c \
-                main.c \
-                xom0_func.c \
-                xom1_func.c
+CHIP_ASRCS_S = ../../Device/Nuvoton/M2351/Source/GCC/startup_M2351.S
+
+CHIP_CSRCS_S = ../../Device/Nuvoton/M2351/Source/system_M2351.c \
+               ../../Device/Nuvoton/M2351/Source/GCC/_syscalls.c \
+               main.c \
+               xom0_func.c \
+               xom1_func.c
 

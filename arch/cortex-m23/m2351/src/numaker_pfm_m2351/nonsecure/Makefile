@@ -1,5 +1,5 @@
 ############################################################################
-# # arch/cortex-m23/m2351/src/numaker_pfm_m2351/NonSecure/Makefile
+# arch/cortex-m23/m2351/src/numaker_pfm_m2351/nonsecure/Makefile
 #
 # Copyright (c) 2019 Samsung Electronics Co., Ltd. All Rights Reserved.
 # Author: Taras Drozdovskyi t.drozdovsky@samsung.com
@@ -29,43 +29,44 @@ CFLAGS += -I../../Device/Nuvoton/M2351/Include
 
 CFLAGS += -DDEBUG_PORT=UART1_NS
 
+OBJDIR = $(TOPDIR)/build/nonsecure$(subst $(TOPDIR),,$(shell pwd))
+
 MTOWER_NS = $(TOPDIR)/mtower_ns$(EXEEXT)
 
 ASRCS_NS = $(CHIP_ASRCS_NS) $(CMN_ASRCS)
-AOBJS_NS = $(ASRCS_NS:.S=$(OBJEXT))
+AOBJS_NS = $(addprefix $(OBJDIR)/, $(ASRCS_NS:.S=$(OBJEXT)))
 
 CSRCS_NS = $(CHIP_CSRCS_NS) $(CMN_CSRCS)
-COBJS_NS = $(CSRCS_NS:.c=$(OBJEXT))
+COBJS_NS = $(addprefix $(OBJDIR)/, $(CSRCS_NS:.c=$(OBJEXT)))
 
-SRCS_NS = $(ASRCS_NS) $(CSRCS_NS)
 OBJS_NS = $(AOBJS_NS) $(COBJS_NS)
 
-LIBPATHS = -L. -L"$(TOPDIR)/lib" -L"../../StdDriver/src"
+LIBPATHS = -L. -L"$(TOPDIR)/lib"
 
-LIBS =  -lm -lc -lnosys -lm2351_StdDriver -lnsc
+LIBS =  -lm -lc -lnosys -lm2351_StdDriver_ns -lnsc
 
-$(AOBJS_NS): %$(OBJEXT): %.S
+$(AOBJS_NS): $(OBJDIR)/%$(OBJEXT): %.S
+	$(Q) mkdir -p $(OBJDIR)/$(dir $<)
 	@echo "AS: $<"
 	$(Q) $(CC) -c $(AFLAGS) $< -o $@
 
-$(COBJS_NS): %$(OBJEXT): %.c
+$(COBJS_NS): $(OBJDIR)/%$(OBJEXT): %.c
+	$(Q) mkdir -p $(OBJDIR)/$(dir $<)
 	@echo "CC: $<"
 	$(Q) $(CC) -c $(CFLAGS) $< -o $@
 
 mtower_ns$(EXEEXT): $(OBJS_NS) 
-	$(Q) $(MAKE) -C ../../StdDriver/src/ TOPDIR="$(TOPDIR)"
+	$(Q) $(MAKE) -C ../../StdDriver/src/ TOPDIR="$(TOPDIR)" libm2351_StdDriver_ns.a
 	@echo "LD: mTower_ns$(EXEEXT)"
-	$(Q) $(CC) $(CFLAGS) -TNonsecure.ld $(OBJS_NS) $(LIBPATHS) $(LIBS) -o $(MTOWER_NS)
-	$(Q) $(OBJCOPY) -O ihex $(MTOWER_NS) $(TOPDIR)/mTower_ns.hex
-	$(Q) $(OBJCOPY) -O binary $(MTOWER_NS) $(TOPDIR)/mTower_ns.bin
+	$(Q) $(CC) $(CFLAGS) -Tnonsecure.ld $(OBJS_NS) $(LIBPATHS) $(LIBS) -o $(MTOWER_NS)
+	$(Q) $(OBJCOPY) -O ihex $(MTOWER_NS) $(TOPDIR)/mtower_ns.hex
+	$(Q) $(OBJCOPY) -O binary $(MTOWER_NS) $(TOPDIR)/mtower_ns.bin
 
 clean:
 	$(Q) rm -f *$(OBJEXT) *$(LIBEXT)
 	$(Q) rm -f ../../Device/Nuvoton/M2351/NonSource/*$(OBJEXT)
 	$(Q) rm -f ../../Device/Nuvoton/M2351/NonSource/GCC/*$(OBJEXT)
 	$(Q) rm -f ../../StdDriver/src/*$(OBJEXT) ../../StdDriver/src/*$(LIBEXT)
-#	$(Q) rm -f $(TOPDIR)/mTower_ns.bin
-#	$(Q) rm -f $(TOPDIR)/mTower_ns.hex
 
 distclean: clean
 

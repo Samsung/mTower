@@ -21,14 +21,6 @@
 -include $(TOPDIR)/Make.defs
 -include $(TOPDIR)/.config
 
-# Check for valid float argument
-ifneq ($(FLOAT_TYPE), hard)
-ifneq ($(FLOAT_TYPE), soft)
-#override FLOAT_TYPE = hard
-override FLOAT_TYPE = soft
-endif
-endif
-
 CFLAGS += -I../../CMSIS/Include
 CFLAGS += -I../../StdDriver/inc
 CFLAGS += -I../../Device/Nuvoton/M2351/Include
@@ -48,20 +40,29 @@ endif
 
 ifneq ($(WORLD), secure)
 CFLAGS += -DDEBUG_PORT=UART1_NS
+OBJDIR = $(TOPDIR)/build/nonsecure$(subst $(TOPDIR),,$(shell pwd))
 endif
 
-OBJS = $(SRCS:.c=.o)
+ifeq ($(WORLD), secure)
+OBJDIR = $(TOPDIR)/build/secure$(subst $(TOPDIR),,$(shell pwd))
+endif
 
-.PHONY: libm2351_StdDriver.a
+OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 
-all: libm2351_StdDriver.a
+current_dir = $(subst $(TOPDIR),,$(shell pwd))
 
-%.o : %.c
+$(OBJDIR)/%.o : %.c
+	$(Q) mkdir -p $(OBJDIR)/$(dir $<)
 	@echo "CC: $<"
 	$(Q) $(CC) $(CFLAGS) -c -o $@ $^
 
-libm2351_StdDriver.a: $(OBJS)
-	$(Q) $(AR) $@ $(OBJS)
+libm2351_StdDriver_s.a: $(OBJS)
+	$(Q) $(AR) $(OBJDIR)/$@ $(OBJS)
+	$(Q) cp $(OBJDIR)/$@ $(TOPDIR)/lib/$@
+
+libm2351_StdDriver_ns.a: $(OBJS)
+	$(Q) $(AR) $(OBJDIR)/$@ $(OBJS)
+	$(Q) cp $(OBJDIR)/$@ $(TOPDIR)/lib/$@
 
 clean:
 	rm -f $(OBJS) libm2351_StdDriver.a

@@ -15,12 +15,9 @@
 
 typedef int32_t (*funcptr)(uint32_t);
 
-
 extern int32_t Secure_func(void);
 void App_Init(uint32_t u32BootBase);
 void DEBUG_PORT_Init(void);
-
-
 
 /*----------------------------------------------------------------------------
   NonSecure Callable Functions from Secure Region
@@ -52,13 +49,13 @@ int32_t NonSecure_LED_Off(uint32_t num)
  *----------------------------------------------------------------------------*/
 void LED_On(uint32_t us)
 {
-    //printf("Nonsecure LED On\n");
+    printf("Nonsecure LED On\n");
     PC1_NS = 0;
 }
 
 void LED_Off(uint32_t us)
 {
-    //printf("Nonsecure LED Off\n");
+    printf("Nonsecure LED Off\n");
     PC1_NS = 1;
 }
 
@@ -91,9 +88,6 @@ void SysTick_Handler(void)
     }
 }
 
-
-/** mTower version */
-#define VERSION "0.1"
 /*----------------------------------------------------------------------------
   Main function
  *----------------------------------------------------------------------------*/
@@ -101,7 +95,6 @@ int main(void)
 {
     DEBUG_PORT_Init();
 
-    printf("\n\n\t-=mTower v" VERSION "=-  " __DATE__ "  " __TIME__"\n\n");
     printf("+---------------------------------------------+\n");
     printf("|           Nonsecure is running ...          |\n");
     printf("+---------------------------------------------+\n");
@@ -127,8 +120,6 @@ int main(void)
     while(1);
 }
 
-
-
 void DEBUG_PORT_Init(void)
 {
     /*---------------------------------------------------------------------------------------------------------*/
@@ -138,7 +129,6 @@ void DEBUG_PORT_Init(void)
     DEBUG_PORT->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HIRC, 115200);
     DEBUG_PORT->LINE = UART_WORD_LEN_8 | UART_PARITY_NONE | UART_STOP_BIT_1;
 }
-
 
 void App_Init(uint32_t u32BootBase)
 {

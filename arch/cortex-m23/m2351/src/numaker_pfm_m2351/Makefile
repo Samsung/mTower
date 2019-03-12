@@ -26,18 +26,17 @@ MTOWER_S = $(TOPDIR)/mtower_s$(EXEEXT)
 MTOWER_NS = $(TOPDIR)/mtower_ns$(EXEEXT)
 
 mtower$(EXEEXT):
-	$(Q) $(MAKE) -C Secure TOPDIR="$(TOPDIR)" mtower_s$(EXEEXT)
-	$(Q) $(MAKE) -C Secure TOPDIR="$(TOPDIR)" clean
-	$(Q) $(MAKE) -C NonSecure TOPDIR="$(TOPDIR)" mtower_ns$(EXEEXT)
-	$(Q) $(MAKE) -C NonSecure TOPDIR="$(TOPDIR)" clean
+	$(Q) $(MAKE) -C secure TOPDIR="$(TOPDIR)" mtower_s$(EXEEXT)
+	$(Q) $(MAKE) -C nonsecure TOPDIR="$(TOPDIR)" mtower_ns$(EXEEXT)
 
 clean:
-	$(Q) $(MAKE) -C Secure TOPDIR="$(TOPDIR)" clean
-	$(Q) $(MAKE) -C NonSecure TOPDIR="$(TOPDIR)" clean
-	$(Q) rm -f $(TOPDIR)/mTower_s.bin
-	$(Q) rm -f $(TOPDIR)/mTower_s.hex
-	$(Q) rm -f $(TOPDIR)/mTower_ns.bin
-	$(Q) rm -f $(TOPDIR)/mTower_ns.hex
+	$(Q) $(MAKE) -C secure TOPDIR="$(TOPDIR)" clean
+	$(Q) $(MAKE) -C nonsecure TOPDIR="$(TOPDIR)" clean
+	$(Q) rm -rf $(TOPDIR)/build
+	$(Q) rm -f $(TOPDIR)/mtower_s.bin
+	$(Q) rm -f $(TOPDIR)/mtower_s.hex
+	$(Q) rm -f $(TOPDIR)/mtower_ns.bin
+	$(Q) rm -f $(TOPDIR)/mtower_ns.hex
 
 distclean: clean
 

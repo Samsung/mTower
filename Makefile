@@ -174,7 +174,7 @@ mtower_libs:
 
 $(BIN): context mtower_libs 
 	$(Q) $(MAKE) -C $(ARCH_SRC) TOPDIR="$(TOPDIR)" $(BIN)
-	$(Q) if [ -e $(TOPDIR)/mtower ] || [ -e $(TOPDIR)/mtower.bin ]; then \
+	$(Q) if [ -e $(TOPDIR)/mtower_ns.hex ] && [ -e $(TOPDIR)/mtower_s.hex ]; then \
 		$(ECHO) -e "$(GREEN)***********************************************$(NORMAL)" ; \
 		$(ECHO) -e "$(GREEN)**** mTower has been successfully compiled ****$(NORMAL)" ; \
 		$(ECHO) -e "$(GREEN)***********************************************$(NORMAL)" ; \

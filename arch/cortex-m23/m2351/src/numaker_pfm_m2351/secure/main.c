@@ -3,20 +3,6 @@
  * @version  V1.00
  * @brief    Secure sample code for TrustZone
  *
- * @mainpage    mTower - TrustZone implementation for MCUs
- *
- * Bare-metal sample application that demonstrates control of GPIO pin (LED on/off)
- * from normal world through secure world.
- *
- * @section     plat_spprtd_sec Platforms supported
- *
- * Several platforms are supported. In order to manage slight differences
- * between platforms, a `PLATFORM` flag has been introduced.
- *
- * | Platform           | Composite PLATFORM flag     | Published | Maintained |
- * |--------------------|-----------------------------|-----------|------------|
- * | NuMaker-PFM-M2351  |`PLATFORM=numaker_pfm_m2351` | Yes       | v0.1       |
- *
  * @note
  * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
  *
@@ -195,8 +181,6 @@ void Boot_Init(uint32_t u32BootBase)
     }
 }
 
-/** mTower version */
-#define VERSION "0.1"
 /*----------------------------------------------------------------------------
   Main function
  *----------------------------------------------------------------------------*/
@@ -209,7 +193,6 @@ int main(void)
     /* UART is configured as debug port */
     DEBUG_PORT_Init();
 
-    printf("\n\n\t-=mTower v" VERSION "=-  " __DATE__ "  " __TIME__"\n\n");
     printf("+---------------------------------------------+\n");
     printf("|              Secure is running ...          |\n");
     printf("+---------------------------------------------+\n");
