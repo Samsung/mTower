@@ -1,5 +1,5 @@
 ############################################################################
-# arch/cortex-m23/m2351/src/StdDriver/Makefile
+# freertos/Makefile
 #
 # Copyright (c) 2019 Samsung Electronics Co., Ltd. All Rights Reserved.
 # Author: Taras Drozdovskyi t.drozdovsky@samsung.com
@@ -21,25 +21,18 @@
 -include $(TOPDIR)/Make.defs
 -include $(TOPDIR)/.config
 
-CFLAGS += -I../../CMSIS/Include
-CFLAGS += -I../../StdDriver/inc
-CFLAGS += -I../../Device/Nuvoton/M2351/Include
-
+CFLAGS += -I./include
+CFLAGS += -I./portable/GCC/ARM_V8M
+CFLAGS += -I../arch/$(subst ",,$(CONFIG_ARCH))/$(subst ",,$(CONFIG_ARCH_FAMILY))/src/$(subst ",,$(CONFIG_PLATFORM))/nonsecure
+CFLAGS += -I../arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Include
+CFLAGS += -I../arch/cortex-m23/m2351/src/CMSIS/Include
+CFLAGS += -I../arch/cortex-m23/m2351/src/StdDriver/inc
 ifeq ($(WORLD), secure)
 CFLAGS += -mcmse
 endif
 
-CFLAGS += -Wno-unused-parameter -Wno-undef -Wno-maybe-uninitialized
-CFLAGS += -Wno-unused-variable -Wno-pointer-compare
-
-SRCS = acmp.c bpwm.c can.c crc.c crypto.c dac.c eadc.c ebi.c ecap.c epwm.c \
-       fmc.c gpio.c i2c.c i2s.c pdma.c qei.c qspi.c qspi.c retarget.c rtc.c \
-       sc.c scuart.c sdh.c spi.c sys.c timer.c timer_pwm.c uart.c usbd.c \
-       usci_i2c.c usci_spi.c usci_uart.c wdt.c wwdt.c
-
-ifeq ($(WORLD), secure)
-SRCS += clk.c
-endif
+SRCS  = croutine.c list.c queue.c stream_buffer.c tasks.c timers.c 
+SRCS += portable/GCC/ARM_V8M/port.c portable/MemMang/heap_2.c
 
 ifneq ($(WORLD), secure)
 CFLAGS += -DDEBUG_PORT=UART1_NS
@@ -59,11 +52,11 @@ $(OBJDIR)/%.o : %.c
 	@echo "CC: $<"
 	$(Q) $(CC) $(CFLAGS) -c -o $@ $^
 
-libm2351_StdDriver_s.a: $(OBJS)
+libFreeRTOS_s.a: $(OBJS)
 	$(Q) $(AR) $(OBJDIR)/$@ $(OBJS)
 	$(Q) cp $(OBJDIR)/$@ $(TOPDIR)/lib/$@
 
-libm2351_StdDriver_ns.a: $(OBJS)
+libFreeRTOS_ns.a: $(OBJS)
 	$(Q) $(AR) $(OBJDIR)/$@ $(OBJS)
 	$(Q) cp $(OBJDIR)/$@ $(TOPDIR)/lib/$@
 
