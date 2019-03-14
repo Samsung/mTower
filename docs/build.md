@@ -6,7 +6,7 @@ differences between platforms, a `PLATFORM` flag has been introduced.
 
 | Platform            | Composite PLATFORM flag    | Published | Maintained | Quick start guide doc |
 |---------------------|----------------------------|-----------|------------|-----------------------| 
-| [NuMaker-PFM-M2351] |`PLATFORM=numaker_pfm_m2351` | No        | v0.1       | [numaker_pfm_m2351.md] |
+| [NuMaker-PFM-M2351] |`PLATFORM=numaker_pfm_m2351` | Yes       | v0.1       | [numaker_pfm_m2351.md] |
 
 
 ---

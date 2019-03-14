@@ -32,7 +32,5 @@ CHIP_ASRCS_NS = ../../Device/Nuvoton/M2351/Source/GCC/startup_M2351.S
 
 CHIP_CSRCS_NS = ../../Device/Nuvoton/M2351/Source/system_M2351.c \
                 ../../Device/Nuvoton/M2351/Source/GCC/_syscalls.c \
-                main_ns.c \
-                xom2_func.c \
-                xom3_func.c
+                main_ns.c
 

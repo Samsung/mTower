@@ -22,7 +22,8 @@
 -include $(TOPDIR)/.config
 -include Make.defs
 
-CFLAGS += -I../ -I./	
+CFLAGS += -I../ -I./
+CFLAGS += -I$(TOPDIR)/include/mtower
 CFLAGS += -I../../CMSIS/Include
 CFLAGS += -I../../StdDriver/inc
 CFLAGS += -I../../Device/Nuvoton/M2351/Include

@@ -26,6 +26,9 @@ CFLAGS += -I../ -I./
 CFLAGS += -I../../CMSIS/Include
 CFLAGS += -I../../StdDriver/inc
 CFLAGS += -I../../Device/Nuvoton/M2351/Include
+CFLAGS += -I$(TOPDIR)/include/mtower
+CFLAGS += -I$(TOPDIR)/freertos/include
+CFLAGS += -I$(TOPDIR)/freertos/portable/GCC/ARM_V8M
 
 CFLAGS += -DDEBUG_PORT=UART1_NS
 
@@ -43,7 +46,7 @@ OBJS_NS = $(AOBJS_NS) $(COBJS_NS)
 
 LIBPATHS = -L. -L"$(TOPDIR)/lib"
 
-LIBS =  -lm -lc -lnosys -lm2351_StdDriver_ns -lnsc
+LIBS =  -lm -lc -lnosys -lm2351_StdDriver_ns -lnsc -lFreeRTOS_ns
 
 $(AOBJS_NS): $(OBJDIR)/%$(OBJEXT): %.S
 	$(Q) mkdir -p $(OBJDIR)/$(dir $<)
@@ -56,6 +59,7 @@ $(COBJS_NS): $(OBJDIR)/%$(OBJEXT): %.c
 	$(Q) $(CC) -c $(CFLAGS) $< -o $@
 
 mtower_ns$(EXEEXT): $(OBJS_NS) 
+	$(Q) $(MAKE) -C $(TOPDIR)/freertos/ TOPDIR="$(TOPDIR)" libFreeRTOS_ns.a
 	$(Q) $(MAKE) -C ../../StdDriver/src/ TOPDIR="$(TOPDIR)" libm2351_StdDriver_ns.a
 	@echo "LD: mTower_ns$(EXEEXT)"
 	$(Q) $(CC) $(CFLAGS) -Tnonsecure.ld $(OBJS_NS) $(LIBPATHS) $(LIBS) -o $(MTOWER_NS)
