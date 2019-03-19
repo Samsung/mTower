@@ -35,7 +35,15 @@
 
 /* Pre-processor Definitions. */
 /* All C pre-processor macros are defined here. */
-
+#define NORMAL  "\033[0m"
+#define BLACK   "\033[0;30m1"
+#define RED     "\033[0;31m"
+#define GREEN   "\033[0;32m"
+#define YELLOW  "\033[0;33m"
+#define BLUE    "\033[0;34m"
+#define MAGENTA "\033[0;35m"
+#define CYAN    "\033[0;36m"
+#define GRAY    "\033[0;37m"
 
 /* Private Types. */
 /* Any types, enums, structures or unions used by the file are defined here. */
@@ -59,6 +67,8 @@ static void testTask1( void *pvParameters );
 static void testTask2( void *pvParameters );
 static void testTask3( void *pvParameters );
 
+static void teeTest( void *pvParameters );
+
 /* Private Data. */
 /* All static data definitions appear here. */
 
@@ -70,6 +80,7 @@ static void testTask3( void *pvParameters );
 /* Extern Function Prototypes */
 /* CMSIS clock configuration function. */
 extern void SystemCoreClockUpdate( void );
+extern int tee_hello_world(void);
 
 /* NonSecure Callable Functions from Secure Region */
 extern int32_t Secure_func(void);
@@ -220,7 +231,7 @@ static void testTask1( void *pvParameters )
   (void)pvParameters;
 
   do {
-    printf("Thread 1 test\n");
+    printf(CYAN "Thread 1 test\n" NORMAL);
     Secure_LED_On(6u);
     vTaskDelay( xDelay );
     Secure_LED_Off(6u);
@@ -242,13 +253,15 @@ static void testTask2( void *pvParameters )
   (void)pvParameters;
 
   do {
-    printf("Thread 2 test\n");
+    printf(YELLOW "Thread 2 test\n" NORMAL);
     LED_On(7u);
     vTaskDelay( xDelay );
     LED_Off(7u);
     vTaskDelay( xDelay );
   } while (1);
 }
+
+#define BUFFER_SIZE 500
 
 /**
  * @brief         testTask3 - .
@@ -259,12 +272,44 @@ static void testTask2( void *pvParameters )
  */
 static void testTask3( void *pvParameters )
 {
-  const TickType_t xDelay = 500 / portTICK_PERIOD_MS;
+  const TickType_t xDelay = 10000 / portTICK_PERIOD_MS;
+
+  /* Define a buffer that is large enough to hold the generated table.  In most
+   * cases the buffer will be too large to allocate on the stack, hence in this
+   * example it is declared static. */
+
+  static char cBuffer[BUFFER_SIZE];
 
   (void)pvParameters;
 
   do {
     printf("Thread 3 test\n");
+    /* Pass the buffer into vTaskList() to generate the table of information. */
+    vTaskList(cBuffer);
+    printf(GREEN "%s\n" NORMAL, cBuffer);
+    vTaskDelay( xDelay );
+  } while (1);
+}
+
+/**
+ * @brief         teeTest - .
+ *
+ * @param         None
+ *
+ * @returns       None
+ */
+static void teeTest( void *pvParameters )
+{
+  const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
+
+  (void)pvParameters;
+
+  do {
+    printf(RED "TEE test: Hello_world\n");
+    portDISABLE_INTERRUPTS();
+    tee_hello_world();
+    printf(NORMAL);
+    portENABLE_INTERRUPTS();
     vTaskDelay( xDelay );
   } while (1);
 }
@@ -388,21 +433,28 @@ int main( void )
 
   xTaskCreate( testTask1,     /* The function that implements the task. */
       "test1",                /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-      128,                    /* The size of the stack to allocate to the task. */
+      256,                    /* The size of the stack to allocate to the task. */
       ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
       tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
       NULL );
 
   xTaskCreate( testTask2,     /* The function that implements the task. */
       "test2",                /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-      128,                    /* The size of the stack to allocate to the task. */
+      256,                    /* The size of the stack to allocate to the task. */
       ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
       tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
       NULL );
 
   xTaskCreate( testTask3,     /* The function that implements the task. */
       "test3",                /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-      128,                    /* The size of the stack to allocate to the task. */
+      512,                    /* The size of the stack to allocate to the task. */
+      ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
+      tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
+      NULL );
+
+  xTaskCreate( teeTest,       /* The function that implements the task. */
+      "tee_test",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+      512,                    /* The size of the stack to allocate to the task. */
       ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
       tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
       NULL );

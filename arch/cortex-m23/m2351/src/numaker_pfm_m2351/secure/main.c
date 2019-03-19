@@ -353,7 +353,7 @@ int main(void)
   GPIO_SetMode(PB, BIT1 | BIT0, GPIO_MODE_OUTPUT);
 
   /* Generate Systick interrupt each 10 ms */
-  SysTick_Config(SystemCoreClock / 100);
+//  SysTick_Config(SystemCoreClock / 100);
 
   /* Set GPIO Port C to non-secure for LED control */
   SCU_SET_IONSSET(SCU_IONSSET_PC_Msk);

@@ -27,6 +27,10 @@ CFLAGS += -I$(TOPDIR)/include/mtower
 CFLAGS += -I../../CMSIS/Include
 CFLAGS += -I../../StdDriver/inc
 CFLAGS += -I../../Device/Nuvoton/M2351/Include
+CFLAGS += -I$(TOPDIR)/tee_client/public
+CFLAGS += -I$(TOPDIR)/tee_client/libteec/include/freertos
+CFLAGS += -I$(TOPDIR)/apps/hello_world
+
 
 OBJDIR = $(TOPDIR)/build/secure$(subst $(TOPDIR),,$(shell pwd))
 
