@@ -29,6 +29,9 @@ CFLAGS += -I../../Device/Nuvoton/M2351/Include
 CFLAGS += -I$(TOPDIR)/include/mtower
 CFLAGS += -I$(TOPDIR)/freertos/include
 CFLAGS += -I$(TOPDIR)/freertos/portable/GCC/ARM_V8M
+CFLAGS += -I$(TOPDIR)/tee_client/public
+CFLAGS += -I$(TOPDIR)/tee_client/libteec/include/freertos
+CFLAGS += -I$(TOPDIR)/apps/hello_world
 
 CFLAGS += -DDEBUG_PORT=UART1_NS
 
