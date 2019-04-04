@@ -30,6 +30,7 @@ CFLAGS += -I../../Device/Nuvoton/M2351/Include
 CFLAGS += -I$(TOPDIR)/tee_client/public
 CFLAGS += -I$(TOPDIR)/tee_client/libteec/include/freertos
 CFLAGS += -I$(TOPDIR)/apps/hello_world
+CFLAGS += -I$(TOPDIR)/tee_internal/include
 
 
 OBJDIR = $(TOPDIR)/build/secure$(subst $(TOPDIR),,$(shell pwd))

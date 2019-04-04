@@ -232,9 +232,13 @@ static void testTask1( void *pvParameters )
 
   do {
     printf(CYAN "Thread 1 test\n" NORMAL);
+    portDISABLE_INTERRUPTS();
     Secure_LED_On(6u);
+    portENABLE_INTERRUPTS();
     vTaskDelay( xDelay );
+    portDISABLE_INTERRUPTS();
     Secure_LED_Off(6u);
+    portENABLE_INTERRUPTS();
     vTaskDelay( xDelay );
   } while (1);
 }
@@ -274,6 +278,7 @@ static void testTask3( void *pvParameters )
 {
   const TickType_t xDelay = 10000 / portTICK_PERIOD_MS;
 
+  TickType_t xTimeNow;
   /* Define a buffer that is large enough to hold the generated table.  In most
    * cases the buffer will be too large to allocate on the stack, hence in this
    * example it is declared static. */
@@ -284,6 +289,9 @@ static void testTask3( void *pvParameters )
 
   do {
     printf("Thread 3 test\n");
+    /* Obtain the current tick count. */
+    xTimeNow = xTaskGetTickCount();
+    printf("\nAuto-reload timer callback executing = %d\n", xTimeNow );
     /* Pass the buffer into vTaskList() to generate the table of information. */
     vTaskList(cBuffer);
     printf(GREEN "%s\n" NORMAL, cBuffer);

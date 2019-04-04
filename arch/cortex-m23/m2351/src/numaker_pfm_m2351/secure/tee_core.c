@@ -30,6 +30,8 @@
 #include "tee_client_api.h"
 #include "tee.h"
 
+#include <tee_ta_manager.h>
+
 /* Pre-processor Definitions. */
 
 
@@ -104,26 +106,9 @@ int32_t ioctl(uint32_t cmd, struct tee_ioctl_buf_data *buf_data)
   return TEEC_SUCCESS;
 }
 
-/**
- * struct tee_ioctl_open_session_arg - Open session argument
- * @uuid: [in] UUID of the Trusted Application
- * @clnt_uuid:  [in] UUID of client
- * @clnt_login: [in] Login class of client, TEE_IOCTL_LOGIN_* above
- * @cancel_id:  [in] Cancellation id, a unique value to identify this request
- * @session:  [out] Session id
- * @ret:  [out] return value
- * @ret_origin  [out] origin of the return value
- * @num_params  [in] number of parameters following this struct
- */
-//struct tee_ioctl_open_session_arg {
-//  uint8_t uuid[TEE_IOCTL_UUID_LEN];
-//  uint8_t clnt_uuid[TEE_IOCTL_UUID_LEN];
-//  uint32_t clnt_login;
-//  uint32_t cancel_id;
-//  uint32_t session;
-//  uint32_t ret;
-//  uint32_t ret_origin;
-//  uint32_t num_params;
+/* Sessions opened from normal world */
+struct tee_ta_session_head tee_open_sessions =
+TAILQ_HEAD_INITIALIZER(tee_open_sessions);
 
 static void uuid_print(uint8_t d[TEE_IOCTL_UUID_LEN])
 {
@@ -152,44 +137,54 @@ static void uuid_print(uint8_t d[TEE_IOCTL_UUID_LEN])
 
 TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
 {
+  TEE_ErrorOrigin err;
+  struct tee_ta_session *sess = NULL;
+  struct tee_ta_param *param = NULL;
+
   struct tee_ioctl_open_session_arg *arg;
   struct tee_ioctl_param *params;
 
   arg = buf_data->buf_ptr;
   params = (struct tee_ioctl_param *)(arg + 1);
-  printf("arg->num_params = %d\n", arg->num_params);
-  printf("arg->session = %d\n", arg->session);
-  arg->session = 2;
-  printf("arg->session = %d\n", arg->session);
 
   uuid_print(arg->uuid);
+
+  tee_ta_context_register(arg->uuid);
+
+  param = (struct tee_ta_param *)(arg + 1);
+
+  tee_ta_open_session(&err, &sess, &tee_open_sessions, arg->uuid, param);
+
+  arg->session = sess;
 
   return TEEC_SUCCESS;
 }
 
 TEEC_Result tee_ioctl_invoke(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
 {
+  TEE_ErrorOrigin err;
+
   struct tee_ioctl_invoke_arg *arg;
-  struct tee_ioctl_param *params;
+  struct tee_ta_session *sess;
+  struct tee_ta_param *param = NULL;
 
   arg = buf_data->buf_ptr;
-  params = (struct tee_ioctl_param *)(arg + 1);
-  printf("arg->num_params = %d\n", arg->num_params);
-  printf("arg->session = %d\n", arg->session);
-  printf("params->u.value.a = %d\n", params->u.value.a);
-  params->u.value.a++;
+  param = (struct tee_ta_param *)(arg + 1);
 
+  sess = tee_ta_get_session(arg->session, true, &tee_open_sessions);
+
+  tee_ta_invoke_command(&err, sess, arg->func, param);
 
   return TEEC_SUCCESS;
 }
 
 TEEC_Result tee_ioctl_close_session(/*ctx,*/ struct tee_ioctl_close_session_arg *arg)
 {
-//  struct tee_ioctl_close_session_arg *arg;
+  struct tee_ta_session *s;
 
-//  arg = buf_data->buf_ptr;
-  printf("arg->session = %d\n", arg->session);
-  arg->session = 0;
+  s = (struct tee_ta_session *)arg->session;
+
+  tee_ta_close_session(s, &tee_open_sessions, NULL /* NSAPP_IDENTITY*/);
 
   return TEEC_SUCCESS;
 }

@@ -24,7 +24,7 @@
 #define configUSE_IDLE_HOOK             0
 #define configUSE_TICK_HOOK             0
 #define configCPU_CLOCK_HZ              ( SystemCoreClock )
-#define configTICK_RATE_HZ              ( ( TickType_t ) 200 ) /* if value upper then 200 to need fix issue related SysTick in Secure world */
+#define configTICK_RATE_HZ              ( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES            ( 8 )
 #define configMINIMAL_STACK_SIZE        ( ( unsigned short ) 128 )
 #define configTOTAL_HEAP_SIZE           ( ( size_t ) ( 0x2000 ) )
