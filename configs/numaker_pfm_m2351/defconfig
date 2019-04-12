@@ -46,3 +46,9 @@ CONFIG_GCC_VERSION_6_1_2017Q2=y
 CONFIG_GCC_VERSION="arm-none-eabi-6-2017-q2-update-linux"
 CONFIG_GCC_SITE="https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/6-2017q2"
 CONFIG_GCC_FOLDER="gcc-arm-none-eabi-6-2017-q2-update"
+
+#
+# Application Configuration
+#
+CONFIG_APPS_HELLO_WORLD=y
+CONFIG_APPS_TEST=y

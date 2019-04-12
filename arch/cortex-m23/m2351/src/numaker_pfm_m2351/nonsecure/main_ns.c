@@ -25,6 +25,7 @@
 #include <arm_cmse.h>
 #include "M2351.h"
 #include "version.h"
+#include "config.h"
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -68,6 +69,7 @@ static void testTask2( void *pvParameters );
 static void testTask3( void *pvParameters );
 
 static void teeTest( void *pvParameters );
+static void teeTest2( void *pvParameters );
 
 /* Private Data. */
 /* All static data definitions appear here. */
@@ -81,6 +83,7 @@ static void teeTest( void *pvParameters );
 /* CMSIS clock configuration function. */
 extern void SystemCoreClockUpdate( void );
 extern int tee_hello_world(void);
+extern int tee_hello_world2(void);
 
 /* NonSecure Callable Functions from Secure Region */
 extern int32_t Secure_func(void);
@@ -265,7 +268,7 @@ static void testTask2( void *pvParameters )
   } while (1);
 }
 
-#define BUFFER_SIZE 500
+#define BUFFER_SIZE 700
 
 /**
  * @brief         testTask3 - .
@@ -294,11 +297,14 @@ static void testTask3( void *pvParameters )
     printf("\nAuto-reload timer callback executing = %d\n", xTimeNow );
     /* Pass the buffer into vTaskList() to generate the table of information. */
     vTaskList(cBuffer);
+    portDISABLE_INTERRUPTS();
     printf(GREEN "%s\n" NORMAL, cBuffer);
+    portENABLE_INTERRUPTS();
     vTaskDelay( xDelay );
   } while (1);
 }
 
+#ifdef CONFIG_APPS_HELLO_WORLD
 /**
  * @brief         teeTest - .
  *
@@ -321,6 +327,33 @@ static void teeTest( void *pvParameters )
     vTaskDelay( xDelay );
   } while (1);
 }
+#endif
+
+
+#ifdef CONFIG_APPS_TEST
+/**
+ * @brief         teeTest - .
+ *
+ * @param         None
+ *
+ * @returns       None
+ */
+static void teeTest2( void *pvParameters )
+{
+  const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
+
+  (void)pvParameters;
+
+  do {
+    printf(RED "TEE test: Hello_world2\n");
+    portDISABLE_INTERRUPTS();
+    tee_hello_world2();
+    printf(NORMAL);
+    portENABLE_INTERRUPTS();
+    vTaskDelay( xDelay );
+  } while (1);
+}
+#endif
 
 /* Public Functions. */
 /**
@@ -455,17 +488,27 @@ int main( void )
 
   xTaskCreate( testTask3,     /* The function that implements the task. */
       "test3",                /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-      512,                    /* The size of the stack to allocate to the task. */
+      256,                    /* The size of the stack to allocate to the task. */
       ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
       tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
       NULL );
-
+#ifdef CONFIG_APPS_HELLO_WORLD
   xTaskCreate( teeTest,       /* The function that implements the task. */
       "tee_test",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-      512,                    /* The size of the stack to allocate to the task. */
+      256,                    /* The size of the stack to allocate to the task. */
       ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
       tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
       NULL );
+#endif
+
+#ifdef CONFIG_APPS_TEST
+  xTaskCreate( teeTest2,       /* The function that implements the task. */
+      "tee_test2",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+      256,                    /* The size of the stack to allocate to the task. */
+      ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
+      tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
+      NULL );
+#endif
 
   vTaskStartScheduler();
 

@@ -30,7 +30,7 @@
 #include "tee_types.h"
 #include "tee_client_api.h"
 /* TA UUID */
-#include "hello_world_ta.h"
+#include "hello_world2_ta.h"
 
 /* Pre-processor Definitions. */
 /* All C pre-processor macros are defined here. */
@@ -42,7 +42,7 @@
 
 /* Private Function Prototypes. */
 /* Prototypes of all static functions in the file are provided here. */
-int tee_hello_world(void);
+int tee_hello_world2(void);
 
 /* Private Data. */
 /* All static data definitions appear here. */
@@ -84,8 +84,9 @@ int tee_hello_world(void);
  *                (if any), including an enumeration of all possible
  *                error values.
  */
+//#define  errx(i ,format, ...) printf(format "\n", ##__VA_ARGS__)
 
-int tee_hello_world()
+int tee_hello_world2()
 {
 
   TEEC_Result res = 0;
@@ -134,11 +135,11 @@ int tee_hello_world()
   op.params[0].value.a = 42;
 
   /*
-   * TA_HELLO_WORLD_CMD_INC_VALUE is the actual function in the TA to be
+   * TA_HELLO_WORLD_CMD_DEC_VALUE is the actual function in the TA to be
    * called.
    */
-  printf("Invoking TA to increment %d\n", op.params[0].value.a);
-  res = TEEC_InvokeCommand(&sess, TA_HELLO_WORLD_CMD_INC_VALUE, &op,
+  printf("Invoking TA to decrement %d\n", op.params[0].value.a);
+  res = TEEC_InvokeCommand(&sess, TA_HELLO_WORLD_CMD_DEC_VALUE, &op,
          &err_origin);
   if (res != TEEC_SUCCESS)
     errx(1, "TEEC_InvokeCommand failed with code 0x%x origin 0x%x",
@@ -146,7 +147,7 @@ int tee_hello_world()
   else
     printf("TEEC_InvokeCommand successfully with code 0x%x\n", res);
 
-  printf("TA incremented value to %d\n", op.params[0].value.a);
+  printf("TA decremented value to %d\n", op.params[0].value.a);
 
   /*
    * We're done with the TA, close the session and

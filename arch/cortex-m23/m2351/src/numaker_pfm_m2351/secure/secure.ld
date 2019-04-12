@@ -71,9 +71,26 @@ SECTIONS
  		*(SORT(.dtors.*))
  		*(.dtors)
 
-		*(.rodata*)
+		/* *(.rodata*) */
 
 		KEEP(*(.eh_frame*))
+	} > FLASH
+
+	.rodata : ALIGN(4)
+	{
+		__rodata_start = .;
+		*(.rodata .rodata.*)
+		/*
+		 * 8 to avoid unwanted padding between __start_ta_head_section
+		 * and the first structure in ta_head_section, in 64-bit
+		 * builds
+		 */
+		. = ALIGN(4);
+		__start_ta_head_section = . ;
+		KEEP(*(ta_head_section))
+		__stop_ta_head_section = . ;
+		. = ALIGN(4);
+		__rodata_end = .;
 	} > FLASH
 
 	.ARM.extab :

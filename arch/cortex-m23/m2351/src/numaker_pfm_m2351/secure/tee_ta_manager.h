@@ -70,8 +70,8 @@ struct tee_ta_param {
 };
 
 struct tee_ta_ctx;
-//struct user_ta_ctx;
-//struct pseudo_ta_ctx;
+struct user_ta_ctx;
+struct pseudo_ta_ctx;
 
 struct tee_ta_ops {
 	TEE_Result (*enter_open_session)(struct tee_ta_session *s,
@@ -122,7 +122,7 @@ struct tee_ta_session {
 //	bool cancel;		/* True if TAF is cancelled */
 //	bool cancel_mask;	/* True if cancel is masked */
 //	TEE_Time cancel_time;	/* Time when to cancel the TAF */
-//	void *user_ctx;		/* ??? */
+	void *user_ctx;		/* ??? */
 //	uint32_t ref_count;	/* reference counter */
 //	struct condvar refc_cv;	/* CV used to wait for ref_count to be 0 */
 //	struct condvar lock_cv;	/* CV used to wait for lock */
@@ -134,7 +134,7 @@ struct tee_ta_session {
 };
 
 /* Registered contexts */
-//extern struct tee_ta_ctx_head tee_ctxes;
+extern struct tee_ta_ctx_head tee_ctxes;
 
 //extern struct mutex tee_ta_mutex;
 

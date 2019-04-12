@@ -137,25 +137,36 @@ static void uuid_print(uint8_t d[TEE_IOCTL_UUID_LEN])
 
 TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
 {
+  TEE_Result res;
   TEE_ErrorOrigin err;
   struct tee_ta_session *sess = NULL;
   struct tee_ta_param *param = NULL;
 
   struct tee_ioctl_open_session_arg *arg;
   struct tee_ioctl_param *params;
+  TEE_UUID uuid;
 
   arg = buf_data->buf_ptr;
   params = (struct tee_ioctl_param *)(arg + 1);
 
   uuid_print(arg->uuid);
 
-  tee_ta_context_register(arg->uuid);
+  tee_uuid_from_octets(&uuid, arg->uuid);
+//  tee_ta_context_register(arg->uuid);
 
   param = (struct tee_ta_param *)(arg + 1);
 
-  tee_ta_open_session(&err, &sess, &tee_open_sessions, arg->uuid, param);
+  res = tee_ta_open_session(&err, &sess, &tee_open_sessions, &uuid, param);
 
-  arg->session = sess;
+  if (res != TEE_SUCCESS)
+    sess = NULL;
+
+  if (sess)
+    arg->session = sess;
+  else
+    arg->session = 0;
+  arg->ret = res;
+  arg->ret_origin = err;
 
   return TEEC_SUCCESS;
 }
