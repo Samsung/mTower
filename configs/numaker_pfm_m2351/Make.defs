@@ -34,7 +34,7 @@ AR = $(ARCROSSDEV)ar rcs
 NM = $(ARCROSSDEV)nm
 OBJCOPY = $(CROSSDEV)objcopy
 OBJDUMP = $(CROSSDEV)objdump
-SIZE=$(BINPATH)/arm-none-eabi-size
+SIZE = $(CROSSDEV)size
 
 JC = javac
 

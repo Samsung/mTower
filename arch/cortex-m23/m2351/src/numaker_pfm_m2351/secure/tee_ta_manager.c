@@ -50,7 +50,7 @@
 //#include <tee/tee_obj.h>
 //#include <tee/tee_svc_storage.h>
 //#include <tee_api_types.h>
-//#include <trace.h>
+#include <trace.h>
 //#include <utee_types.h>
 //#include <util.h>
 
@@ -477,9 +477,9 @@ TEE_Result tee_ta_close_session(struct tee_ta_session *csess,
 	struct tee_ta_session *sess;
 	struct tee_ta_ctx *ctx;
 //	bool keep_alive;
-//
+
 //	DMSG("tee_ta_close_session(0x%" PRIxVA ")",  (vaddr_t)csess);
-//
+
 	if (!csess)
 		return TEE_ERROR_ITEM_NOT_FOUND;
 
@@ -497,13 +497,13 @@ TEE_Result tee_ta_close_session(struct tee_ta_session *csess,
 //	}
 //
 	ctx = sess->ctx;
-//	DMSG("Destroy session");
+	DMSG("Destroy session");
 //
 //	tee_ta_set_busy(ctx);
 //
 //	if (!ctx->panicked) {
 //		set_invoke_timeout(sess, TEE_TIMEOUT_INFINITE);
-//		ctx->ops->enter_close_session(sess);
+		ctx->ops->enter_close_session(sess);
 //	}
 
 	tee_ta_unlink_session(sess, open_sessions);
@@ -523,7 +523,7 @@ TEE_Result tee_ta_close_session(struct tee_ta_session *csess,
 //	keep_alive = (ctx->flags & TA_FLAG_INSTANCE_KEEP_ALIVE) &&
 //			(ctx->flags & TA_FLAG_SINGLE_INSTANCE);
 //	if (!ctx->ref_count && !keep_alive) {
-//		DMSG("Destroy TA ctx");
+		DMSG("Destroy TA ctx");
 //
 		TAILQ_REMOVE(&tee_ctxes, ctx, link);
 //		mutex_unlock(&tee_ta_mutex);
@@ -565,7 +565,7 @@ static TEE_Result tee_ta_init_session_with_context(struct tee_ta_ctx *ctx,
 }
 
 
-/*static*/ TEE_Result tee_ta_init_session(TEE_ErrorOrigin *err,
+static TEE_Result tee_ta_init_session(TEE_ErrorOrigin *err,
 				struct tee_ta_session_head *open_sessions,
 				const TEE_UUID *uuid,
 				struct tee_ta_session **sess)
@@ -598,18 +598,18 @@ static TEE_Result tee_ta_init_session_with_context(struct tee_ta_ctx *ctx,
 	TAILQ_INSERT_TAIL(open_sessions, s, link);
 
 	/* Look for already loaded TA */
-	ctx = tee_ta_context_find(uuid);
-	if (ctx) {
-		res = tee_ta_init_session_with_context(ctx, s);
-		if (res == TEE_SUCCESS || res != TEE_ERROR_ITEM_NOT_FOUND)
-			goto out;
-	}
-//
-//	/* Look for static TA */
-//	res = tee_ta_init_pseudo_ta_session(uuid, s);
-//	if (res == TEE_SUCCESS || res != TEE_ERROR_ITEM_NOT_FOUND)
-//		goto out;
-//
+//	ctx = tee_ta_context_find(uuid);
+//	if (ctx) {
+//		res = tee_ta_init_session_with_context(ctx, s);
+//		if (res == TEE_SUCCESS || res != TEE_ERROR_ITEM_NOT_FOUND)
+//			goto out;
+//	}
+
+	/* Look for static TA */
+	res = tee_ta_init_pseudo_ta_session(uuid, s);
+	if (res == TEE_SUCCESS || res != TEE_ERROR_ITEM_NOT_FOUND)
+		goto out;
+
 //	/* Look for user TA */
 //	res = tee_ta_init_user_ta_session(uuid, s);
 
@@ -640,7 +640,7 @@ TEE_Result tee_ta_open_session(TEE_ErrorOrigin *err,
 //
 	res = tee_ta_init_session(err, open_sessions, uuid, &s);
 	if (res != TEE_SUCCESS) {
-//		DMSG("init session failed 0x%x", res);
+		DMSG("init session failed 0x%x", res);
 		return res;
 	}
 //

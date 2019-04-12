@@ -1,0 +1,17 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the docs folder of mTower repository.
+#
+
+config APPS_HELLO_WORLD
+	bool "Hello world example"
+	default y
+	---help---
+		"Hello world example."
+
+config APPS_TEST
+	bool "Test example"
+	default y
+	---help---
+		"Test example. Output of integer value, byte array and string."
+

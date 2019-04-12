@@ -142,3 +142,7 @@ endmenu
 #source "libc/Kconfig"
 #endmenu
 
+menu "Application Configuration"
+source "apps/Kconfig"
+endmenu
+

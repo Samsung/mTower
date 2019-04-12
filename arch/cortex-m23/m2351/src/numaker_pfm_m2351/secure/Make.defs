@@ -18,6 +18,9 @@
 #
 ############################################################################
 
+-include $(TOPDIR)/Make.defs
+-include $(TOPDIR)/.config
+
 HEAD_ASRC = 
 
 # Common m2351 files
@@ -34,7 +37,16 @@ CHIP_CSRCS_S = ../../Device/Nuvoton/M2351/Source/system_M2351.c \
                ../../Device/Nuvoton/M2351/Source/GCC/_syscalls.c \
                main.c \
                tee_core.c \
+               pseudo_ta.c \
                tee_ta_manager.c \
                trace.c \
-               ../../../../../../apps/hello_world/ta/hello_world_ta.c
+               uuid.c
+
+ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
+CHIP_CSRCS_S += ../../../../../../apps/hello_world/ta/hello_world_ta.c
+endif
+
+ifeq ($(CONFIG_APPS_TEST),y)
+CHIP_CSRCS_S += ../../../../../../apps/hello_world2/ta/hello_world2_ta.c
+endif
 

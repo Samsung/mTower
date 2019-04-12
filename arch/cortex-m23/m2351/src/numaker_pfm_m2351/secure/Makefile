@@ -29,9 +29,15 @@ CFLAGS += -I../../StdDriver/inc
 CFLAGS += -I../../Device/Nuvoton/M2351/Include
 CFLAGS += -I$(TOPDIR)/tee_client/public
 CFLAGS += -I$(TOPDIR)/tee_client/libteec/include/freertos
-CFLAGS += -I$(TOPDIR)/apps/hello_world
 CFLAGS += -I$(TOPDIR)/tee_internal/include
 
+ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
+CFLAGS += -I$(TOPDIR)/apps/hello_world
+endif
+
+ifeq ($(CONFIG_APPS_TEST),y)
+CFLAGS += -I$(TOPDIR)/apps/hello_world2
+endif
 
 OBJDIR = $(TOPDIR)/build/secure$(subst $(TOPDIR),,$(shell pwd))
 
