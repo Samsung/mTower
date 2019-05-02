@@ -1,4 +1,4 @@
-# ![](docs/images/icon/mTower-logo.png) mTower
+# ![](docs/images/icon/mTower-logo-81_128.png) mTower
 
 ## Contents
 1. [Introduction](#1-introduction)
@@ -90,5 +90,5 @@ TBD
 [how to add a platform]: docs/port-new-platform.md
 [CodingStyle]: docs/mtower-coding-standard.md
 [source code structure]: docs/source-code-structure.md
-[doxygen]: http://www.stack.nl/~dimitri/doxygen/index.html
+[doxygen]: http://www.doxygen.nl
 [NuMaker-PFM-M2351]: http://www.nuvoton.com.cn/hq/products/iot-solution/iot-platform/numaker-maker-platform/numaker-pfm-m2351?__locale=en
