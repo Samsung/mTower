@@ -1,5 +1,5 @@
-# mTower 
- 
+# ![](docs/images/icon/mTower-logo.png) mTower
+
 ## Contents
 1. [Introduction](#1-introduction)
 2. [License](#2-license)
@@ -36,11 +36,11 @@ be seen in [COPYING] file.
 Several platforms are supported. In order to manage slight differences
 between platforms, a `PLATFORM` flag has been introduced.
 
-| Platform              | Composite PLATFORM flag     | Published | Maintained |
-|-----------------------|-----------------------------|-----------|------------|
-| [NuMaker-PFM-M2351]   |`PLATFORM=numaker_pfm_m2351` | No       | v0.1       |
+| Platform              | Composite PLATFORM flag     | Maintained |
+|-----------------------|-----------------------------|------------|
+| [NuMaker-PFM-M2351]   |`PLATFORM=numaker_pfm_m2351` | v0.1       |
 
-For add a new platform see the [how to add a platform].
+Fo information on adding a new platform see the [how to add a platform].
 
 ---
 ## 4. Get and build mTower software
@@ -61,12 +61,13 @@ the code also uses other open source components.
 ## 7. Documentation
 The mTower documentation for the project is located in the [docs] folder.
 The latest version of the specification that describes the mTower source code
-can be generated using [doxygen] tool. 
+can be generated using [doxygen] tool from command line. To generate
+documentation, use
 
 ```sh
 $ make docs_gen
 ```
-and view it
+command, and to view generated docs use
 
 ```sh
 $ make docs_show

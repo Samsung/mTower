@@ -4,9 +4,9 @@
 Below is a table showing the platforms supported. In order to manage slight 
 differences between platforms, a `PLATFORM` flag has been introduced.
 
-| Platform            | Composite PLATFORM flag    | Published | Maintained | Quick start guide doc |
-|---------------------|----------------------------|-----------|------------|-----------------------| 
-| [NuMaker-PFM-M2351] |`PLATFORM=numaker_pfm_m2351` | Yes       | v0.1       | [numaker_pfm_m2351.md] |
+| Platform            | Composite PLATFORM flag     | Maintained |  Quick start guide doc |
+|---------------------|-----------------------------|------------|------------------------| 
+| [NuMaker-PFM-M2351] |`PLATFORM=numaker_pfm_m2351` | v0.1       | [numaker_pfm_m2351.md] |
 
 
 ---
@@ -106,8 +106,8 @@ $ cd mTower/
 $ make PLATFORM=numaker_pfm_m2351 create_context
 ```
 ### 2.4 Get the toolchains
-In mTower are using different toolchains for different targets (depends on
-architecture 32 bit solutions). In any case start by downloading the
+In mTower different toolchains are used for different targets (depends on
+architecture 32-bit solutions). In any case start by downloading the
 toolchains by:
 
 ```sh
@@ -128,15 +128,6 @@ This is device specific.
 ### 2.7 Boot up the device
 This is device specific.
 
-### 2.8 Run test
-The entire test test suite has been deployed when you we're running `$ make
-test` in previous step , in general there is no need to copy any binaries
-manually. So, to run
-test, you simply type:
-
-```sh
-$ make test
-```
-
 [docs]: ./
 [NuMaker-PFM-M2351]: http://www.nuvoton.com/resource-files/UM_NuMaker-PFM-M2351_EN_Rev1.00.pdf
+[numaker_pfm_m2351.md]: ./numaker_pfm_m2351.md
