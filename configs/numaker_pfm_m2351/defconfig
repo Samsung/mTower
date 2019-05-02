@@ -51,4 +51,4 @@ CONFIG_GCC_FOLDER="gcc-arm-none-eabi-6-2017-q2-update"
 # Application Configuration
 #
 CONFIG_APPS_HELLO_WORLD=y
-CONFIG_APPS_TEST=y
+CONFIG_APPS_TEMPLATE=y

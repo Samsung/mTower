@@ -1,8 +1,8 @@
 /**
- * @file        /mTower/apps/hello_world/hello_world_ta.h
- * @brief       Short file description
+ * @file        /mTower/apps/template/template_ta.h
+ * @brief       Definition of template ta and ca
  *
- * @copyright   Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
+ * @copyright   Copyright (c) 2019 Samsung Electronics Co., Ltd. All Rights Reserved.
  * @author      Taras Drozdovskyi t.drozdovsky@samsung.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @todo
  */
 
-#ifndef __APPS_HELLO_WORLD_HELLO_WORLD2_TA_H_
-#define __APPS_HELLO_WORLD_HELLO_WORLD2_TA_H_
+#ifndef __APPS_TEMPLATE_TEMPLATE_TA_H_
+#define __APPS_TEMPLATE_TEMPLATE_TA_H_
 
 /* Included Files */
 /* All header files are included here. */
@@ -32,14 +31,12 @@
  * This UUID is generated with uuidgen
  * the ITU-T UUID generator at http://www.itu.int/ITU-T/asn1/uuid.html
  */
-#define TA_HELLO_WORLD_UUID \
-  { 0x8aaaf201, 0x2450, 0x11e4, \
-    { 0xab, 0xe2, 0x00, 0x02, 0xa5, 0xd5, 0xc5, 0x1b} }
+#define TA_TEMPLATE_UUID \
+  { 0x1dbaf216, 0x6cb3, 0x11e9, \
+    { 0xa9, 0x23, 0x16, 0x81, 0xbe, 0x66, 0x3d, 0x3e } }
 
 /* The function IDs implemented in this TA */
-#define TA_HELLO_WORLD_CMD_INC_VALUE    0
-#define TA_HELLO_WORLD_CMD_DEC_VALUE    1
-
+#define TA_TEMPLATE_CMD_TEST    1
 
 /* Public Types */
 /* Any types, enumerations, structures or unions are defined here. */
@@ -89,4 +86,4 @@
  */
 
 
-#endif /* __APPS_HELLO_WORLD_HELLO_WORLD2_TA_H_ */
+#endif /* __APPS_TEMPLATE_TEMPLATE_TA_H_ */

@@ -34,6 +34,7 @@
 //#include <mm/core_memprot.h>
 //#include <mm/mobj.h>
 //#include <sm/tee_mon.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <trace.h>
@@ -332,9 +333,8 @@ TEE_Result tee_ta_init_pseudo_ta_session(const TEE_UUID *uuid,
 		  DMSG("TEE_ERROR_ITEM_NOT_FOUND\n");
 			return TEE_ERROR_ITEM_NOT_FOUND;
 		}
-    DMSG("NEXT\n");
-    uuid_print(&ta->uuid);
-    uuid_print(uuid);
+//    uuid_print(&ta->uuid);
+//    uuid_print(uuid);
 		if (memcmp(&ta->uuid, uuid, sizeof(TEE_UUID)) == 0)
 			break;
 		ta++;
@@ -359,3 +359,4 @@ TEE_Result tee_ta_init_pseudo_ta_session(const TEE_UUID *uuid,
 
 	return TEE_SUCCESS;
 }
+

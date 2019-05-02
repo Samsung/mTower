@@ -1,8 +1,8 @@
 /**
  * @file        /mTower/apps/hello_world/hello_world_ta.h
- * @brief       Short file description
+ * @brief       Definition of hello_world ta and ca.
  *
- * @copyright   Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
+ * @copyright   Copyright (c) 2019 Samsung Electronics Co., Ltd. All Rights Reserved.
  * @author      Taras Drozdovskyi t.drozdovsky@samsung.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

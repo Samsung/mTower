@@ -76,7 +76,7 @@ TEEC_Result tee_ioctl_close_session(/*ctx,*/ struct tee_ioctl_close_session_arg 
 __NONSECURE_ENTRY
 int32_t ioctl(uint32_t cmd, struct tee_ioctl_buf_data *buf_data)
 {
-  printf("Secure ioctl: cmd = %x\n", cmd);
+//  printf("Secure ioctl: cmd = %x\n", cmd);
 
   switch (cmd) {
 //  case TEE_IOC_VERSION:
