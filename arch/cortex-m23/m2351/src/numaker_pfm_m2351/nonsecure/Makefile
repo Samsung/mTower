@@ -36,8 +36,8 @@ ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
 CFLAGS += -I$(TOPDIR)/apps/hello_world
 endif
 
-ifeq ($(CONFIG_APPS_TEST),y)
-CFLAGS += -I$(TOPDIR)/apps/hello_world2
+ifeq ($(CONFIG_APPS_TEMPLATE),y)
+CFLAGS += -I$(TOPDIR)/apps/template
 endif
 
 CFLAGS += -DDEBUG_PORT=UART1_NS

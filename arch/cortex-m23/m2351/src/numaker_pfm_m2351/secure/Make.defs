@@ -46,7 +46,7 @@ ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
 CHIP_CSRCS_S += ../../../../../../apps/hello_world/ta/hello_world_ta.c
 endif
 
-ifeq ($(CONFIG_APPS_TEST),y)
-CHIP_CSRCS_S += ../../../../../../apps/hello_world2/ta/hello_world2_ta.c
+ifeq ($(CONFIG_APPS_TEMPLATE),y)
+CHIP_CSRCS_S += ../../../../../../apps/template/ta/template_ta.c
 endif
 

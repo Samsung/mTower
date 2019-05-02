@@ -330,7 +330,7 @@ static void teeTest( void *pvParameters )
 #endif
 
 
-#ifdef CONFIG_APPS_TEST
+#ifdef CONFIG_APPS_TEMPLATE
 /**
  * @brief         teeTest - .
  *
@@ -345,9 +345,9 @@ static void teeTest2( void *pvParameters )
   (void)pvParameters;
 
   do {
-    printf(RED "TEE test: Hello_world2\n");
+    printf(RED "TEE test: template\n");
     portDISABLE_INTERRUPTS();
-    tee_hello_world2();
+    tee_template();
     printf(NORMAL);
     portENABLE_INTERRUPTS();
     vTaskDelay( xDelay );
@@ -501,7 +501,7 @@ int main( void )
       NULL );
 #endif
 
-#ifdef CONFIG_APPS_TEST
+#ifdef CONFIG_APPS_TEMPLATE
   xTaskCreate( teeTest2,       /* The function that implements the task. */
       "tee_test2",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
       256,                    /* The size of the stack to allocate to the task. */

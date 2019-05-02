@@ -9,9 +9,9 @@ config APPS_HELLO_WORLD
 	---help---
 		"Hello world example."
 
-config APPS_TEST
-	bool "Test example"
+config APPS_TEMPLATE
+	bool "Template example"
 	default y
 	---help---
-		"Test example. Output of integer value, byte array and string."
+		"Template example."
 

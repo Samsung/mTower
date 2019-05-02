@@ -1,8 +1,8 @@
 /**
- * @file        /mTower/apps/hello_world/ca/hello_world_ns.c
- * @brief       <Short file description>
+ * @file        /mTower/apps/template/ca/template_ns.c
+ * @brief       Template of Client application.
  *
- * @copyright   Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
+ * @copyright   Copyright (c) 2019 Samsung Electronics Co., Ltd. All Rights Reserved.
  * @author      Taras Drozdovskyi t.drozdovsky@samsung.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +17,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @todo
- * @bug
  */
 
 /* Included Files. */
@@ -30,7 +28,7 @@
 #include "tee_types.h"
 #include "tee_client_api.h"
 /* TA UUID */
-#include "hello_world2_ta.h"
+#include "template_ta.h"
 
 /* Pre-processor Definitions. */
 /* All C pre-processor macros are defined here. */
@@ -42,7 +40,7 @@
 
 /* Private Function Prototypes. */
 /* Prototypes of all static functions in the file are provided here. */
-int tee_hello_world2(void);
+int tee_template(void);
 
 /* Private Data. */
 /* All static data definitions appear here. */
@@ -73,27 +71,24 @@ int tee_hello_world2(void);
 /* Public Functions. */
 
 /**
- * @brief         <Function name > - Description of the operation of
+ * @brief         tee_template - Description of the operation of
  *                the static function.
  *
- * @param value   [in]/[out] A list of input parameters, one-per-line,
- *                appears here along with a description of each input
- *                parameter.
+ * @param value   None.
  *
- * @returns       Description of the value returned by this function
- *                (if any), including an enumeration of all possible
- *                error values.
+ * @returns       TEEC_SUCCESS on success, or error code on failure (see
+ *                mTower tee_client/public/tee_client_api.h for details).
  */
 //#define  errx(i ,format, ...) printf(format "\n", ##__VA_ARGS__)
 
-int tee_hello_world2()
+int tee_template(void)
 {
 
   TEEC_Result res = 0;
   TEEC_Context ctx;
   TEEC_Session sess;
   TEEC_Operation op;
-  TEEC_UUID uuid = TA_HELLO_WORLD_UUID;
+  TEEC_UUID uuid = TA_TEMPLATE_UUID;
   uint32_t err_origin;
 
   /* Initialize a context connecting us to the TEE */
@@ -104,7 +99,7 @@ int tee_hello_world2()
     printf("TEEC_InitializeContext successfully with code 0x%x\n", res);
 
   /*
-   * Open a session to the "hello world" TA, the TA will print "hello
+   * Open a session to the "temlate" TA, the TA will print "hello
    * world!" in the log when the session is created.
    */
   res = TEEC_OpenSession(&ctx, &sess, &uuid,
@@ -117,7 +112,7 @@ int tee_hello_world2()
 
   /*
    * Execute a function in the TA by invoking it, in this case
-   * we're incrementing a number.
+   * we're doing nothing.
    *
    * The value of command ID part and how the parameters are
    * interpreted is part of the interface provided by the TA.
@@ -130,24 +125,21 @@ int tee_hello_world2()
    * Prepare the argument. Pass a value in the first parameter,
    * the remaining three parameters are unused.
    */
-  op.paramTypes = TEEC_PARAM_TYPES(TEEC_VALUE_INOUT, TEEC_NONE,
+  op.paramTypes = TEEC_PARAM_TYPES(TEEC_NONE, TEEC_NONE,
            TEEC_NONE, TEEC_NONE);
-  op.params[0].value.a = 42;
 
   /*
-   * TA_HELLO_WORLD_CMD_DEC_VALUE is the actual function in the TA to be
+   * TA_TEMPLATE_CMD_TEST is the actual function in the TA to be
    * called.
    */
-  printf("Invoking TA to decrement %d\n", op.params[0].value.a);
-  res = TEEC_InvokeCommand(&sess, TA_HELLO_WORLD_CMD_DEC_VALUE, &op,
+  printf("Invoking TA\n");
+  res = TEEC_InvokeCommand(&sess, TA_TEMPLATE_CMD_TEST, &op,
          &err_origin);
   if (res != TEEC_SUCCESS)
     errx(1, "TEEC_InvokeCommand failed with code 0x%x origin 0x%x",
       res, err_origin);
   else
     printf("TEEC_InvokeCommand successfully with code 0x%x\n", res);
-
-  printf("TA decremented value to %d\n", op.params[0].value.a);
 
   /*
    * We're done with the TA, close the session and
