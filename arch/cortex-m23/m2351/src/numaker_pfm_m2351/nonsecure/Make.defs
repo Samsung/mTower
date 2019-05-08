@@ -40,6 +40,10 @@ ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
 CHIP_CSRCS_NS += ../../../../../../apps/hello_world/ca/hello_world_ns.c
 endif
 
+ifeq ($(CONFIG_APPS_AES),y)
+CHIP_CSRCS_NS += ../../../../../../apps/aes/ca/aes_ns.c
+endif
+
 ifeq ($(CONFIG_APPS_TEMPLATE),y)
 CHIP_CSRCS_NS += ../../../../../../apps/template/ca/template_ns.c
 endif

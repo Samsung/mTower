@@ -57,12 +57,6 @@
 //#include "tee_types.h"
 //#include "tee_client_api.h"
 //#include "tee.h"
-extern TEE_Result TA_OpenSessionEntryPoint(uint32_t param_types, TEE_Param params[4],
-    void **sess_ctx);
-extern void TA_CloseSessionEntryPoint(void *sess_ctx);
-extern TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx, uint32_t cmd_id,
-      uint32_t param_types, TEE_Param params[4]);
-extern void TA_DestroyEntryPoint(void);
 
 /* This mutex protects the critical section in tee_ta_init_session */
 //struct mutex tee_ta_mutex = MUTEX_INITIALIZER;
@@ -277,70 +271,6 @@ static void tee_ta_unlink_session(struct tee_ta_session *s,
 //	mutex_unlock(&tee_ta_mutex);
 }
 
-//static const struct tee_ta_ops loaded_ta_ops = {
-//  .enter_open_session = TA_OpenSessionEntryPoint,
-//  .enter_invoke_cmd = TA_InvokeCommandEntryPoint,
-//  .enter_close_session = TA_CloseSessionEntryPoint,
-//  .destroy = TA_DestroyEntryPoint,
-//};
-
-//TEE_Result (*enter_open_session)(struct tee_ta_session *s,
-//    struct tee_ta_param *param, TEE_ErrorOrigin *eo);
-//TEE_Result (*enter_invoke_cmd)(struct tee_ta_session *s, uint32_t cmd,
-//      struct tee_ta_param *param, TEE_ErrorOrigin *eo);
-//void (*enter_close_session)(struct tee_ta_session *s);
-//void (*dump_state)(struct tee_ta_ctx *ctx);
-//void (*destroy)(struct tee_ta_ctx *ctx);
-//uint32_t (*get_instance_id)(struct tee_ta_ctx *ctx);
-
-
-TEE_Result loaded_ta_enter_open_session(struct tee_ta_session *s,
-    struct tee_ta_param *param, TEE_ErrorOrigin *eo)
-{
-  return TA_OpenSessionEntryPoint(param->types, param->u, s);
-}
-
-TEE_Result loaded_ta_enter_invoke_cmd(struct tee_ta_session *s, uint32_t cmd,
-    struct tee_ta_param *param, TEE_ErrorOrigin *eo)
-{
-  return TA_InvokeCommandEntryPoint(s, cmd, param->types, param->u);
-}
-
-void loaded_ta_enter_close_session(struct tee_ta_session *s)
-{
-  TA_CloseSessionEntryPoint(s);
-}
-
-void loaded_ta_destroy(struct tee_ta_ctx *ctx)
-{
-  (void)&ctx;
-
-  TA_DestroyEntryPoint();
-}
-
-static const struct tee_ta_ops loaded_ta_ops = {
-  .enter_open_session = loaded_ta_enter_open_session,
-  .enter_invoke_cmd = loaded_ta_enter_invoke_cmd,
-  .enter_close_session = loaded_ta_enter_close_session,
-  .destroy = loaded_ta_destroy,
-};
-unsigned int ta_flag = 0;
-
-void tee_ta_context_register(const TEE_UUID *uuid)
-{
-  struct tee_ta_ctx *ctx;
-  if (!ta_flag) {
-  ctx = malloc(sizeof(struct tee_ta_ctx));
-  printf("\nsizeof(struct tee_ta_ctx) = %d\n", sizeof(struct tee_ta_ctx));
-  if (ctx != NULL) {
-    memcpy(&ctx->uuid, uuid, sizeof(TEE_UUID));
-    ctx->ops = &loaded_ta_ops;
-    TAILQ_INSERT_TAIL(&tee_ctxes, ctx, link);
-    printf("UUID is successfully registered\n");
-  }
-  ta_flag = 1;
-  }
-}
 /*
  * tee_ta_context_find - Find TA in session list based on a UUID (input)
  * Returns a pointer to the session

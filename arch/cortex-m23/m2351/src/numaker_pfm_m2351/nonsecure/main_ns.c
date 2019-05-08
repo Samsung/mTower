@@ -70,6 +70,7 @@ static void testTask3( void *pvParameters );
 
 static void teeTest( void *pvParameters );
 static void teeTest2( void *pvParameters );
+static void teeTest3( void *pvParameters );
 
 /* Private Data. */
 /* All static data definitions appear here. */
@@ -83,7 +84,7 @@ static void teeTest2( void *pvParameters );
 /* CMSIS clock configuration function. */
 extern void SystemCoreClockUpdate( void );
 extern int tee_hello_world(void);
-extern int tee_hello_world2(void);
+extern int tee_aes(void);
 
 /* NonSecure Callable Functions from Secure Region */
 extern int32_t Secure_func(void);
@@ -329,6 +330,30 @@ static void teeTest( void *pvParameters )
 }
 #endif
 
+#ifdef CONFIG_APPS_AES
+/**
+ * @brief         teeTest - .
+ *
+ * @param         None
+ *
+ * @returns       None
+ */
+static void teeTest3( void *pvParameters )
+{
+  const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
+
+  (void)pvParameters;
+
+  do {
+    printf(RED "TEE test: AES\n");
+    portDISABLE_INTERRUPTS();
+    tee_aes();
+    printf(NORMAL);
+    portENABLE_INTERRUPTS();
+    vTaskDelay( xDelay );
+  } while (1);
+}
+#endif
 
 #ifdef CONFIG_APPS_TEMPLATE
 /**
@@ -495,6 +520,15 @@ int main( void )
 #ifdef CONFIG_APPS_HELLO_WORLD
   xTaskCreate( teeTest,       /* The function that implements the task. */
       "tee_test",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+      256,                    /* The size of the stack to allocate to the task. */
+      ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
+      tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
+      NULL );
+#endif
+
+#ifdef CONFIG_APPS_AES
+  xTaskCreate( teeTest3,       /* The function that implements the task. */
+      "tee_test3",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
       256,                    /* The size of the stack to allocate to the task. */
       ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
       tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */

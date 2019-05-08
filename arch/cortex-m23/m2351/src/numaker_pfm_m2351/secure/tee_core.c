@@ -110,29 +110,231 @@ int32_t ioctl(uint32_t cmd, struct tee_ioctl_buf_data *buf_data)
 struct tee_ta_session_head tee_open_sessions =
 TAILQ_HEAD_INITIALIZER(tee_open_sessions);
 
-static void uuid_print(uint8_t d[TEE_IOCTL_UUID_LEN])
+#define OPTEE_MSG_ATTR_TYPE_NONE    0x0
+#define OPTEE_MSG_ATTR_TYPE_VALUE_INPUT   0x1
+#define OPTEE_MSG_ATTR_TYPE_VALUE_OUTPUT  0x2
+#define OPTEE_MSG_ATTR_TYPE_VALUE_INOUT   0x3
+#define OPTEE_MSG_ATTR_TYPE_RMEM_INPUT    0x5
+#define OPTEE_MSG_ATTR_TYPE_RMEM_OUTPUT   0x6
+#define OPTEE_MSG_ATTR_TYPE_RMEM_INOUT    0x7
+#define OPTEE_MSG_ATTR_TYPE_TMEM_INPUT    0x9
+#define OPTEE_MSG_ATTR_TYPE_TMEM_OUTPUT   0xa
+#define OPTEE_MSG_ATTR_TYPE_TMEM_INOUT    0xb
+
+#define OPTEE_MSG_ATTR_TYPE_MASK    0x000000ff //GENMASK_32(7, 0)
+
+/**
+ * struct optee_msg_param_tmem - temporary memory reference parameter
+ * @buf_ptr:  Address of the buffer
+ * @size: Size of the buffer
+ * @shm_ref:  Temporary shared memory reference, pointer to a struct tee_shm
+ *
+ * Secure and normal world communicates pointers as physical address
+ * instead of the virtual address. This is because secure and normal world
+ * have completely independent memory mapping. Normal world can even have a
+ * hypervisor which need to translate the guest physical address (AKA IPA
+ * in ARM documentation) to a real physical address before passing the
+ * structure to secure world.
+ */
+struct optee_msg_param_tmem {
+  uint32_t buf_ptr;
+  uint32_t size;
+  uint32_t shm_ref;
+};
+
+/**
+ * struct optee_msg_param_rmem - registered memory reference parameter
+ * @offs: Offset into shared memory reference
+ * @size: Size of the buffer
+ * @shm_ref:  Shared memory reference, pointer to a struct tee_shm
+ */
+struct optee_msg_param_rmem {
+  uint32_t offs;
+  uint32_t size;
+  uint32_t shm_ref;
+};
+
+/**
+ * struct optee_msg_param_value - values
+ * @a: first value
+ * @b: second value
+ * @c: third value
+ */
+struct optee_msg_param_value {
+  uint32_t a;
+  uint32_t b;
+//  uint64_t c;
+};
+
+/**
+ * struct optee_msg_param - parameter
+ * @attr: attributes
+ * @memref: a memory reference
+ * @value: a value
+ *
+ * @attr & OPTEE_MSG_ATTR_TYPE_MASK indicates if tmem, rmem or value is used in
+ * the union. OPTEE_MSG_ATTR_TYPE_VALUE_* indicates value,
+ * OPTEE_MSG_ATTR_TYPE_TMEM_* indicates tmem and
+ * OPTEE_MSG_ATTR_TYPE_RMEM_* indicates rmem.
+ * OPTEE_MSG_ATTR_TYPE_NONE indicates that none of the members are used.
+ */
+struct optee_msg_param {
+  uint32_t attr;
+  union {
+    struct optee_msg_param_tmem tmem;
+    struct optee_msg_param_rmem rmem;
+    struct optee_msg_param_value value;
+  } u;
+};
+
+/**
+ * struct optee_msg_arg - call argument
+ * @cmd: Command, one of OPTEE_MSG_CMD_* or OPTEE_MSG_RPC_CMD_*
+ * @func: Trusted Application function, specific to the Trusted Application,
+ *       used if cmd == OPTEE_MSG_CMD_INVOKE_COMMAND
+ * @session: In parameter for all OPTEE_MSG_CMD_* except
+ *       OPTEE_MSG_CMD_OPEN_SESSION where it's an output parameter instead
+ * @cancel_id: Cancellation id, a unique value to identify this request
+ * @ret: return value
+ * @ret_origin: origin of the return value
+ * @num_params: number of parameters supplied to the OS Command
+ * @params: the parameters supplied to the OS Command
+ *
+ * All normal calls to Trusted OS uses this struct. If cmd requires further
+ * information than what these fields hold it can be passed as a parameter
+ * tagged as meta (setting the OPTEE_MSG_ATTR_META bit in corresponding
+ * attrs field). All parameters tagged as meta have to come first.
+ *
+ * Temp memref parameters can be fragmented if supported by the Trusted OS
+ * (when optee_smc.h is bearer of this protocol this is indicated with
+ * OPTEE_SMC_SEC_CAP_UNREGISTERED_SHM). If a logical memref parameter is
+ * fragmented then all but the last fragment have the
+ * OPTEE_MSG_ATTR_FRAGMENT bit set in attrs. Even if a memref is fragmented
+ * it will still be presented as a single logical memref to the Trusted
+ * Application.
+ */
+struct optee_msg_arg {
+//  uint32_t cmd;
+  uint32_t func;
+  uint32_t session;
+  uint32_t cancel_id;
+//  uint32_t pad;
+  uint32_t ret;
+  uint32_t ret_origin;
+  uint32_t num_params;
+
+  /* num_params tells the actual number of element in params */
+  struct optee_msg_param params[4];
+};
+
+static TEE_Result copy_in_params(const struct optee_msg_param *params,
+         uint32_t num_params,
+         struct tee_ta_param *ta_param,
+         uint32_t *saved_attr)
 {
-//  printf("UUID = %08x\n",
-//      ((uint32_t) (d[0] << 24)) | (uint32_t) (d[1] << 16)
-//          | (uint32_t) (d[2] << 8) | (uint32_t) d[3]);
+  TEE_Result res;
+  size_t n;
+  uint8_t pt[TEE_NUM_PARAMS];
 
-  TEEC_UUID s;
-  int i;
-  s.timeLow = ((uint32_t)d[0] << 24);
-  s.timeLow |= ((uint32_t)d[1] << 16);
-  s.timeLow |= ((uint32_t)d[2] << 8);
-  s.timeLow |= ((uint32_t)d[3]);
-  s.timeMid = ((uint16_t)d[4] << 8);
-  s.timeMid |= ((uint16_t)d[5]);
-  s.timeHiAndVersion = ((uint16_t)d[6] << 8);
-  s.timeHiAndVersion |= ((uint16_t)d[7]);
-  memcpy(s.clockSeqAndNode, d + 8, sizeof(s.clockSeqAndNode));
+  if (num_params > TEE_NUM_PARAMS)
+    return TEE_ERROR_BAD_PARAMETERS;
 
-  printf("UUID = %08x-%04x-%04x", s.timeLow, s.timeMid, s.timeHiAndVersion);
-  for (i = 0; i < 8; ++i) {
-    printf("-%02x",s.clockSeqAndNode[i]);
+  memset(ta_param, 0, sizeof(*ta_param));
+
+  for (n = 0; n < num_params; n++) {
+    uint32_t attr;
+    saved_attr[n] = params[n].attr;
+
+//    if (saved_attr[n] & OPTEE_MSG_ATTR_META)
+//      return TEE_ERROR_BAD_PARAMETERS;
+
+    attr = saved_attr[n] & OPTEE_MSG_ATTR_TYPE_MASK;
+    switch (attr) {
+    case OPTEE_MSG_ATTR_TYPE_NONE:
+      pt[n] = TEE_PARAM_TYPE_NONE;
+      memset(&ta_param->u[n], 0, sizeof(ta_param->u[n]));
+      break;
+    case OPTEE_MSG_ATTR_TYPE_VALUE_INPUT:
+    case OPTEE_MSG_ATTR_TYPE_VALUE_OUTPUT:
+    case OPTEE_MSG_ATTR_TYPE_VALUE_INOUT:
+      pt[n] = TEE_PARAM_TYPE_VALUE_INPUT + attr -
+        OPTEE_MSG_ATTR_TYPE_VALUE_INPUT;
+      ta_param->u[n].val.a = params[n].u.value.a;
+      ta_param->u[n].val.b = params[n].u.value.b;
+      break;
+    case OPTEE_MSG_ATTR_TYPE_TMEM_INPUT:
+    case OPTEE_MSG_ATTR_TYPE_TMEM_OUTPUT:
+    case OPTEE_MSG_ATTR_TYPE_TMEM_INOUT:
+      pt[n] = TEE_PARAM_TYPE_MEMREF_INPUT + attr -
+        OPTEE_MSG_ATTR_TYPE_TMEM_INPUT;
+//      printf("\n~~~~~TMEM params[%d].u.tmem.size = %d;\n",n,params[n].u.tmem.size);
+      ta_param->u[n].mem.buffer = params[n].u.tmem.buf_ptr;
+      ta_param->u[n].mem.size = params[n].u.tmem.size;
+//      res = assign_mobj_to_param_mem(params[n].u.tmem.buf_ptr,
+//                   params[n].u.tmem.size,
+//                   saved_attr[n],
+//                   params[n].u.tmem.shm_ref,
+//                   &ta_param->u[n].mem);
+//      if (res != TEE_SUCCESS)
+//        return res;
+      break;
+    case OPTEE_MSG_ATTR_TYPE_RMEM_INPUT:
+    case OPTEE_MSG_ATTR_TYPE_RMEM_OUTPUT:
+    case OPTEE_MSG_ATTR_TYPE_RMEM_INOUT:
+      pt[n] = TEE_PARAM_TYPE_MEMREF_INPUT + attr -
+        OPTEE_MSG_ATTR_TYPE_RMEM_INPUT;
+      ta_param->u[n].mem.buffer = params[n].u.rmem.offs;
+//      printf("\n~~~~~RMEM params[n].u.rmem.offs = %p", params[n].u.rmem.offs);
+      ta_param->u[n].mem.size = params[n].u.tmem.size;
+      //      printf("\n~~~~~RMEM params[%d].u.tmem.size = %d;\n",n,params[n].u.tmem.size);
+//      mem->offs = param->u.rmem.offs;
+//      mem->size = param->u.rmem.size;
+
+//      res = set_rmem_param(params + n, &ta_param->u[n].mem);
+//      if (res != TEE_SUCCESS)
+//        return res;
+      break;
+    default:
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
   }
-  printf("\n");
+
+  ta_param->types = TEE_PARAM_TYPES(pt[0], pt[1], pt[2], pt[3]);
+
+  return TEE_SUCCESS;
+}
+
+static void copy_out_param(struct tee_ta_param *ta_param, uint32_t num_params,
+         struct optee_msg_param *params, uint32_t *saved_attr)
+{
+  size_t n;
+
+  for (n = 0; n < num_params; n++) {
+    switch (TEE_PARAM_TYPE_GET(ta_param->types, n)) {
+    case TEE_PARAM_TYPE_MEMREF_OUTPUT:
+    case TEE_PARAM_TYPE_MEMREF_INOUT:
+      switch (saved_attr[n] & OPTEE_MSG_ATTR_TYPE_MASK) {
+      case OPTEE_MSG_ATTR_TYPE_TMEM_OUTPUT:
+      case OPTEE_MSG_ATTR_TYPE_TMEM_INOUT:
+        params[n].u.tmem.size = ta_param->u[n].mem.size;
+        break;
+      case OPTEE_MSG_ATTR_TYPE_RMEM_OUTPUT:
+      case OPTEE_MSG_ATTR_TYPE_RMEM_INOUT:
+        params[n].u.rmem.size = ta_param->u[n].mem.size;
+        break;
+      default:
+        break;
+      }
+      break;
+    case TEE_PARAM_TYPE_VALUE_OUTPUT:
+    case TEE_PARAM_TYPE_VALUE_INOUT:
+      params[n].u.value.a = ta_param->u[n].val.a;
+      params[n].u.value.b = ta_param->u[n].val.b;
+      break;
+    default:
+      break;
+    }
+  }
 }
 
 TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
@@ -174,18 +376,33 @@ TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
 TEEC_Result tee_ioctl_invoke(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
 {
   TEE_ErrorOrigin err;
+  TEE_Result res;
 
-  struct tee_ioctl_invoke_arg *arg;
+//  struct tee_ioctl_invoke_arg *arg;
+  struct optee_msg_arg *arg;
   struct tee_ta_session *sess;
-  struct tee_ta_param *param = NULL;
+//  struct tee_ta_param *param = NULL;
+  struct tee_ta_param param;
+  struct tee_ioctl_param *params = NULL;
+
+  uint32_t saved_attr[TEE_NUM_PARAMS];
 
   arg = buf_data->buf_ptr;
-  param = (struct tee_ta_param *)(arg + 1);
 
+//  for(int i = 0; i != 20; i++)
+//    printf("\n###### INT %d = %x", i, *((uint32_t *)(arg) + i));
+//  params = (struct tee_ta_param *)(arg + 1);
   sess = tee_ta_get_session(arg->session, true, &tee_open_sessions);
 
-  tee_ta_invoke_command(&err, sess, arg->func, param);
+  res = copy_in_params(arg->params, arg->num_params, &param, saved_attr);
+  if (res != TEE_SUCCESS)
+    goto out;
 
+  tee_ta_invoke_command(&err, sess, arg->func, &param);
+
+  copy_out_param(&param, arg->num_params, arg->params, saved_attr);
+
+out:
   return TEEC_SUCCESS;
 }
 

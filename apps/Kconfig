@@ -9,6 +9,12 @@ config APPS_HELLO_WORLD
 	---help---
 		"Hello world example."
 
+config APPS_AES
+	bool "AES example"
+	default y
+	---help---
+		"AES example."
+
 config APPS_TEMPLATE
 	bool "Template example"
 	default y

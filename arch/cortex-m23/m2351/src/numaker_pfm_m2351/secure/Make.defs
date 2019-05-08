@@ -46,6 +46,10 @@ ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
 CHIP_CSRCS_S += ../../../../../../apps/hello_world/ta/hello_world_ta.c
 endif
 
+ifeq ($(CONFIG_APPS_AES),y)
+CHIP_CSRCS_S += ../../../../../../apps/aes/ta/aes_ta.c
+endif
+
 ifeq ($(CONFIG_APPS_TEMPLATE),y)
 CHIP_CSRCS_S += ../../../../../../apps/template/ta/template_ta.c
 endif

@@ -24,4 +24,6 @@ void tee_uuid_to_octets(uint8_t *dst, const TEE_UUID *src);
  */
 void tee_uuid_from_octets(TEE_UUID *dst, const uint8_t *src);
 
+void uuid_print(uint8_t *d);
+
 #endif /*__TEE_UUID*/

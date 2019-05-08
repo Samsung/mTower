@@ -54,9 +54,9 @@ struct param_val {
 	uint32_t a;
 	uint32_t b;
 };
-
 struct param_mem {
-	struct mobj *mobj;
+//	struct mobj *mobj;
+  void *buffer;
 	size_t size;
 	size_t offs;
 };

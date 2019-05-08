@@ -43,6 +43,7 @@
 //#include "tee_types.h"
 #include "tee_client_api.h"
 #include "tee.h"
+#include "tee_api_defines.h"
 
 extern const struct pseudo_ta_head __start_ta_head_section;
 extern const struct pseudo_ta_head __stop_ta_head_section;
@@ -96,9 +97,9 @@ static TEE_Result copy_in_param(struct tee_ta_session *s __maybe_unused,
 			tee_param[n].value.a = param->u[n].val.a;
 			tee_param[n].value.b = param->u[n].val.b;
 			break;
-//		case TEE_PARAM_TYPE_MEMREF_INPUT:
-//		case TEE_PARAM_TYPE_MEMREF_OUTPUT:
-//		case TEE_PARAM_TYPE_MEMREF_INOUT:
+		case TEE_PARAM_TYPE_MEMREF_INPUT:
+		case TEE_PARAM_TYPE_MEMREF_OUTPUT:
+		case TEE_PARAM_TYPE_MEMREF_INOUT:
 //			if (!validate_in_param(s, param->u[n].mem.mobj))
 //				return TEE_ERROR_BAD_PARAMETERS;
 //			va = mobj_get_va(param->u[n].mem.mobj,
@@ -117,9 +118,10 @@ static TEE_Result copy_in_param(struct tee_ta_session *s __maybe_unused,
 //					return TEE_ERROR_BAD_PARAMETERS;
 //			}
 //
-//			tee_param[n].memref.buffer = va;
-//			tee_param[n].memref.size = param->u[n].mem.size;
-//			break;
+//      tee_param[n].memref.buffer = va;
+      tee_param[n].memref.buffer = param->u[n].mem.buffer;
+			tee_param[n].memref.size = param->u[n].mem.size;
+			break;
 		default:
 			memset(tee_param + n, 0, sizeof(TEE_Param));
 			break;
@@ -176,6 +178,7 @@ static TEE_Result pseudo_ta_enter_open_session(struct tee_ta_session *s,
 //
 //	tee_ta_push_current_session(s);
 	*eo = TEE_ORIGIN_TRUSTED_APP;
+	printf("\n**** OPEN ******\n");
 //
 //	if ((s->ctx->ref_count == 1) && stc->pseudo_ta->create_entry_point) {
 //		res = stc->pseudo_ta->create_entry_point();
@@ -287,31 +290,6 @@ static const struct tee_ta_ops pseudo_ta_ops = {
 //}
 //
 //service_init(verify_pseudo_tas_conformance);
-static void uuid_print(uint8_t d[TEE_IOCTL_UUID_LEN])
-{
-//  printf("UUID = %08x\n",
-//      ((uint32_t) (d[0] << 24)) | (uint32_t) (d[1] << 16)
-//          | (uint32_t) (d[2] << 8) | (uint32_t) d[3]);
-
-  TEEC_UUID s;
-  int i;
-  s.timeLow = ((uint32_t)d[0] << 24);
-  s.timeLow |= ((uint32_t)d[1] << 16);
-  s.timeLow |= ((uint32_t)d[2] << 8);
-  s.timeLow |= ((uint32_t)d[3]);
-  s.timeMid = ((uint16_t)d[4] << 8);
-  s.timeMid |= ((uint16_t)d[5]);
-  s.timeHiAndVersion = ((uint16_t)d[6] << 8);
-  s.timeHiAndVersion |= ((uint16_t)d[7]);
-  memcpy(s.clockSeqAndNode, d + 8, sizeof(s.clockSeqAndNode));
-
-  printf("UUID = %08x-%04x-%04x", s.timeLow, s.timeMid, s.timeHiAndVersion);
-  for (i = 0; i < 8; ++i) {
-    printf("-%02x",s.clockSeqAndNode[i]);
-  }
-  printf("\n");
-}
-
 
 /*-----------------------------------------------------------------------------
  * Initialises a session based on the UUID or ptr to the ta

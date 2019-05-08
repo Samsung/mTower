@@ -36,6 +36,10 @@ ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
 CFLAGS += -I$(TOPDIR)/apps/hello_world
 endif
 
+ifeq ($(CONFIG_APPS_AES),y)
+CFLAGS += -I$(TOPDIR)/apps/aes
+endif
+
 ifeq ($(CONFIG_APPS_TEMPLATE),y)
 CFLAGS += -I$(TOPDIR)/apps/template
 endif
