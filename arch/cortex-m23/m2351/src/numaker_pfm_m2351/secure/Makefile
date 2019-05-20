@@ -57,7 +57,7 @@ OBJS_S = $(AOBJS_S) $(COBJS_S)
 
 LIBPATHS = -L. -L"$(TOPDIR)/lib"
 
-LIBS =  -lm -lc -lnosys -lm2351_StdDriver_s
+LIBS =  -lm -lc -lnosys -lm2351_StdDriver_s -lcrypt_s
 
 $(AOBJS_S): $(OBJDIR)/%$(OBJEXT): %.S
 	$(Q) mkdir -p $(OBJDIR)/$(dir $<)
@@ -71,6 +71,8 @@ $(COBJS_S): $(OBJDIR)/%$(OBJEXT): %.c
 
 mtower_s$(EXEEXT): $(OBJS_S) 
 	$(Q) $(MAKE) -C ../../StdDriver/src/ TOPDIR="$(TOPDIR)" WORLD=secure libm2351_StdDriver_s.a
+	$(Q) $(MAKE) -C $(TOPDIR)/crypto/ TOPDIR="$(TOPDIR)" WORLD=secure libcrypt_s.a
+	
 	@echo "CC: mTower_s$(EXEEXT)"
 	$(Q) $(CC) $(CFLAGS) -mcmse -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(MTOWER_S)
 #	-$(Q) $(CC) -Wl,--section-start=.gnu.sgstubs=0x3f000 -Wl,--out-implib=libnsc$(LIBEXT) -Wl,--cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)

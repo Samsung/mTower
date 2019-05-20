@@ -58,6 +58,7 @@
 //#include "tee_client_api.h"
 //#include "tee.h"
 
+struct tee_ta_session *current_session;
 /* This mutex protects the critical section in tee_ta_init_session */
 //struct mutex tee_ta_mutex = MUTEX_INITIALIZER;
 struct tee_ta_ctx_head tee_ctxes = TAILQ_HEAD_INITIALIZER(tee_ctxes);
@@ -504,10 +505,11 @@ static TEE_Result tee_ta_init_session(TEE_ErrorOrigin *err,
 	struct tee_ta_ctx *ctx;
 //  struct tee_ta_session *s = calloc(1, sizeof(struct tee_ta_session));
   struct tee_ta_session *s = malloc(sizeof(struct tee_ta_session));
-
   *err = TEE_ORIGIN_TEE;
   if (!s)
     return TEE_ERROR_OUT_OF_MEMORY;
+
+  memset(s,0,sizeof(struct tee_ta_session));
 
 //
 //	s->cancel_mask = true;
@@ -540,8 +542,8 @@ static TEE_Result tee_ta_init_session(TEE_ErrorOrigin *err,
 	if (res == TEE_SUCCESS || res != TEE_ERROR_ITEM_NOT_FOUND)
 		goto out;
 
-//	/* Look for user TA */
-//	res = tee_ta_init_user_ta_session(uuid, s);
+	/* Look for user TA */
+	res = tee_ta_init_user_ta_session(uuid, s);
 
 out:
 	if (res == TEE_SUCCESS) {
@@ -727,16 +729,19 @@ TEE_Result tee_ta_invoke_command(TEE_ErrorOrigin *err,
 //		panic("unexpected active mapping");
 //}
 //
-//void tee_ta_push_current_session(struct tee_ta_session *sess)
-//{
+void tee_ta_push_current_session(struct tee_ta_session *sess)
+{
 //	struct thread_specific_data *tsd = thread_get_tsd();
 //
 //	TAILQ_INSERT_HEAD(&tsd->sess_stack, sess, link_tsd);
 //	update_current_ctx(tsd);
-//}
-//
-//struct tee_ta_session *tee_ta_pop_current_session(void)
-//{
+
+  current_session = sess;
+
+}
+
+struct tee_ta_session *tee_ta_pop_current_session(void)
+{
 //	struct thread_specific_data *tsd = thread_get_tsd();
 //	struct tee_ta_session *s = TAILQ_FIRST(&tsd->sess_stack);
 //
@@ -744,19 +749,21 @@ TEE_Result tee_ta_invoke_command(TEE_ErrorOrigin *err,
 //		TAILQ_REMOVE(&tsd->sess_stack, s, link_tsd);
 //		update_current_ctx(tsd);
 //	}
+  return current_session;
 //	return s;
-//}
-//
-//TEE_Result tee_ta_get_current_session(struct tee_ta_session **sess)
-//{
+}
+
+TEE_Result tee_ta_get_current_session(struct tee_ta_session **sess)
+{
 //	struct tee_ta_session *s = TAILQ_FIRST(&thread_get_tsd()->sess_stack);
-//
+
 //	if (!s)
 //		return TEE_ERROR_BAD_STATE;
 //	*sess = s;
-//	return TEE_SUCCESS;
-//}
-//
+	*sess = current_session;
+	return TEE_SUCCESS;
+}
+
 //struct tee_ta_session *tee_ta_get_calling_session(void)
 //{
 //	struct tee_ta_session *s = TAILQ_FIRST(&thread_get_tsd()->sess_stack);

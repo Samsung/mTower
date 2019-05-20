@@ -14,7 +14,7 @@
     .section .stack
     .align  3
 #ifndef Stack_Size
-    .equ    Stack_Size, 0x00000800
+    .equ    Stack_Size, 0x00000A00
 #endif
     .global __StackTop
     .global __StackLimit
@@ -27,7 +27,7 @@ __StackTop:
     .section .heap
     .align  3
 #ifndef Heap_Size
-    .equ    Heap_Size, 0x00000200
+    .equ    Heap_Size, 0x00000700
 #endif
     
     .global __HeapBase

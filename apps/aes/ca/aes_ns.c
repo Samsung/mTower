@@ -35,7 +35,7 @@
 /* To the the UUID (found the the TA's h-file(s)) */
 #include <aes_ta.h>
 
-#define AES_TEST_BUFFER_SIZE	4096
+#define AES_TEST_BUFFER_SIZE	64 //4096
 #define AES_TEST_KEY_SIZE	16
 
 #define DECODE			0
@@ -161,10 +161,10 @@ void tee_aes(void)
 {
 	struct test_ctx ctx;
 	char key[AES_TEST_KEY_SIZE];
-//	char iv[AES_TEST_KEY_SIZE];
-//	char clear[AES_TEST_BUFFER_SIZE];
-//	char ciph[AES_TEST_BUFFER_SIZE];
-//	char temp[AES_TEST_BUFFER_SIZE];
+	char iv[AES_TEST_KEY_SIZE];
+	char clear[AES_TEST_BUFFER_SIZE];
+	char ciph[AES_TEST_BUFFER_SIZE];
+	char temp[AES_TEST_BUFFER_SIZE];
 
 	printf("Prepare session with the TA\n");
 	prepare_tee_session(&ctx);
@@ -176,34 +176,35 @@ void tee_aes(void)
 	memset(key, 0xa5, sizeof(key)); /* Load some dummy value */
 	set_key(&ctx, key, AES_TEST_KEY_SIZE);
 
-//	printf("Reset ciphering operation in TA (provides the initial vector)\n");
-//	memset(iv, 0, sizeof(iv)); /* Load some dummy value */
-//	set_iv(&ctx, iv, AES_TEST_KEY_SIZE);
-//
-//	printf("Encore buffer from TA\n");
-//	memset(clear, 0x5a, sizeof(clear)); /* Load some dummy value */
-//	cipher_buffer(&ctx, clear, ciph, AES_TEST_BUFFER_SIZE);
-//
-//	printf("Prepare decode operation\n");
-//	prepare_aes(&ctx, DECODE);
-//
-//	printf("Load key in TA\n");
-//	memset(key, 0xa5, sizeof(key)); /* Load some dummy value */
-//	set_key(&ctx, key, AES_TEST_KEY_SIZE);
-//
-//	printf("Reset ciphering operation in TA (provides the initial vector)\n");
-//	memset(iv, 0, sizeof(iv)); /* Load some dummy value */
-//	set_iv(&ctx, iv, AES_TEST_KEY_SIZE);
-//
-//	printf("Decode buffer from TA\n");
-//	memset(clear, 0x5a, sizeof(clear)); /* Load some dummy value */
-//	cipher_buffer(&ctx, ciph, temp, AES_TEST_BUFFER_SIZE);
-//
-//	/* Check decoded is the clear content */
-//	if (memcmp(clear, temp, AES_TEST_BUFFER_SIZE))
-//		printf("Clear text and decoded text differ => ERROR\n");
-//	else
-//		printf("Clear text and decoded text match\n");
+	printf("Reset ciphering operation in TA (provides the initial vector)\n");
+	memset(iv, 0, sizeof(iv)); /* Load some dummy value */
+	set_iv(&ctx, iv, AES_TEST_KEY_SIZE);
+
+	printf("Encode buffer from TA\n");
+	memset(clear, 0x5a, sizeof(clear)); /* Load some dummy value */
+  memset(ciph, 0x0, sizeof(clear)); /* Load some dummy value */
+	cipher_buffer(&ctx, clear, ciph, AES_TEST_BUFFER_SIZE);
+
+	printf("Prepare decode operation\n");
+	prepare_aes(&ctx, DECODE);
+
+	printf("Load key in TA\n");
+	memset(key, 0xa5, sizeof(key)); /* Load some dummy value */
+	set_key(&ctx, key, AES_TEST_KEY_SIZE);
+
+	printf("Reset ciphering operation in TA (provides the initial vector)\n");
+	memset(iv, 0, sizeof(iv)); /* Load some dummy value */
+	set_iv(&ctx, iv, AES_TEST_KEY_SIZE);
+
+	printf("Decode buffer from TA\n");
+	memset(clear, 0x5a, sizeof(clear)); /* Load some dummy value */
+	cipher_buffer(&ctx, ciph, temp, AES_TEST_BUFFER_SIZE);
+
+	/* Check decoded is the clear content */
+	if (memcmp(clear, temp, AES_TEST_BUFFER_SIZE))
+		printf("Clear text and decoded text differ => ERROR\n");
+	else
+		printf("Clear text and decoded text match\n");
 
 	terminate_tee_session(&ctx);
 

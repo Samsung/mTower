@@ -35,9 +35,20 @@ CHIP_ASRCS_S = ../../Device/Nuvoton/M2351/Source/GCC/startup_M2351.S
 
 CHIP_CSRCS_S = ../../Device/Nuvoton/M2351/Source/system_M2351.c \
                ../../Device/Nuvoton/M2351/Source/GCC/_syscalls.c \
+               ../../../../../../tee_internal/tee_api_operations.c \
+               ../../../../../../tee_internal/tee_api.c \
+               ../../../../../../tee_internal/tee_api_panic.c \
+               ../../../../../../tee_internal/tee_user_mem.c \
+               ../../../../../../tee_internal/tee_api_objects.c \
+               ../../../../../../tee_internal/tee/tee_svc_cryp.c \
+               ../../../../../../tee_internal/tee/tee_cryp_utl.c \
+               ../../../../../../tee_internal/tee/tee_svc.c \
+               ../../../../../../tee_internal/tee/tee_obj.c \
+               ../../../../../../tee_internal/tee/tee_pobj.c \
                main.c \
                tee_core.c \
                pseudo_ta.c \
+               user_ta.c \
                tee_ta_manager.c \
                trace.c \
                uuid.c

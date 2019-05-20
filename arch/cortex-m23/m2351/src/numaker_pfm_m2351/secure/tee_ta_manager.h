@@ -41,9 +41,9 @@
 
 
 /* Magic TEE identity pointer: set when teecore requests a TA close */
-//#define KERN_IDENTITY	((TEE_Identity *)-1)
-///* Operation is initiated by a client (non-secure) app */
-//#define NSAPP_IDENTITY	(NULL)
+#define KERN_IDENTITY	((TEE_Identity *)-1)
+/* Operation is initiated by a client (non-secure) app */
+#define NSAPP_IDENTITY	(NULL)
 
 TAILQ_HEAD(tee_ta_session_head, tee_ta_session);
 TAILQ_HEAD(tee_ta_ctx_head, tee_ta_ctx);
@@ -52,7 +52,8 @@ struct mobj;
 
 struct param_val {
 	uint32_t a;
-	uint32_t b;
+  uint32_t b;
+  uint32_t c;
 };
 struct param_mem {
 //	struct mobj *mobj;
@@ -76,9 +77,6 @@ struct pseudo_ta_ctx;
 struct tee_ta_ops {
 	TEE_Result (*enter_open_session)(struct tee_ta_session *s,
 			struct tee_ta_param *param, TEE_ErrorOrigin *eo);
-//  TEE_Result (*enter_invoke_cmd)(struct tee_ta_session *s, uint32_t cmd,
-//      uint32_t param_types, TEE_Param params[4]);
-
   TEE_Result (*enter_invoke_cmd)(struct tee_ta_session *s, uint32_t cmd,
       struct tee_ta_param *param, TEE_ErrorOrigin *eo);
 	void (*enter_close_session)(struct tee_ta_session *s);

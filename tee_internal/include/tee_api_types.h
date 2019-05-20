@@ -73,10 +73,12 @@ typedef union {
 	struct {
 		void *buffer;
 		uint32_t size;
+		uint32_t // ????
 	} memref;
 	struct {
 		uint32_t a;
-		uint32_t b;
+    uint32_t b;
+    uint32_t c;   //???
 	} value;
 } TEE_Param;
 

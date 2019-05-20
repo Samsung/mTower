@@ -175,11 +175,9 @@ static TEE_Result pseudo_ta_enter_open_session(struct tee_ta_session *s,
 	struct pseudo_ta_ctx *stc = to_pseudo_ta_ctx(s->ctx);
 	TEE_Param tee_param[TEE_NUM_PARAMS];
 	bool did_map[TEE_NUM_PARAMS] = { false };
-//
-//	tee_ta_push_current_session(s);
+
+	tee_ta_push_current_session(s);
 	*eo = TEE_ORIGIN_TRUSTED_APP;
-	printf("\n**** OPEN ******\n");
-//
 //	if ((s->ctx->ref_count == 1) && stc->pseudo_ta->create_entry_point) {
 //		res = stc->pseudo_ta->create_entry_point();
 //		if (res != TEE_SUCCESS)
@@ -202,7 +200,7 @@ static TEE_Result pseudo_ta_enter_open_session(struct tee_ta_session *s,
 	}
 
 out:
-//	tee_ta_pop_current_session();
+	tee_ta_pop_current_session();
 	return res;
 }
 
@@ -215,7 +213,7 @@ static TEE_Result pseudo_ta_enter_invoke_cmd(struct tee_ta_session *s,
 	TEE_Param tee_param[TEE_NUM_PARAMS];
 	bool did_map[TEE_NUM_PARAMS] = { false };
 
-//	tee_ta_push_current_session(s);
+	tee_ta_push_current_session(s);
 	res = copy_in_param(s, param, tee_param, did_map);
 	if (res != TEE_SUCCESS) {
 //		unmap_mapped_param(param, did_map);
@@ -230,7 +228,7 @@ static TEE_Result pseudo_ta_enter_invoke_cmd(struct tee_ta_session *s,
 	update_out_param(tee_param, param);
 //	unmap_mapped_param(param, did_map);
 out:
-//	tee_ta_pop_current_session();
+	tee_ta_pop_current_session();
 	return res;
 }
 
@@ -238,15 +236,15 @@ static void pseudo_ta_enter_close_session(struct tee_ta_session *s)
 {
 	struct pseudo_ta_ctx *stc = to_pseudo_ta_ctx(s->ctx);
 
-//	tee_ta_push_current_session(s);
-//
+	tee_ta_push_current_session(s);
+
 	if (stc->pseudo_ta->close_session_entry_point)
 		stc->pseudo_ta->close_session_entry_point(s->user_ctx);
 
 //	if ((s->ctx->ref_count == 1) && stc->pseudo_ta->destroy_entry_point)
 //		stc->pseudo_ta->destroy_entry_point();
 //
-//	tee_ta_pop_current_session();
+	tee_ta_pop_current_session();
 }
 
 static void pseudo_ta_destroy(struct tee_ta_ctx *ctx)
@@ -307,10 +305,7 @@ TEE_Result tee_ta_init_pseudo_ta_session(const TEE_UUID *uuid,
 	ta = &__start_ta_head_section;
 	while (true) {
 		if (ta >= &__stop_ta_head_section)
-		{
-		  DMSG("TEE_ERROR_ITEM_NOT_FOUND\n");
 			return TEE_ERROR_ITEM_NOT_FOUND;
-		}
 //    uuid_print(&ta->uuid);
 //    uuid_print(uuid);
 		if (memcmp(&ta->uuid, uuid, sizeof(TEE_UUID)) == 0)

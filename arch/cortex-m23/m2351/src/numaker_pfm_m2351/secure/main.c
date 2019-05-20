@@ -358,6 +358,8 @@ int main(void)
   /* Set GPIO Port C to non-secure for LED control */
   SCU_SET_IONSSET(SCU_IONSSET_PC_Msk);
 
+  tee_cryp_init();
+
   Boot_Init(NEXT_BOOT_BASE);
 
   do {

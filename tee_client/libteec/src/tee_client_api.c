@@ -222,15 +222,11 @@ static TEEC_Result teec_pre_process_tmpref(TEEC_Context *ctx,
 		return res;
 
 	memcpy(shm->buffer, tmpref->buffer, tmpref->size);
-  printf("\nkey is ");
-  for (int i = 0; i < tmpref->size; ++i) {
-    printf("%02x ",*(char *)(shm->buffer + i));
-  }
 
 	param->u.memref.size = tmpref->size;
 //  param->u.memref.shm_id = shm->id;
   param->u.memref.shm_offs = shm->buffer;
-  printf("\nu.memref.shm_offs = %p",param->u.memref.shm_offs );
+//  printf("\nu.memref.shm_offs = %p\n",param->u.memref.shm_offs );
 	return TEEC_SUCCESS;
 }
 

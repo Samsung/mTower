@@ -54,11 +54,22 @@ union ta_head_func_ptr {
 	} ptr32;
 };
 
-struct ta_head {
+struct user_ta_head {
 	TEE_UUID uuid;
-	uint32_t stack_size;
+  const char *name;
+//	uint32_t stack_size;
 	uint32_t flags;
-	union ta_head_func_ptr entry;
+  TEE_Result (*create_entry_point)(void);
+  void (*destroy_entry_point)(void);
+  TEE_Result (*open_session_entry_point)(uint32_t nParamTypes,
+      TEE_Param pParams[TEE_NUM_PARAMS],
+      void **ppSessionContext);
+  void (*close_session_entry_point)(void *pSessionContext);
+  TEE_Result (*invoke_command_entry_point)(void *pSessionContext,
+      uint32_t nCommandID, uint32_t nParamTypes,
+      TEE_Param pParams[TEE_NUM_PARAMS]);
+
+//	union ta_head_func_ptr entry;
 };
 
 #define TA_PROP_STR_SINGLE_INSTANCE	"gpd.ta.singleInstance"

@@ -29,7 +29,7 @@
 #define UTEE_DEFINES_H
 
 #include <compiler.h>
-#include <types_ext.h>
+//#include <types_ext.h>
 
 /*
  * Copied from TEE Internal API specificaion v1.0 table 6-9 "Structure of

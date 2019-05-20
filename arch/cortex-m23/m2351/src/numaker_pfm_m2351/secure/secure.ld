@@ -90,6 +90,10 @@ SECTIONS
 		KEEP(*(ta_head_section))
 		__stop_ta_head_section = . ;
 		. = ALIGN(4);
+		__start_user_ta_head_section = . ;
+		KEEP(*(user_ta_head_section))
+		__stop_user_ta_head_section = . ;
+		. = ALIGN(4);
 		__rodata_end = .;
 	} > FLASH
 

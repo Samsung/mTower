@@ -30,7 +30,8 @@
 //#include <tee_internal_api_extensions.h>
 #include <trace.h>
 #include <aes_ta.h>
-#include <pseudo_ta.h>
+#include <user_ta.h>
+#include <user_ta_header.h>
 
 
 #define AES128_KEY_BIT_SIZE		128
@@ -49,8 +50,8 @@ struct aes_cipher {
 	uint32_t algo;			/* AES flavour */
 	uint32_t mode;			/* Encode or decode */
 	uint32_t key_size;		/* AES key size in byte */
-//	TEE_OperationHandle op_handle;	/* AES ciphering operation */
-//	TEE_ObjectHandle key_handle;	/* transient object to load the key */
+	TEE_OperationHandle op_handle;	/* AES ciphering operation */
+	TEE_ObjectHandle key_handle;	/* transient object to load the key */
 };
 
 /*
@@ -118,10 +119,10 @@ static TEE_Result alloc_resources(void *session, uint32_t param_types,
 				TEE_PARAM_TYPE_VALUE_INPUT,
 				TEE_PARAM_TYPE_NONE);
 	struct aes_cipher *sess;
-//	TEE_Attribute attr;
+	TEE_Attribute attr;
 	TEE_Result res;
-//	char *key;
-//
+	char *key;
+
 	/* Get ciphering context from session ID */
 	DMSG("Session %p: get ciphering resources", session);
 	sess = (struct aes_cipher *)session;
@@ -142,82 +143,82 @@ static TEE_Result alloc_resources(void *session, uint32_t param_types,
 	if (res != TEE_SUCCESS)
 		return res;
 
-//	/*
-//	 * Ready to allocate the resources which are:
-//	 * - an operation handle, for an AES ciphering of given configuration
-//	 * - a transient object that will be use to load the key materials
-//	 *   into the AES ciphering operation.
-//	 */
-//
-//	/* Free potential previous operation */
-//	if (sess->op_handle != TEE_HANDLE_NULL)
-//		TEE_FreeOperation(sess->op_handle);
-//
-//	/* Allocate operation: AES/CTR, mode and size from params */
-//	res = TEE_AllocateOperation(&sess->op_handle,
-//				    sess->algo,
-//				    sess->mode,
-//				    sess->key_size * 8);
-//	if (res != TEE_SUCCESS) {
-//		EMSG("Failed to allocate operation");
-//		sess->op_handle = TEE_HANDLE_NULL;
-//		goto err;
-//	}
-//
-//	/* Free potential previous transient object */
-//	if (sess->key_handle != TEE_HANDLE_NULL)
-//		TEE_FreeTransientObject(sess->key_handle);
-//
-//	/* Allocate transient object according to target key size */
-//	res = TEE_AllocateTransientObject(TEE_TYPE_AES,
-//					  sess->key_size * 8,
-//					  &sess->key_handle);
-//	if (res != TEE_SUCCESS) {
-//		EMSG("Failed to allocate transient object");
-//		sess->key_handle = TEE_HANDLE_NULL;
-//		goto err;
-//	}
-//
-//	/*
-//	 * When loading a key in the cipher session, set_aes_key()
-//	 * will reset the operation and load a key. But we cannot
-//	 * reset and operation that has no key yet (GPD TEE Internal
-//	 * Core API Specification – Public Release v1.1.1, section
-//	 * 6.2.5 TEE_ResetOperation). In consequence, we will load a
-//	 * dummy key in the operation so that operation can be reset
-//	 * when updating the key.
-//	 */
-//	key = TEE_Malloc(sess->key_size, 0);
-//	if (!key) {
-//		res = TEE_ERROR_OUT_OF_MEMORY;
-//		goto err;
-//	}
-//
-//	TEE_InitRefAttribute(&attr, TEE_ATTR_SECRET_VALUE, key, sess->key_size);
-//
-//	res = TEE_PopulateTransientObject(sess->key_handle, &attr, 1);
-//	if (res != TEE_SUCCESS) {
-//		EMSG("TEE_PopulateTransientObject failed, %x", res);
-//		goto err;
-//	}
-//
-//	res = TEE_SetOperationKey(sess->op_handle, sess->key_handle);
-//	if (res != TEE_SUCCESS) {
-//		EMSG("TEE_SetOperationKey failed %x", res);
-//		goto err;
-//	}
-//
-//	return res;
-//
-//err:
-//	if (sess->op_handle != TEE_HANDLE_NULL)
-//		TEE_FreeOperation(sess->op_handle);
-//	sess->op_handle = TEE_HANDLE_NULL;
-//
-//	if (sess->key_handle != TEE_HANDLE_NULL)
-//		TEE_FreeTransientObject(sess->key_handle);
-//	sess->key_handle = TEE_HANDLE_NULL;
-//
+	/*
+	 * Ready to allocate the resources which are:
+	 * - an operation handle, for an AES ciphering of given configuration
+	 * - a transient object that will be use to load the key materials
+	 *   into the AES ciphering operation.
+	 */
+
+	/* Free potential previous operation */
+	if (sess->op_handle != TEE_HANDLE_NULL)
+		TEE_FreeOperation(sess->op_handle);
+
+	/* Allocate operation: AES/CTR, mode and size from params */
+	res = TEE_AllocateOperation(&sess->op_handle,
+				    sess->algo,
+				    sess->mode,
+				    sess->key_size * 8);
+	if (res != TEE_SUCCESS) {
+	  EMSG("Failed to allocate operation");
+		sess->op_handle = TEE_HANDLE_NULL;
+		goto err;
+	}
+
+	/* Free potential previous transient object */
+	if (sess->key_handle != TEE_HANDLE_NULL)
+		TEE_FreeTransientObject(sess->key_handle);
+
+	/* Allocate transient object according to target key size */
+	res = TEE_AllocateTransientObject(TEE_TYPE_AES,
+					  sess->key_size * 8,
+					  &sess->key_handle);
+	if (res != TEE_SUCCESS) {
+		EMSG("Failed to allocate transient object");
+		sess->key_handle = TEE_HANDLE_NULL;
+		goto err;
+	}
+
+	/*
+	 * When loading a key in the cipher session, set_aes_key()
+	 * will reset the operation and load a key. But we cannot
+	 * reset and operation that has no key yet (GPD TEE Internal
+	 * Core API Specification – Public Release v1.1.1, section
+	 * 6.2.5 TEE_ResetOperation). In consequence, we will load a
+	 * dummy key in the operation so that operation can be reset
+	 * when updating the key.
+	 */
+	key = TEE_Malloc(sess->key_size, 0);
+	if (!key) {
+		res = TEE_ERROR_OUT_OF_MEMORY;
+		goto err;
+	}
+
+	TEE_InitRefAttribute(&attr, TEE_ATTR_SECRET_VALUE, key, sess->key_size);
+
+	res = TEE_PopulateTransientObject(sess->key_handle, &attr, 1);
+  TEE_Free(key);
+  if (res != TEE_SUCCESS) {
+		EMSG("TEE_PopulateTransientObject failed, %x", res);
+		goto err;
+	}
+	res = TEE_SetOperationKey(sess->op_handle, sess->key_handle);
+	if (res != TEE_SUCCESS) {
+		EMSG("TEE_SetOperationKey failed %x", res);
+		goto err;
+	}
+
+	return res;
+
+err:
+	if (sess->op_handle != TEE_HANDLE_NULL)
+		TEE_FreeOperation(sess->op_handle);
+	sess->op_handle = TEE_HANDLE_NULL;
+
+	if (sess->key_handle != TEE_HANDLE_NULL)
+		TEE_FreeTransientObject(sess->key_handle);
+	sess->key_handle = TEE_HANDLE_NULL;
+
 	return res;
 }
 
@@ -233,8 +234,8 @@ static TEE_Result set_aes_key(void *session, uint32_t param_types,
 				TEE_PARAM_TYPE_NONE,
 				TEE_PARAM_TYPE_NONE);
 	struct aes_cipher *sess;
-//	TEE_Attribute attr;
-//	TEE_Result res;
+	TEE_Attribute attr;
+	TEE_Result res;
 	uint32_t key_sz;
 	char *key;
 
@@ -243,11 +244,14 @@ static TEE_Result set_aes_key(void *session, uint32_t param_types,
 	sess = (struct aes_cipher *)session;
 
 	/* Safely get the invocation parameters */
-	if (param_types != exp_param_types)
+	if (param_types != exp_param_types) {
+	  DMSG("param_types != exp_param_types");
 		return TEE_ERROR_BAD_PARAMETERS;
+	}
 
 	key = params[0].memref.buffer;
 	key_sz = params[0].memref.size;
+
 	if (key_sz != sess->key_size) {
 		EMSG("Wrong key size %" PRIu32 ", expect %" PRIu32 " bytes",
 		     key_sz, sess->key_size);
@@ -271,25 +275,23 @@ static TEE_Result set_aes_key(void *session, uint32_t param_types,
 	 * Thus, set_key sequence always reset then set key on operation.
 	 */
 
-//	TEE_InitRefAttribute(&attr, TEE_ATTR_SECRET_VALUE, key, key_sz);
-//
-//	TEE_ResetTransientObject(sess->key_handle);
-//	res = TEE_PopulateTransientObject(sess->key_handle, &attr, 1);
-//	if (res != TEE_SUCCESS) {
-//		EMSG("TEE_PopulateTransientObject failed, %x", res);
-//		return res;
-//	}
-//
-//	TEE_ResetOperation(sess->op_handle);
-//	res = TEE_SetOperationKey(sess->op_handle, sess->key_handle);
-//	if (res != TEE_SUCCESS) {
-//		EMSG("TEE_SetOperationKey failed %x", res);
-//		return res;
-//	}
+	TEE_InitRefAttribute(&attr, TEE_ATTR_SECRET_VALUE, key, key_sz);
 
-//	return res;
+	TEE_ResetTransientObject(sess->key_handle);
+	res = TEE_PopulateTransientObject(sess->key_handle, &attr, 1);
+	if (res != TEE_SUCCESS) {
+		EMSG("TEE_PopulateTransientObject failed, %x", res);
+		return res;
+	}
 
-	return TEE_SUCCESS;
+	TEE_ResetOperation(sess->op_handle);
+	res = TEE_SetOperationKey(sess->op_handle, sess->key_handle);
+	if (res != TEE_SUCCESS) {
+		EMSG("TEE_SetOperationKey failed %x", res);
+		return res;
+	}
+
+	return res;
 }
 
 /*
@@ -303,25 +305,25 @@ static TEE_Result reset_aes_iv(void *session, uint32_t param_types,
 				TEE_PARAM_TYPE_NONE,
 				TEE_PARAM_TYPE_NONE,
 				TEE_PARAM_TYPE_NONE);
-//	struct aes_cipher *sess;
-//	size_t iv_sz;
-//	char *iv;
-//
+	struct aes_cipher *sess;
+	size_t iv_sz;
+	char *iv;
+
 	/* Get ciphering context from session ID */
 	DMSG("Session %p: reset initial vector", session);
-//	sess = (struct aes_cipher *)session;
-//
-//	/* Safely get the invocation parameters */
-//	if (param_types != exp_param_types)
-//		return TEE_ERROR_BAD_PARAMETERS;
-//
-//	iv = params[0].memref.buffer;
-//	iv_sz = params[0].memref.size;
-//
-//	/*
-//	 * Init cipher operation with the initialization vector.
-//	 */
-//	TEE_CipherInit(sess->op_handle, iv, iv_sz);
+	sess = (struct aes_cipher *)session;
+
+	/* Safely get the invocation parameters */
+	if (param_types != exp_param_types)
+		return TEE_ERROR_BAD_PARAMETERS;
+
+	iv = params[0].memref.buffer;
+	iv_sz = params[0].memref.size;
+
+	/*
+	 * Init cipher operation with the initialization vector.
+	 */
+	TEE_CipherInit(sess->op_handle, iv, iv_sz);
 
 	return TEE_SUCCESS;
 }
@@ -337,32 +339,31 @@ static TEE_Result cipher_buffer(void *session, uint32_t param_types,
 				TEE_PARAM_TYPE_MEMREF_OUTPUT,
 				TEE_PARAM_TYPE_NONE,
 				TEE_PARAM_TYPE_NONE);
-//	struct aes_cipher *sess;
+	struct aes_cipher *sess;
 
 	/* Get ciphering context from session ID */
 	DMSG("Session %p: cipher buffer", session);
-//	sess = (struct aes_cipher *)session;
-//
-//	/* Safely get the invocation parameters */
-//	if (param_types != exp_param_types)
-//		return TEE_ERROR_BAD_PARAMETERS;
-//
-//	if (params[1].memref.size < params[0].memref.size) {
-//		EMSG("Bad sizes: in %d, out %d", params[0].memref.size,
-//						 params[1].memref.size);
-//		return TEE_ERROR_BAD_PARAMETERS;
-//	}
-//
-//	if (sess->op_handle == TEE_HANDLE_NULL)
-//		return TEE_ERROR_BAD_STATE;
-//
-//	/*
-//	 * Process ciphering operation on provided buffers
-//	 */
-//	return TEE_CipherUpdate(sess->op_handle,
-//				params[0].memref.buffer, params[0].memref.size,
-//				params[1].memref.buffer, &params[1].memref.size);
-  return TEE_SUCCESS; // ?????
+	sess = (struct aes_cipher *)session;
+
+	/* Safely get the invocation parameters */
+	if (param_types != exp_param_types)
+		return TEE_ERROR_BAD_PARAMETERS;
+
+	if (params[1].memref.size < params[0].memref.size) {
+		EMSG("Bad sizes: in %d, out %d", params[0].memref.size,
+						 params[1].memref.size);
+		return TEE_ERROR_BAD_PARAMETERS;
+	}
+
+	if (sess->op_handle == TEE_HANDLE_NULL)
+		return TEE_ERROR_BAD_STATE;
+
+	/*
+	 * Process ciphering operation on provided buffers
+	 */
+	return TEE_CipherUpdate(sess->op_handle,
+				params[0].memref.buffer, params[0].memref.size,
+				params[1].memref.buffer, &params[1].memref.size);
 }
 
 TEE_Result AES_TA_CreateEntryPoint(void)
@@ -387,13 +388,12 @@ TEE_Result AES_TA_OpenSessionEntryPoint(uint32_t __unused param_types,
 	 * The address of the structure is used as session ID for
 	 * the client.
 	 */
-    sess = malloc(sizeof(*sess));
-  //  sess = TEE_Malloc(sizeof(*sess), 0);
+    sess = TEE_Malloc(sizeof(*sess), 0);
 	if (!sess)
 		return TEE_ERROR_OUT_OF_MEMORY;
 
-//	sess->key_handle = TEE_HANDLE_NULL;
-//	sess->op_handle = TEE_HANDLE_NULL;
+	sess->key_handle = TEE_HANDLE_NULL;
+	sess->op_handle = TEE_HANDLE_NULL;
 
 	*session = (void *)sess;
 	DMSG("Session %p: newly allocated", *session);
@@ -410,12 +410,11 @@ void AES_TA_CloseSessionEntryPoint(void *session)
 	sess = (struct aes_cipher *)session;
 
 	/* Release the session resources */
-//	if (sess->key_handle != TEE_HANDLE_NULL)
-//		TEE_FreeTransientObject(sess->key_handle);
-//	if (sess->op_handle != TEE_HANDLE_NULL)
-//		TEE_FreeOperation(sess->op_handle);
-//  TEE_Free(sess);
-  free(sess);
+	if (sess->key_handle != TEE_HANDLE_NULL)
+		TEE_FreeTransientObject(sess->key_handle);
+	if (sess->op_handle != TEE_HANDLE_NULL)
+		TEE_FreeOperation(sess->op_handle);
+  TEE_Free(sess);
 }
 
 TEE_Result AES_TA_InvokeCommandEntryPoint(void *session,
@@ -438,8 +437,8 @@ TEE_Result AES_TA_InvokeCommandEntryPoint(void *session,
 	}
 }
 
-pseudo_ta_register(.uuid = TA_AES_UUID, .name = "AES",
-       .flags = PTA_DEFAULT_FLAGS | TA_FLAG_CONCURRENT,
+user_ta_register(.uuid = TA_AES_UUID, .name = "AES",
+       .flags = TA_FLAG_USER_MODE,
        .open_session_entry_point = AES_TA_OpenSessionEntryPoint,
        .close_session_entry_point = AES_TA_CloseSessionEntryPoint,
        .invoke_command_entry_point = AES_TA_InvokeCommandEntryPoint);
