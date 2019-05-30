@@ -23,7 +23,7 @@
 #include <tee_internal_api.h>
 #include <trace.h>
 #include <template_ta.h>
-#include <pseudo_ta.h>
+#include <kernel/pseudo_ta.h>
 
 /* Pre-processor Definitions. */
 /* All C pre-processor macros are defined here. */

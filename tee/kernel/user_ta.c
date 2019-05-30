@@ -31,12 +31,9 @@
 #include <compiler.h>
 //#include <keep.h>
 //#include <kernel/panic.h>
-//#include <kernel/tee_ta_manager.h>
-//#include <panic.h>
-#include <tee_ta_manager.h>
+#include <kernel/tee_ta_manager.h>
 //#include <kernel/thread.h>
-#include <user_ta.h>
-//#include <kernel/user_ta.h>
+#include <kernel/user_ta.h>
 //#include <mm/core_memprot.h>
 //#include <mm/core_mmu.h>
 //#include <mm/mobj.h>
@@ -47,15 +44,14 @@
 //#include <optee_msg_supplicant.h>
 //#include <signed_hdr.h>
 #include <stdlib.h>
-//#include <sys/queue.h>
-#include <queue.h>
+#include <sys/queue.h>
 //#include <ta_pub_key.h>
 //#include <tee/tee_cryp_utl.h>
 #include <tee/tee_obj.h>
 #include <tee/tee_svc_cryp.h>
 #include <tee/tee_svc.h>
 //#include <tee/tee_svc_storage.h>
-//#include <tee/uuid.h>
+#include <tee/uuid.h>
 #include <trace.h>
 #include <types_ext.h>
 #include <utee_defines.h>
@@ -424,7 +420,7 @@ static TEE_Result user_ta_enter(TEE_ErrorOrigin *err,
 	TEE_ErrorOrigin serr = TEE_ORIGIN_TEE;
 	struct tee_ta_session *s __maybe_unused;
 	void *param_va[TEE_NUM_PARAMS] = { NULL };
-//
+
 //	if (!(utc->ctx.flags & TA_FLAG_EXEC_DDR))
 //		panic("TA does not exec in DDR");
 //
@@ -432,7 +428,7 @@ static TEE_Result user_ta_enter(TEE_ErrorOrigin *err,
 //	res = tee_mmu_map_param(utc, param, param_va);
 //	if (res != TEE_SUCCESS)
 //		goto cleanup_return;
-//
+
 	/* Switch to user ctx */
 	tee_ta_push_current_session(session);
 
@@ -442,7 +438,7 @@ static TEE_Result user_ta_enter(TEE_ErrorOrigin *err,
 //	usr_stack -= ROUNDUP(sizeof(struct utee_params), STACK_ALIGNMENT);
 //	usr_params = (struct utee_params *)usr_stack;
 	init_utee_param(usr_params, param, param_va);
-//
+
 //	res = thread_enter_user_mode(func, tee_svc_kaddr_to_uref(session),
 //				     (vaddr_t)usr_params, cmd, usr_stack,
 //				     utc->entry_func, utc->is_32bit,
@@ -682,7 +678,7 @@ static void user_ta_dump_state(struct tee_ta_ctx *ctx)
 //	}
 }
 //KEEP_PAGER(user_ta_dump_state);
-//
+
 static void user_ta_ctx_destroy(struct tee_ta_ctx *ctx)
 {
 	struct user_ta_ctx *utc = to_user_ta_ctx(ctx);
@@ -714,21 +710,21 @@ static void user_ta_ctx_destroy(struct tee_ta_ctx *ctx)
 //			}
 //		}
 //	}
-//
-//	/*
-//	 * Close sessions opened by this TA
-//	 * Note that tee_ta_close_session() removes the item
-//	 * from the utc->open_sessions list.
-//	 */
+
+	/*
+	 * Close sessions opened by this TA
+	 * Note that tee_ta_close_session() removes the item
+	 * from the utc->open_sessions list.
+	 */
 	while (!TAILQ_EMPTY(&utc->open_sessions)) {
 		tee_ta_close_session(TAILQ_FIRST(&utc->open_sessions),
 				     &utc->open_sessions, KERN_IDENTITY);
 	}
-//
+
 //	tee_mmu_final(utc);
 //	mobj_free(utc->mobj_code);
 //	mobj_free(utc->mobj_stack);
-//
+
 	/* Free cryp states created by this TA */
 	tee_svc_cryp_free_states(utc);
 	/* Close cryp objects opened by this TA */
@@ -855,4 +851,3 @@ TEE_Result tee_ta_init_user_ta_session(const TEE_UUID *uuid,
 error_return:
 	return res;
 }
-

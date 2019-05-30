@@ -36,7 +36,7 @@
 #include <trace.h>
 //#include <tee/tee_svc_storage.h>
 #include <tee/tee_svc_cryp.h>
-#include <user_ta.h>
+#include <kernel/user_ta.h>
 
 void tee_obj_add(struct user_ta_ctx *utc, struct tee_obj *o)
 {
@@ -99,7 +99,7 @@ TEE_Result tee_obj_verify(struct tee_ta_session *sess, struct tee_obj *o)
 
 struct tee_obj *tee_obj_alloc(void)
 {
-  return calloc(1, sizeof(struct tee_obj));
+	return calloc(1, sizeof(struct tee_obj));
 }
 
 void tee_obj_free(struct tee_obj *o)

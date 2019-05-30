@@ -25,9 +25,11 @@ CFLAGS += -I.
 CFLAGS += -I./libtomcrypt/include
 CFLAGS += -I$(TOPDIR)/tee_client/public
 CFLAGS += -I$(TOPDIR)/tee_client/libteec/include/freertos
-CFLAGS += -I$(TOPDIR)/tee_internal/include
+CFLAGS += -I$(TOPDIR)/tee/lib/libutee/include
 CFLAGS += -I$(TOPDIR)/arch/cortex-m23/m2351/src/numaker_pfm_m2351/secure
 
+CFLAGS += -I$(TOPDIR)/tee/lib/libutils/ext/include
+CFLAGS += -I$(TOPDIR)/tee/include
 
 ifeq ($(WORLD), secure)
 CFLAGS += -mcmse

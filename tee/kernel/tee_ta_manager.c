@@ -37,8 +37,8 @@
 //#include <kernel/panic.h>
 //#include <kernel/pseudo_ta.h>
 //#include <kernel/tee_common.h>
-//#include <kernel/tee_misc.h>
-#include <tee_ta_manager.h>
+//#include nkernel/tee_misc.h>
+#include <kernel/tee_ta_manager.h>
 //#include <kernel/tee_time.h>
 //#include <kernel/thread.h>
 //#include <kernel/user_ta.h>

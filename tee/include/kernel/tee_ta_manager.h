@@ -31,7 +31,7 @@
 #define TEE_TA_MANAGER_H
 
 //#include <types_ext.h>
-#include "queue.h"
+#include <sys/queue.h>
 #include <tee_api_types.h>
 //#include <utee_types.h>
 //#include <kernel/tee_common.h>

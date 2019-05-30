@@ -29,7 +29,7 @@
 //#include <tee_internal_api_extensions.h>
 #include <trace.h>
 #include <hello_world_ta.h>
-#include <pseudo_ta.h>
+#include <kernel/pseudo_ta.h>
 
 
 /*

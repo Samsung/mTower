@@ -29,7 +29,10 @@ CFLAGS += -I../../StdDriver/inc
 CFLAGS += -I../../Device/Nuvoton/M2351/Include
 CFLAGS += -I$(TOPDIR)/tee_client/public
 CFLAGS += -I$(TOPDIR)/tee_client/libteec/include/freertos
-CFLAGS += -I$(TOPDIR)/tee_internal/include
+CFLAGS += -I$(TOPDIR)/tee/lib/libutee/include
+
+CFLAGS += -I$(TOPDIR)/tee/lib/libutils/ext/include
+CFLAGS += -I$(TOPDIR)/tee/include
 
 ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
 CFLAGS += -I$(TOPDIR)/apps/hello_world

@@ -127,7 +127,7 @@ TEE_Result tee_pobj_get(TEE_UUID *uuid, void *obj_id, uint32_t obj_id_len,
 
 	o->obj_id = malloc(obj_id_len);
 	if (o->obj_id == NULL) {
-	  free(o);
+		free(o);
 		res = TEE_ERROR_OUT_OF_MEMORY;
 		goto out;
 	}

@@ -28,8 +28,7 @@
 
 #include <assert.h>
 #include <crypto/crypto.h>
-#include <tee_ta_manager.h>
-//#include <kernel/tee_ta_manager.h>
+#include <kernel/tee_ta_manager.h>
 //#include <mm/tee_mmu.h>
 //#include <string_ext.h>
 #include <string.h>
@@ -42,7 +41,7 @@
 #include <trace.h>
 #include <utee_defines.h>
 #include <util.h>
-#include <user_ta.h>
+#include <kernel/user_ta.h>
 
 #if defined(CFG_CRYPTO_HKDF) || defined(CFG_CRYPTO_CONCAT_KDF) || \
 	defined(CFG_CRYPTO_PBKDF2)
@@ -105,8 +104,6 @@ struct tee_cryp_obj_type_attrs {
 
 #define RAW_DATA(_x, _y)	\
 	.raw_offs = offsetof(_x, _y), .raw_size = MEMBER_SIZE(_x, _y)
-
-
 
 static const struct tee_cryp_obj_type_attrs
 	tee_cryp_obj_secret_value_attrs[] = {
@@ -874,7 +871,7 @@ TEE_Result utee_cryp_obj_get_info(unsigned long obj, TEE_ObjectInfo *info)
 exit:
 	return res;
 }
-//
+
 //TEE_Result syscall_cryp_obj_restrict_usage(unsigned long obj,
 //			unsigned long usage)
 //{
@@ -896,7 +893,7 @@ exit:
 //exit:
 //	return res;
 //}
-//
+
 static int tee_svc_cryp_obj_find_type_attr_idx(
 		uint32_t attr_id,
 		const struct tee_cryp_obj_type_props *type_props)
@@ -1276,7 +1273,6 @@ TEE_Result utee_cryp_obj_alloc(unsigned long obj_type,
 	res = tee_svc_copy_kaddr_to_uref(obj, o);
 	if (res != TEE_SUCCESS)
 		tee_obj_close(to_user_ta_ctx(sess->ctx), o);
-
 	return res;
 }
 
@@ -1839,7 +1835,7 @@ TEE_Result utee_cryp_obj_copy(unsigned long dst, unsigned long src)
 //	}
 //	return res;
 //}
-//
+
 static TEE_Result tee_svc_cryp_get_state(struct tee_ta_session *sess,
 					 uint32_t state_id,
 					 struct tee_cryp_state **state)
@@ -1885,6 +1881,7 @@ static void cryp_state_free(struct user_ta_ctx *utc, struct tee_cryp_state *cs)
 	default:
 		assert(!cs->ctx);
 	}
+
 	free(cs);
 }
 
@@ -2009,7 +2006,6 @@ TEE_Result utee_cryp_state_alloc(unsigned long algo, unsigned long mode,
 	cs = calloc(1, sizeof(struct tee_cryp_state));
 	if (!cs)
 		return TEE_ERROR_OUT_OF_MEMORY;
-
 	TAILQ_INSERT_TAIL(&utc->cryp_states, cs, link);
 	cs->algo = algo;
 	cs->mode = mode;
@@ -2021,7 +2017,6 @@ TEE_Result utee_cryp_state_alloc(unsigned long algo, unsigned long mode,
 			res = TEE_ERROR_BAD_PARAMETERS;
 		} else {
 			res = crypto_cipher_alloc_ctx(&cs->ctx, algo);
-
 			if (res != TEE_SUCCESS)
 				break;
 		}
@@ -2347,7 +2342,7 @@ TEE_Result utee_hash_init(unsigned long state,
 //		return res2;
 //	return res;
 //}
-//
+
 TEE_Result utee_cipher_init(unsigned long state, const void *iv,
 			size_t iv_len)
 {
@@ -2427,7 +2422,7 @@ static TEE_Result tee_svc_cipher_update_helper(unsigned long state,
 //					  (uaddr_t)src, src_len);
 //	if (res != TEE_SUCCESS)
 //		return res;
-//
+
 	if (!dst_len) {
 		dlen = 0;
 	} else {

@@ -30,7 +30,7 @@
 #include "tee_client_api.h"
 #include "tee.h"
 
-#include <tee_ta_manager.h>
+#include <kernel/tee_ta_manager.h>
 
 /* Pre-processor Definitions. */
 

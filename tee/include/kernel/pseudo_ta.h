@@ -7,7 +7,7 @@
 
 #include <assert.h>
 #include <compiler.h>
-#include <tee_ta_manager.h>
+#include <kernel/tee_ta_manager.h>
 #include <tee_api_types.h>
 #include <user_ta_header.h>
 //#include <util.h>

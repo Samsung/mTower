@@ -30,8 +30,7 @@
 #define TEE_OBJ_H
 
 #include <tee_api_types.h>
-//#include <kernel/tee_ta_manager.h>
-#include <tee_ta_manager.h>
+#include <kernel/tee_ta_manager.h>
 #include <sys/queue.h>
 
 #define TEE_USAGE_DEFAULT   0xffffffff

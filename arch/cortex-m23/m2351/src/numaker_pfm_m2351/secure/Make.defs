@@ -27,7 +27,22 @@ HEAD_ASRC =
 
 CMN_ASRCS = 
 
-CMN_CSRCS = 
+CMN_CSRCS =    $(TOPDIR)/tee/lib/libutee/tee_api_operations.c \
+               $(TOPDIR)/tee/lib/libutee/tee_api.c \
+               $(TOPDIR)/tee/lib/libutee/tee_api_panic.c \
+               $(TOPDIR)/tee/lib/libutee/tee_user_mem.c \
+               $(TOPDIR)/tee/lib/libutee/tee_api_objects.c \
+               $(TOPDIR)/tee/lib/libutils/ext/trace.c \
+               $(TOPDIR)/tee/tee/tee_svc_cryp.c \
+               $(TOPDIR)/tee/tee/tee_cryp_utl.c \
+               $(TOPDIR)/tee/tee/tee_svc.c \
+               $(TOPDIR)/tee/tee/tee_obj.c \
+               $(TOPDIR)/tee/tee/tee_pobj.c \
+               $(TOPDIR)/tee/tee/uuid.c \
+               $(TOPDIR)/tee/kernel/entry_std.c \
+               $(TOPDIR)/tee/kernel/pseudo_ta.c \
+               $(TOPDIR)/tee/kernel/user_ta.c \
+               $(TOPDIR)/tee/kernel/tee_ta_manager.c
 
 # Required CHIP files
 
@@ -35,33 +50,17 @@ CHIP_ASRCS_S = ../../Device/Nuvoton/M2351/Source/GCC/startup_M2351.S
 
 CHIP_CSRCS_S = ../../Device/Nuvoton/M2351/Source/system_M2351.c \
                ../../Device/Nuvoton/M2351/Source/GCC/_syscalls.c \
-               ../../../../../../tee_internal/tee_api_operations.c \
-               ../../../../../../tee_internal/tee_api.c \
-               ../../../../../../tee_internal/tee_api_panic.c \
-               ../../../../../../tee_internal/tee_user_mem.c \
-               ../../../../../../tee_internal/tee_api_objects.c \
-               ../../../../../../tee_internal/tee/tee_svc_cryp.c \
-               ../../../../../../tee_internal/tee/tee_cryp_utl.c \
-               ../../../../../../tee_internal/tee/tee_svc.c \
-               ../../../../../../tee_internal/tee/tee_obj.c \
-               ../../../../../../tee_internal/tee/tee_pobj.c \
-               main.c \
-               tee_core.c \
-               pseudo_ta.c \
-               user_ta.c \
-               tee_ta_manager.c \
-               trace.c \
-               uuid.c
+               main.c
 
 ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
-CHIP_CSRCS_S += ../../../../../../apps/hello_world/ta/hello_world_ta.c
+CHIP_CSRCS_S += $(TOPDIR)/apps/hello_world/ta/hello_world_ta.c
 endif
 
 ifeq ($(CONFIG_APPS_AES),y)
-CHIP_CSRCS_S += ../../../../../../apps/aes/ta/aes_ta.c
+CHIP_CSRCS_S += $(TOPDIR)/apps/aes/ta/aes_ta.c
 endif
 
 ifeq ($(CONFIG_APPS_TEMPLATE),y)
-CHIP_CSRCS_S += ../../../../../../apps/template/ta/template_ta.c
+CHIP_CSRCS_S += $(TOPDIR)/apps/template/ta/template_ta.c
 endif
 

@@ -30,7 +30,7 @@
 //#include <tee_internal_api_extensions.h>
 #include <trace.h>
 #include <aes_ta.h>
-#include <user_ta.h>
+#include <kernel/user_ta.h>
 #include <user_ta_header.h>
 
 

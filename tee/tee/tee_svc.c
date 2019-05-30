@@ -29,8 +29,7 @@
 //#include <kernel/tee_common_otp.h>
 //#include <kernel/tee_common.h>
 #include <tee_api_types.h>
-#include <tee_ta_manager.h>
-//#include <kernel/tee_ta_manager.h>
+#include <kernel/tee_ta_manager.h>
 #include <utee_types.h>
 #include <tee/tee_svc.h>
 #include <tee/tee_cryp_utl.h>
@@ -965,7 +964,7 @@ TEE_Result tee_svc_copy_to_user(void *uaddr, const void *kaddr, size_t len)
 	memcpy(uaddr, kaddr, len);
 	return TEE_SUCCESS;
 }
-//
+
 TEE_Result tee_svc_copy_kaddr_to_uref(uint32_t *uref, void *kaddr)
 {
 	uint32_t ref = tee_svc_kaddr_to_uref(kaddr);

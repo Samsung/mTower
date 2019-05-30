@@ -6,8 +6,7 @@
 #define KERNEL_USER_TA_H
 
 #include <assert.h>
-//#include <kernel/tee_ta_manager.h>
-#include <tee_ta_manager.h>
+#include <kernel/tee_ta_manager.h>
 #include <user_ta_header.h>
 //#include <kernel/thread.h>
 //#include <mm/tee_mm.h>

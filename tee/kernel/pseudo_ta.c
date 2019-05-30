@@ -29,8 +29,8 @@
 //#include <initcall.h>
 //#include <kernel/linker.h>
 //#include <kernel/panic.h>
-#include <pseudo_ta.h>
-#include <tee_ta_manager.h>
+#include <kernel/pseudo_ta.h>
+#include <kernel/tee_ta_manager.h>
 //#include <mm/core_memprot.h>
 //#include <mm/mobj.h>
 //#include <sm/tee_mon.h>

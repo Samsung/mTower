@@ -4,8 +4,8 @@
  */
 
 #include <string.h>
-#include <uuid.h>
-//#include <util.h>
+#include <tee/uuid.h>
+#include <util.h>
 
 void tee_uuid_to_octets(uint8_t *d, const TEE_UUID *s)
 {
@@ -19,8 +19,6 @@ void tee_uuid_to_octets(uint8_t *d, const TEE_UUID *s)
 	d[7] = s->timeHiAndVersion;
 	memcpy(d + 8, s->clockSeqAndNode, sizeof(s->clockSeqAndNode));
 }
-
-#define SHIFT_U32(v, shift) ((uint32_t)(v) << (shift))
 
 void tee_uuid_from_octets(TEE_UUID *d, const uint8_t *s)
 {
