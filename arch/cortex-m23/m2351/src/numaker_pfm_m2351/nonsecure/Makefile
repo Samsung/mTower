@@ -44,6 +44,10 @@ ifeq ($(CONFIG_APPS_TEMPLATE),y)
 CFLAGS += -I$(TOPDIR)/apps/template
 endif
 
+ifeq ($(CONFIG_APPS_HOTP),y)
+CFLAGS += -I$(TOPDIR)/apps/hotp
+endif
+
 CFLAGS += -DDEBUG_PORT=UART1_NS
 
 OBJDIR = $(TOPDIR)/build/nonsecure$(subst $(TOPDIR),,$(shell pwd))

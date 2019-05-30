@@ -60,7 +60,29 @@ SRCS += libtomcrypt/src/modes/ecb/ecb_done.c
 SRCS += libtomcrypt/src/modes/ecb/ecb_encrypt.c
 SRCS += libtomcrypt/src/modes/ecb/ecb_start.c
 
+SRCS += libtomcrypt/src/misc/crypt/crypt_hash_descriptor.c
+SRCS += libtomcrypt/src/misc/crypt/crypt_hash_is_valid.c
+SRCS += libtomcrypt/src/misc/crypt/crypt_find_hash_any.c
+SRCS += libtomcrypt/src/misc/crypt/crypt_find_hash.c
+SRCS += libtomcrypt/src/misc/crypt/crypt_find_hash_id.c
+SRCS += libtomcrypt/src/misc/crypt/crypt_find_hash_oid.c
+SRCS += libtomcrypt/src/misc/crypt/crypt_register_hash.c
+SRCS += libtomcrypt/src/misc/crypt/crypt_unregister_hash.c
+
+SRCS += libtomcrypt/src/mac/hmac/hmac_init.c
+SRCS += libtomcrypt/src/mac/hmac/hmac_process.c
+SRCS += libtomcrypt/src/mac/hmac/hmac_done.c
+#SRCS += libtomcrypt/src/mac/hmac/hmac_memory.c
+
+SRCS += libtomcrypt/src/hashes/sha1.c
+SRCS += libtomcrypt/src/hashes/helper/hash_memory.c
+SRCS += libtomcrypt/src/misc/zeromem.c
+
 CFLAGS += -DLTC_RIJNDAEL -D_CFG_CRYPTO_WITH_CIPHER -DCFG_CRYPTO_CTR -DLTC_CTR_MODE -DLTC_ECB_MODE -DCFG_CRYPTO_AES
+
+CFLAGS += -D_CFG_CRYPTO_WITH_HASH -DCFG_CRYPTO_SHA1 -DCFG_CRYPTO_HMAC
+
+CFLAGS += -D_CFG_CRYPTO_WITH_MAC -DLTC_HMAC
 
 ifneq ($(WORLD), secure)
 CFLAGS += -DDEBUG_PORT=UART1_NS

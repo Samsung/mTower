@@ -3,17 +3,13 @@
 # see the file kconfig-language.txt in the docs folder of mTower repository.
 #
 
+comment "Pseudo TAs:"
+
 config APPS_HELLO_WORLD
 	bool "Hello world example"
 	default y
 	---help---
 		"Hello world example."
-
-config APPS_AES
-	bool "AES example"
-	default y
-	---help---
-		"AES example."
 
 config APPS_TEMPLATE
 	bool "Template example"
@@ -21,3 +17,17 @@ config APPS_TEMPLATE
 	---help---
 		"Template example."
 
+comment "User TAs:"
+
+config APPS_AES
+	bool "AES example"
+	default y
+	---help---
+		"AES example."
+
+config APPS_HOTP
+	bool "HOTP example"
+	default y
+	---help---
+		"HOTP example. HMAC based One Time Passwords or shortly just 'HOTP' has
+		been around for many years and was initially defined in [RFC4226]."

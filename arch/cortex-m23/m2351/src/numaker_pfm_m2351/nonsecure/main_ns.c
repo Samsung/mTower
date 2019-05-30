@@ -71,6 +71,7 @@ static void testTask3( void *pvParameters );
 static void teeTest( void *pvParameters );
 static void teeTest2( void *pvParameters );
 static void teeTest3( void *pvParameters );
+static void teeTest4( void *pvParameters );
 
 /* Private Data. */
 /* All static data definitions appear here. */
@@ -85,6 +86,7 @@ static void teeTest3( void *pvParameters );
 extern void SystemCoreClockUpdate( void );
 extern int tee_hello_world(void);
 extern int tee_aes(void);
+extern int tee_hotp(void);
 
 /* NonSecure Callable Functions from Secure Region */
 extern int32_t Secure_func(void);
@@ -380,6 +382,31 @@ static void teeTest2( void *pvParameters )
 }
 #endif
 
+#ifdef CONFIG_APPS_HOTP
+/**
+ * @brief         teeTest4 - .
+ *
+ * @param         None
+ *
+ * @returns       None
+ */
+static void teeTest4( void *pvParameters )
+{
+  const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
+
+  (void)pvParameters;
+
+  do {
+    printf(RED "TEE test: HOTP\n");
+    portDISABLE_INTERRUPTS();
+    tee_hotp();
+    printf(NORMAL);
+    portENABLE_INTERRUPTS();
+    vTaskDelay( xDelay );
+  } while (1);
+}
+#endif // CONFIG_APPS_HOTP
+
 /* Public Functions. */
 /**
  * @brief         vApplicationMallocFailedHook - vApplicationMallocFailedHook()
@@ -526,6 +553,15 @@ int main( void )
       NULL );
 #endif
 
+#ifdef CONFIG_APPS_TEMPLATE
+  xTaskCreate( teeTest2,       /* The function that implements the task. */
+      "tee_test2",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+      256,                    /* The size of the stack to allocate to the task. */
+      ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
+      tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
+      NULL );
+#endif
+
 #ifdef CONFIG_APPS_AES
   xTaskCreate( teeTest3,       /* The function that implements the task. */
       "tee_test3",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
@@ -535,9 +571,9 @@ int main( void )
       NULL );
 #endif
 
-#ifdef CONFIG_APPS_TEMPLATE
-  xTaskCreate( teeTest2,       /* The function that implements the task. */
-      "tee_test2",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+#ifdef CONFIG_APPS_HOTP
+  xTaskCreate( teeTest4,       /* The function that implements the task. */
+      "tee_test4",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
       256,                    /* The size of the stack to allocate to the task. */
       ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
       tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */

@@ -167,29 +167,29 @@ static void tee_ltc_reg_algs(void)
 #if defined(CFG_CRYPTO_AES)
 	register_cipher(&aes_desc);
 #endif
-//#if defined(CFG_CRYPTO_DES)
-//	register_cipher(&des_desc);
-//	register_cipher(&des3_desc);
-//#endif
-//#if defined(CFG_CRYPTO_MD5)
-//	register_hash(&md5_desc);
-//#endif
-//#if defined(CFG_CRYPTO_SHA1)
-//	register_hash(&sha1_desc);
-//#endif
-//#if defined(CFG_CRYPTO_SHA224)
-//	register_hash(&sha224_desc);
-//#endif
-//#if defined(CFG_CRYPTO_SHA256)
-//	register_hash(&sha256_desc);
-//#endif
-//#if defined(CFG_CRYPTO_SHA384)
-//	register_hash(&sha384_desc);
-//#endif
-//#if defined(CFG_CRYPTO_SHA512)
-//	register_hash(&sha512_desc);
-//#endif
-//
+#if defined(CFG_CRYPTO_DES)
+	register_cipher(&des_desc);
+	register_cipher(&des3_desc);
+#endif
+#if defined(CFG_CRYPTO_MD5)
+	register_hash(&md5_desc);
+#endif
+#if defined(CFG_CRYPTO_SHA1)
+	register_hash(&sha1_desc);
+#endif
+#if defined(CFG_CRYPTO_SHA224)
+	register_hash(&sha224_desc);
+#endif
+#if defined(CFG_CRYPTO_SHA256)
+	register_hash(&sha256_desc);
+#endif
+#if defined(CFG_CRYPTO_SHA384)
+	register_hash(&sha384_desc);
+#endif
+#if defined(CFG_CRYPTO_SHA512)
+	register_hash(&sha512_desc);
+#endif
+
 //#if defined(CFG_WITH_SOFTWARE_PRNG)
 //#if defined(_CFG_CRYPTO_WITH_FORTUNA_PRNG)
 //	register_prng(&fortuna_desc);

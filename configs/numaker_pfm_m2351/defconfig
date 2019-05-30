@@ -50,6 +50,15 @@ CONFIG_GCC_FOLDER="gcc-arm-none-eabi-6-2017-q2-update"
 #
 # Application Configuration
 #
+
+#
+# Pseudo TAs:
+#
 CONFIG_APPS_HELLO_WORLD=y
-CONFIG_APPS_AES=y
 CONFIG_APPS_TEMPLATE=y
+
+#
+# User TAs:
+#
+CONFIG_APPS_AES=y
+CONFIG_APPS_HOTP=y

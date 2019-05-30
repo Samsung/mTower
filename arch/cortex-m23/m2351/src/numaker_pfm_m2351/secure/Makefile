@@ -46,6 +46,10 @@ ifeq ($(CONFIG_APPS_TEMPLATE),y)
 CFLAGS += -I$(TOPDIR)/apps/template
 endif
 
+ifeq ($(CONFIG_APPS_HOTP),y)
+CFLAGS += -I$(TOPDIR)/apps/hotp
+endif
+
 OBJDIR = $(TOPDIR)/build/secure$(subst $(TOPDIR),,$(shell pwd))
 
 MTOWER_S = $(TOPDIR)/mtower_s$(EXEEXT)

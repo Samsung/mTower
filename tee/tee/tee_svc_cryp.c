@@ -990,20 +990,21 @@ static const struct tee_cryp_obj_type_props *tee_svc_find_type_props(
 //
 void tee_obj_attr_free(struct tee_obj *o)
 {
-//	const struct tee_cryp_obj_type_props *tp;
-//	size_t n;
-//
-//	if (!o->attr)
-//		return;
-//	tp = tee_svc_find_type_props(o->info.objectType);
-//	if (!tp)
-//		return;
-//
-//	for (n = 0; n < tp->num_type_attrs; n++) {
-//		const struct tee_cryp_obj_type_attrs *ta = tp->type_attrs + n;
-//
-//		attr_ops[ta->ops_index].free((uint8_t *)o->attr + ta->raw_offs);
-//	}
+//  DMSG("******** FREE *********");
+	const struct tee_cryp_obj_type_props *tp;
+	size_t n;
+
+	if (!o->attr)
+		return;
+	tp = tee_svc_find_type_props(o->info.objectType);
+	if (!tp)
+		return;
+
+	for (n = 0; n < tp->num_type_attrs; n++) {
+		const struct tee_cryp_obj_type_attrs *ta = tp->type_attrs + n;
+
+		attr_ops[ta->ops_index].free((uint8_t *)o->attr + ta->raw_offs);
+	}
 }
 
 void tee_obj_attr_clear(struct tee_obj *o)
@@ -1873,11 +1874,11 @@ static void cryp_state_free(struct user_ta_ctx *utc, struct tee_cryp_state *cs)
 //		crypto_authenc_free_ctx(cs->ctx, cs->algo);
 //		break;
 	case TEE_OPERATION_DIGEST:
-//		crypto_hash_free_ctx(cs->ctx, cs->algo);
+		crypto_hash_free_ctx(cs->ctx, cs->algo);
 		break;
-//	case TEE_OPERATION_MAC:
-//		crypto_mac_free_ctx(cs->ctx, cs->algo);
-//		break;
+	case TEE_OPERATION_MAC:
+		crypto_mac_free_ctx(cs->ctx, cs->algo);
+		break;
 	default:
 		assert(!cs->ctx);
 	}
@@ -2034,18 +2035,18 @@ TEE_Result utee_cryp_state_alloc(unsigned long algo, unsigned long mode,
 		if (key1 == 0 || key2 != 0) {
 			res = TEE_ERROR_BAD_PARAMETERS;
 		} else {
-//			res = crypto_mac_alloc_ctx(&cs->ctx, algo);
-//			if (res != TEE_SUCCESS)
-//				break;
+			res = crypto_mac_alloc_ctx(&cs->ctx, algo);
+			if (res != TEE_SUCCESS)
+				break;
 		}
 		break;
 	case TEE_OPERATION_DIGEST:
 		if (key1 != 0 || key2 != 0) {
 			res = TEE_ERROR_BAD_PARAMETERS;
 		} else {
-//			res = crypto_hash_alloc_ctx(&cs->ctx, algo);
-//			if (res != TEE_SUCCESS)
-//				break;
+			res = crypto_hash_alloc_ctx(&cs->ctx, algo);
+			if (res != TEE_SUCCESS)
+				break;
 		}
 		break;
 	case TEE_OPERATION_ASYMMETRIC_CIPHER:
@@ -2170,7 +2171,7 @@ TEE_Result utee_hash_init(unsigned long state,
 
 	switch (TEE_ALG_GET_CLASS(cs->algo)) {
 	case TEE_OPERATION_DIGEST:
-//		res = crypto_hash_init(cs->ctx, cs->algo);
+		res = crypto_hash_init(cs->ctx, cs->algo);
 		if (res != TEE_SUCCESS)
 			return res;
 		break;
@@ -2188,10 +2189,10 @@ TEE_Result utee_hash_init(unsigned long state,
 				return TEE_ERROR_BAD_PARAMETERS;
 
 			key = (struct tee_cryp_obj_secret *)o->attr;
-//			res = crypto_mac_init(cs->ctx, cs->algo,
-//					      (void *)(key + 1), key->key_size);
-//			if (res != TEE_SUCCESS)
-//				return res;
+			res = crypto_mac_init(cs->ctx, cs->algo,
+					      (void *)(key + 1), key->key_size);
+			if (res != TEE_SUCCESS)
+				return res;
 			break;
 		}
 	default:
@@ -2201,82 +2202,82 @@ TEE_Result utee_hash_init(unsigned long state,
 	return TEE_SUCCESS;
 }
 
-//TEE_Result syscall_hash_update(unsigned long state, const void *chunk,
-//			size_t chunk_size)
-//{
-//	TEE_Result res;
-//	struct tee_cryp_state *cs;
-//	struct tee_ta_session *sess;
-//
-//	/* No data, but size provided isn't valid parameters. */
-//	if (!chunk && chunk_size)
-//		return TEE_ERROR_BAD_PARAMETERS;
-//
-//	/* Zero length hash is valid, but nothing we need to do. */
-//	if (!chunk_size)
-//		return TEE_SUCCESS;
-//
-//	res = tee_ta_get_current_session(&sess);
-//	if (res != TEE_SUCCESS)
-//		return res;
-//
+TEE_Result utee_hash_update(unsigned long state, const void *chunk,
+			size_t chunk_size)
+{
+	TEE_Result res;
+	struct tee_cryp_state *cs;
+	struct tee_ta_session *sess;
+
+	/* No data, but size provided isn't valid parameters. */
+	if (!chunk && chunk_size)
+		return TEE_ERROR_BAD_PARAMETERS;
+
+	/* Zero length hash is valid, but nothing we need to do. */
+	if (!chunk_size)
+		return TEE_SUCCESS;
+
+	res = tee_ta_get_current_session(&sess);
+	if (res != TEE_SUCCESS)
+		return res;
+
 //	res = tee_mmu_check_access_rights(to_user_ta_ctx(sess->ctx),
 //					  TEE_MEMORY_ACCESS_READ |
 //					  TEE_MEMORY_ACCESS_ANY_OWNER,
 //					  (uaddr_t)chunk, chunk_size);
 //	if (res != TEE_SUCCESS)
 //		return res;
-//
-//	res = tee_svc_cryp_get_state(sess, tee_svc_uref_to_vaddr(state), &cs);
-//	if (res != TEE_SUCCESS)
-//		return res;
-//
-//	switch (TEE_ALG_GET_CLASS(cs->algo)) {
-//	case TEE_OPERATION_DIGEST:
-//		res = crypto_hash_update(cs->ctx, cs->algo, chunk, chunk_size);
-//		if (res != TEE_SUCCESS)
-//			return res;
-//		break;
-//	case TEE_OPERATION_MAC:
-//		res = crypto_mac_update(cs->ctx, cs->algo, chunk, chunk_size);
-//		if (res != TEE_SUCCESS)
-//			return res;
-//		break;
-//	default:
-//		return TEE_ERROR_BAD_PARAMETERS;
-//	}
-//
-//	return TEE_SUCCESS;
-//}
-//
-//TEE_Result syscall_hash_final(unsigned long state, const void *chunk,
-//			size_t chunk_size, void *hash, uint64_t *hash_len)
-//{
-//	TEE_Result res, res2;
-//	size_t hash_size;
-//	uint64_t hlen;
-//	struct tee_cryp_state *cs;
-//	struct tee_ta_session *sess;
-//
-//	/* No data, but size provided isn't valid parameters. */
-//	if (!chunk && chunk_size)
-//		return TEE_ERROR_BAD_PARAMETERS;
-//
-//	res = tee_ta_get_current_session(&sess);
-//	if (res != TEE_SUCCESS)
-//		return res;
-//
+
+	res = tee_svc_cryp_get_state(sess, tee_svc_uref_to_vaddr(state), &cs);
+	if (res != TEE_SUCCESS)
+		return res;
+
+	switch (TEE_ALG_GET_CLASS(cs->algo)) {
+	case TEE_OPERATION_DIGEST:
+		res = crypto_hash_update(cs->ctx, cs->algo, chunk, chunk_size);
+		if (res != TEE_SUCCESS)
+			return res;
+		break;
+	case TEE_OPERATION_MAC:
+		res = crypto_mac_update(cs->ctx, cs->algo, chunk, chunk_size);
+		if (res != TEE_SUCCESS)
+			return res;
+		break;
+	default:
+		return TEE_ERROR_BAD_PARAMETERS;
+	}
+
+	return TEE_SUCCESS;
+}
+
+TEE_Result utee_hash_final(unsigned long state, const void *chunk,
+			size_t chunk_size, void *hash, uint64_t *hash_len)
+{
+	TEE_Result res, res2;
+	size_t hash_size;
+	uint64_t hlen;
+	struct tee_cryp_state *cs;
+	struct tee_ta_session *sess;
+
+	/* No data, but size provided isn't valid parameters. */
+	if (!chunk && chunk_size)
+		return TEE_ERROR_BAD_PARAMETERS;
+
+	res = tee_ta_get_current_session(&sess);
+	if (res != TEE_SUCCESS)
+		return res;
+
 //	res = tee_mmu_check_access_rights(to_user_ta_ctx(sess->ctx),
 //					  TEE_MEMORY_ACCESS_READ |
 //					  TEE_MEMORY_ACCESS_ANY_OWNER,
 //					  (uaddr_t)chunk, chunk_size);
 //	if (res != TEE_SUCCESS)
 //		return res;
-//
-//	res = tee_svc_copy_from_user(&hlen, hash_len, sizeof(hlen));
-//	if (res != TEE_SUCCESS)
-//		return res;
-//
+
+	res = tee_svc_copy_from_user(&hlen, hash_len, sizeof(hlen));
+	if (res != TEE_SUCCESS)
+		return res;
+
 //	res = tee_mmu_check_access_rights(to_user_ta_ctx(sess->ctx),
 //					  TEE_MEMORY_ACCESS_READ |
 //					  TEE_MEMORY_ACCESS_WRITE |
@@ -2284,64 +2285,64 @@ TEE_Result utee_hash_init(unsigned long state,
 //					  (uaddr_t)hash, hlen);
 //	if (res != TEE_SUCCESS)
 //		return res;
-//
-//	res = tee_svc_cryp_get_state(sess, tee_svc_uref_to_vaddr(state), &cs);
-//	if (res != TEE_SUCCESS)
-//		return res;
-//
-//	switch (TEE_ALG_GET_CLASS(cs->algo)) {
-//	case TEE_OPERATION_DIGEST:
-//		res = tee_hash_get_digest_size(cs->algo, &hash_size);
-//		if (res != TEE_SUCCESS)
-//			return res;
-//		if (*hash_len < hash_size) {
-//			res = TEE_ERROR_SHORT_BUFFER;
-//			goto out;
-//		}
-//
-//		if (chunk_size) {
-//			res = crypto_hash_update(cs->ctx, cs->algo, chunk,
-//						 chunk_size);
-//			if (res != TEE_SUCCESS)
-//				return res;
-//		}
-//
-//		res = crypto_hash_final(cs->ctx, cs->algo, hash, hash_size);
-//		if (res != TEE_SUCCESS)
-//			return res;
-//		break;
-//
-//	case TEE_OPERATION_MAC:
-//		res = tee_mac_get_digest_size(cs->algo, &hash_size);
-//		if (res != TEE_SUCCESS)
-//			return res;
-//		if (*hash_len < hash_size) {
-//			res = TEE_ERROR_SHORT_BUFFER;
-//			goto out;
-//		}
-//
-//		if (chunk_size) {
-//			res = crypto_mac_update(cs->ctx, cs->algo, chunk,
-//						chunk_size);
-//			if (res != TEE_SUCCESS)
-//				return res;
-//		}
-//
-//		res = crypto_mac_final(cs->ctx, cs->algo, hash, hash_size);
-//		if (res != TEE_SUCCESS)
-//			return res;
-//		break;
-//
-//	default:
-//		return TEE_ERROR_BAD_PARAMETERS;
-//	}
-//out:
-//	hlen = hash_size;
-//	res2 = tee_svc_copy_to_user(hash_len, &hlen, sizeof(*hash_len));
-//	if (res2 != TEE_SUCCESS)
-//		return res2;
-//	return res;
-//}
+
+	res = tee_svc_cryp_get_state(sess, tee_svc_uref_to_vaddr(state), &cs);
+	if (res != TEE_SUCCESS)
+		return res;
+
+	switch (TEE_ALG_GET_CLASS(cs->algo)) {
+	case TEE_OPERATION_DIGEST:
+		res = tee_hash_get_digest_size(cs->algo, &hash_size);
+		if (res != TEE_SUCCESS)
+			return res;
+		if (*hash_len < hash_size) {
+			res = TEE_ERROR_SHORT_BUFFER;
+			goto out;
+		}
+
+		if (chunk_size) {
+			res = crypto_hash_update(cs->ctx, cs->algo, chunk,
+						 chunk_size);
+			if (res != TEE_SUCCESS)
+				return res;
+		}
+
+		res = crypto_hash_final(cs->ctx, cs->algo, hash, hash_size);
+		if (res != TEE_SUCCESS)
+			return res;
+		break;
+
+	case TEE_OPERATION_MAC:
+		res = tee_mac_get_digest_size(cs->algo, &hash_size);
+		if (res != TEE_SUCCESS)
+			return res;
+		if (*hash_len < hash_size) {
+			res = TEE_ERROR_SHORT_BUFFER;
+			goto out;
+		}
+
+		if (chunk_size) {
+			res = crypto_mac_update(cs->ctx, cs->algo, chunk,
+						chunk_size);
+			if (res != TEE_SUCCESS)
+				return res;
+		}
+
+		res = crypto_mac_final(cs->ctx, cs->algo, hash, hash_size);
+		if (res != TEE_SUCCESS)
+			return res;
+		break;
+
+	default:
+		return TEE_ERROR_BAD_PARAMETERS;
+	}
+out:
+	hlen = hash_size;
+	res2 = tee_svc_copy_to_user(hash_len, &hlen, sizeof(*hash_len));
+	if (res2 != TEE_SUCCESS)
+		return res2;
+	return res;
+}
 
 TEE_Result utee_cipher_init(unsigned long state, const void *iv,
 			size_t iv_len)
