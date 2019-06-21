@@ -7,14 +7,11 @@ tags:
   - embedded systems
   - microcontrollers
 authors:
-  - name: Oleksandr S. Moliavko
-    orcid: 0000-0003-3167-983X
-    affiliation: 1
   - name: Taras A. Drozdovskyi
     orcid: 0000-0002-4651-1696
     affiliation: 1
-  - name: Oleg E. Kopysov
-    orcid: 0000-0003-3055-8104
+  - name: Oleksandr S. Moliavko
+    orcid: 0000-0003-3167-983X
     affiliation: 1
 affiliations:
   - name: Samsung R&D Institute Ukraine
