@@ -1,7 +1,6 @@
 /**
- * @file        arch/arm/m2351/src/numaker_pfm_m2351/secure/tee_core.c
- * @brief       Provides functionality to start secure world, initialize secure
- *              and normal worlds, pass to execution to normal world.
+ * @file        tee/kernel/entry_std.c
+ * @brief       .
  *
  * @copyright   Copyright (c) 2019 Samsung Electronics Co., Ltd. All Rights Reserved.
  * @author      Taras Drozdovskyi t.drozdovsky@samsung.com

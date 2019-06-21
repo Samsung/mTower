@@ -20,7 +20,7 @@ that based on Global Platform API standards to add security to their solution.
 ---
 ## 2. License
 The software is distributed mostly under the
-[BSD 2-Clause](http://opensource.org/licenses/BSD-2-Clause) open source
+[Apache License, Version 2.0](https://opensource.org/licenses/Apache-2.0) open source
 license.
 Some third-party components are used. Licensing terms for these components can
 be seen in [COPYING] file.

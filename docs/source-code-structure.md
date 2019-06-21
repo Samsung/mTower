@@ -77,8 +77,11 @@ described in detail below:
 │       ├── tee_client_api.h
 │       ├── teec_trace.h
 │       └── tee_types.h
-├── tee_internal
-│   └── include
+├── tee
+│   ├── include
+│   ├── kernel
+│   ├── lib
+│   └── tee
 ├── toolchain (specific toolchains)
 │   ├── gcc-arm-none-eabi-6-2017-q1-update
 ├── tools (miscellaneous scripts and programs for build system)
