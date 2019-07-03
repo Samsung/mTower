@@ -25,12 +25,12 @@ license.
 Some third-party components are used. Licensing terms for these components can
 be seen in [COPYING] file.
 
----
+--- 
 ## 3. Platforms supported
 
 | **NuMaker-PFM-M2351** | **How to add a platform** |  |  |
 |------------------|------------------------|----------------------|----------------------|
-|[![](docs/images/platforms/numaker_pfm_m2351.png)](docs/numaker_pfm_m2351.md)| [![](docs/images/platforms/add_new_board.jpg)](docs/port-new-platform.md)| |
+|[![](docs/images/platforms/numaker_pfm_m2351/numaker_pfm_m2351.png)](docs/numaker_pfm_m2351.md)| [![](docs/images/platforms/add_new_board.jpg)](docs/port-new-platform.md)| |
 
 
 Several platforms are supported. In order to manage slight differences
