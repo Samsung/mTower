@@ -123,10 +123,10 @@ $ make
 ```
 
 ### 2.6 Flash the device
-This is device specific.
+Please see instructions for specific devices (e.g., for NuMaker-PFM-M2351, see docs/numaker_pfm_m2351.md).
 
 ### 2.7 Boot up the device
-This is device specific.
+Please see instructions for specific devices (e.g., for NuMaker-PFM-M2351, see docs/numaker_pfm_m2351.md).
 
 [docs]: ./
 [NuMaker-PFM-M2351]: http://www.nuvoton.com/resource-files/UM_NuMaker-PFM-M2351_EN_Rev1.00.pdf
