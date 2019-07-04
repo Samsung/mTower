@@ -28,17 +28,17 @@ be seen in [COPYING] file.
 --- 
 ## 3. Platforms supported
 
-| **NuMaker-PFM-M2351** | **How to add a platform** |  |  |
-|------------------|------------------------|----------------------|----------------------|
+| **NuMaker-PFM-M2351** | **How to add a platform** |             |           |
+|----------------     --|--------------    ---------|-------------|-----------|
 |[![](docs/images/platforms/numaker_pfm_m2351/numaker_pfm_m2351.png)](docs/numaker_pfm_m2351.md)| [![](docs/images/platforms/add_new_board.jpg)](docs/port-new-platform.md)| |
 
 
 Several platforms are supported. In order to manage slight differences
 between platforms, a `PLATFORM` flag has been introduced.
 
-| Platform              | Composite PLATFORM flag     | Maintained |
-|-----------------------|-----------------------------|------------|
-| [NuMaker-PFM-M2351]   |`PLATFORM=numaker_pfm_m2351` | v0.1       |
+| Platform              | Composite PLATFORM flag            | Maintained |
+|-----------------------|------------------------------------|------------|
+| [NuMaker-PFM-M2351]   |`PLATFORM=numaker_pfm_m2351`     | v0.1       |
 
 Fo information on adding a new platform see the [how to add a platform].
 
@@ -59,10 +59,7 @@ the code also uses other open source components.
 
 ---
 ## 7. Documentation
-The mTower documentation for the project is located in the [docs] folder.
-The latest version of the specification that describes the mTower source code
-can be generated using [doxygen] tool from command line. To generate
-documentation, use
+There is a brief overall [functionality description](docs/mtower_functionality_description.md) of mTower. Other mTower documentation for the project is located in the [docs] folder. The latest version of the specification that describes the mTower source code can be generated using [doxygen] tool from command line. To generate documentation, use
 
 ```sh
 $ make docs_gen
@@ -72,6 +69,7 @@ command, and to view generated docs use
 ```sh
 $ make docs_show
 ```
+> Note that documentation on mTower is work in progress, and right now doxygen does not provide much documentation.
 
 ---
 ## 8. Contributing
