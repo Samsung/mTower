@@ -29,8 +29,8 @@ be seen in [COPYING] file.
 ## 3. Platforms supported
 
 | **NuMaker-PFM-M2351** | **How to add a platform** |             |           |
-|----------------     --|--------------    ---------|-------------|-----------|
-|[![](docs/images/platforms/numaker_pfm_m2351/numaker_pfm_m2351.png)](docs/numaker_pfm_m2351.md)| [![](docs/images/platforms/add_new_board.jpg)](docs/port-new-platform.md)| |
+|-----------------------|---------------------------|-------------|-----------|
+|[![](docs/images/platforms/numaker_pfm_m2351/numaker_pfm_m2351.png)](docs/numaker_pfm_m2351.md)| [![](docs/images/platforms/add_new_board.jpg)](docs/port-new-platform.md)|||
 
 
 Several platforms are supported. In order to manage slight differences
@@ -38,7 +38,7 @@ between platforms, a `PLATFORM` flag has been introduced.
 
 | Platform              | Composite PLATFORM flag            | Maintained |
 |-----------------------|------------------------------------|------------|
-| [NuMaker-PFM-M2351]   |`PLATFORM=numaker_pfm_m2351`     | v0.1       |
+| [NuMaker-PFM-M2351]   |`PLATFORM=numaker_pfm_m2351`    | v0.1       |
 
 Fo information on adding a new platform see the [how to add a platform].
 

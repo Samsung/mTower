@@ -23,7 +23,7 @@ Table below gives a listing of API functions for Normal World. For a detailed de
 | TEEC_RequestCancellation        | No  |                                     |
 | TEEC_PARAM_TYPES                | Yes |                                     |
 
-A list of Secure World API functions is given in a table below.For a detailed description of each function, please see [TEE Internal API](specs/gp/GPD_TEE_Internal_API_Specification_v1.0.pdf).
+A list of Secure World API functions is given in a table below. For a detailed description of each function, please see [TEE Internal API](specs/gp/GPD_TEE_Internal_API_Specification_v1.0.pdf).
 
 | **GP TEE Internal API**         |**Implemented**| **Comments**              |
 |---------------------------------|-----|-------------------------------------|

@@ -3,6 +3,7 @@
 # Contents
 1. [Introduction](#1-introduction)
 2. [Add a new application](#2-add-a-new-application-non-secure-and-secure-part)
+3. [Changing configuration to include new application and build](#3-changing-configuration-to-include-new-application-into-build)
 
 ## 1. Introduction
 Note that so far, all the applications for mTower are not dynamically
@@ -47,7 +48,7 @@ of application root folder, and implementation of Secure part must be located
 in `ta` subfolder. There are no other strict requirements.
 
 ### 2.4. Add application into init sequence.
-#### 2.4.1. Edit arch/<platform>/nonsecure/main_ns.c file 
+#### 2.4.1. Edit arch/your_platform/nonsecure/main_ns.c file 
 For example, to add a task into init sequence for m2351 board, add a following code
 into `arch/cortex-m23/m2351/src/numaker_pfm_m2351/main_ns.c`:
 
@@ -62,7 +63,7 @@ into `arch/cortex-m23/m2351/src/numaker_pfm_m2351/main_ns.c`:
 #endif
 ```
 
-#### 2.4.2. Edit arch/<platform>/nonsecure/Make.defs file 
+#### 2.4.2. Edit arch/your_platform/nonsecure/Make.defs file 
 Add new application Non-secure part into build sequence by adding a following
 fragment into `Make.defs` file in the same folder:
  
@@ -72,7 +73,7 @@ CHIP_CSRCS_NS += $(TOPDIR)/apps/app1/ca/app1_ns.c
 endif
 ```
 
-#### 2.4.3. Edit arch/<platform>/nonsecure/Makefile file 
+#### 2.4.3. Edit arch/your_platform/nonsecure/Makefile file 
 Add new application Non-secure part folder into build sequence by adding a following
 fragment into `Makefile` file in the same folder:
 
@@ -81,7 +82,7 @@ CFLAGS += -I$(TOPDIR)/apps/app1
 endif
 ```
 
-#### 2.4.4. Edit arch/<platform>/secure/Make.defs file 
+#### 2.4.4. Edit arch/your_platform/secure/Make.defs file 
 Add new application Secure part into build sequence by adding a following
 fragment into `Make.defs` file in the `secure` subfolder:
  
@@ -91,12 +92,26 @@ CHIP_CSRCS_S += $(TOPDIR)/apps/app1/ta/app1_s.c
 endif
 ```
 
-### 2.4.5. Edit arch/<platform>/secure/Makefile file 
+#### 2.4.5. Edit arch/your_platform/secure/Makefile file 
 Add new application Non-secure part folder into build sequence by adding a following
 fragment into `Makefile` file in the `secure` folder:
 
-```ifeq ($(CONFIG_APPS_APP1),y)
+```
+ifeq ($(CONFIG_APPS_APP1),y)
 CFLAGS += -I$(TOPDIR)/apps/app1
 endif
 ```
 
+## 3. Changing configuration to include new application into build
+Execute following shell commands:
+
+```
+$ make clean
+$ make menuconfig
+```
+
+In the Kconfig menu that will open, select new application for build and close the menu, saving changes. After that, build new application by calling
+
+```
+$ make
+```
