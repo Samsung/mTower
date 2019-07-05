@@ -10,7 +10,7 @@ choice
 config PLATFORM_NUMAKER_PFM_M2351
 	bool "NuMaker-PFM-M2351 board"
 	---help---
-		nuvoTon NuMaker-PFM-M2351 board.
+		Nuvoton NuMaker-PFM-M2351 board.
 
 endchoice
 
