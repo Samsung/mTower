@@ -56,10 +56,10 @@ COPYING -- Describes the terms under which mTower is distributed.
  *
  ***************************************************************************/
 
-apps/hello_world
-apps/aes
-apps/hotp
-tee_client
+apps/hello_world/
+apps/aes/
+apps/hotp/
+tee_client/
 ^^^^^^^^^^^^^^^^^^
 /*
  * Copyright (c) 2014, STMicroelectronics International N.V.
@@ -90,7 +90,7 @@ tee_client
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-tee
+tee/
 ^^^
 
 /* SPDX-License-Identifier: BSD-2-Clause */
@@ -123,7 +123,7 @@ tee
 
 tee/tee/uuid.c
 tee/include/tee/uuid.h
-crypto/crypto
+crypto/crypto/
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 // SPDX-License-Identifier: BSD-2-Clause
@@ -131,9 +131,9 @@ crypto/crypto
  * Copyright (c) 2016, Linaro Limited
  */
 
-arch/cortex-m23/m2351/src/CMSIS
-arch/cortex-m23/m2351/src/Device
-arch/cortex-m23/m2351/src/StdDriver
+arch/cortex-m23/m2351/src/CMSIS/
+arch/cortex-m23/m2351/src/Device/
+arch/cortex-m23/m2351/src/StdDriver/
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
 
@@ -156,7 +156,7 @@ https://github.com/ARMmbed/mbed-os/tree/master/targets/TARGET_NUVOTON/TARGET_M23
  * limitations under the License.
  */
 
-freertos
+freertos/
 ^^^^^^^^
 
  /*
@@ -186,8 +186,8 @@ freertos
  * 1 tab == 4 spaces!
  */
 
-crypto/libtomcrypt
-^^^^^^^^
+crypto/libtomcrypt/
+^^^^^^^^^^^^^^^^^^
 
 // SPDX-License-Identifier: BSD-2-Clause
 /*

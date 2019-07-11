@@ -1,7 +1,7 @@
 ############################################################################
 # tools/Makefile.host
 #
-# Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
+# Copyright (c) 2018-2019 Samsung Electronics Co., Ltd. All Rights Reserved.
 # Author: Taras Drozdovskyi t.drozdovsky@samsung.com
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@ TOPDIR ?= ${shell pwd}/..
 
 # Targets
 
-all: mkconfig$(HOSTEXEEXT) jc2bin$(HOSTEXEEXT)
+all: mkconfig$(HOSTEXEEXT)
 
 .PHONY: clean mkconfig
 
@@ -38,5 +38,5 @@ endif
 
 clean:
 	$(Q) rm -f mkconfig$(HOSTEXEEXT)
-	$(Q) rm -f *$(OBJEXT) *$(LIBEXT) *~
+	$(Q) rm -f *$(OBJEXT) *$(LIBEXT)
 
