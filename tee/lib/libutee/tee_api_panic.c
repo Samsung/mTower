@@ -32,5 +32,7 @@
 
 void TEE_Panic(TEE_Result panicCode)
 {
+  printf("\nTEE_PANIC!\n");
+  while(1);
 //	utee_panic(panicCode);
 }

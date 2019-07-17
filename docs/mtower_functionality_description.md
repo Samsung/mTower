@@ -12,16 +12,16 @@ Table below gives a listing of API functions for Normal World. For a detailed de
 
 | **GP TEE Client API**           |**Implemented**| **Comments**              |
 |---------------------------------|-----|-------------------------------------|
-| TEEC_InitializeContext          | Yes |                                     |
-| TEEC_FinalizeContext            | Yes |                                     |
+| TEEC_InitializeContext          | Yes | Covered in test suite               |
+| TEEC_FinalizeContext            | Yes | Covered in test suite               |
 | TEEC_RegisterSharedMemory       | No  |                                     |
-| TEEC_AllocateSharedMemory       | Yes |                                     |
-| TEEC_ReleaseSharedMemory        | Yes |                                     |
-| TEEC_OpenSession                | Yes |                                     |
-| TEEC_CloseSession               | Yes |                                     |
-| TEEC_InvokeCommand              | Yes |                                     |
+| TEEC_AllocateSharedMemory       | Yes | Covered in test suite               |
+| TEEC_ReleaseSharedMemory        | Yes | Covered in test suite               |
+| TEEC_OpenSession                | Yes | Covered in test suite               |
+| TEEC_CloseSession               | Yes | Covered in test suite               |
+| TEEC_InvokeCommand              | Yes | Covered in test suite               |
 | TEEC_RequestCancellation        | No  |                                     |
-| TEEC_PARAM_TYPES                | Yes |                                     |
+| TEEC_PARAM_TYPES                | Yes | Not tested                          |
 
 A list of Secure World API functions is given in a table below. For a detailed description of each function, please see [TEE Internal API](specs/gp/GPD_TEE_Internal_API_Specification_v1.0.pdf).
 
@@ -31,9 +31,9 @@ A list of Secure World API functions is given in a table below. For a detailed d
 | **TA Interface**                |     |                                     |
 | TA_CreateEntryPoint             | Yes | Every TA includes this function replacing <TA> with <TA_name> prefix |
 | TA_DestroyEntryPoint            | Yes | Every TA includes this function replacing <TA> with <TA_name> prefix |
-| TA_OpenSessionEntryPoint        | Yes | Every TA includes this function replacing <TA> with <TA_name> prefix |
-| TA_CloseSessionEntryPoint       | Yes | Every TA includes this function replacing <TA> with <TA_name> prefix |
-| TA_InvokeCommandEntryPoint      | Yes | Every TA includes this function replacing <TA> with <TA_name> prefix |
+| TA_OpenSessionEntryPoint        | Yes | Every TA includes this function replacing <TA> with <TA_name> prefix. Covered in test suite |
+| TA_CloseSessionEntryPoint       | Yes | Every TA includes this function replacing <TA> with <TA_name> prefix. Covered in test suite |
+| TA_InvokeCommandEntryPoint      | Yes | Every TA includes this function replacing <TA> with <TA_name> prefix. Covered in test suite |
 | **Property Access Functions**   |     |                                     |
 | TEE_GetPropertyAsString         | No  |                                     |
 | TEE_GetPropertyAsBool           | No  |                                     |
@@ -61,28 +61,28 @@ A list of Secure World API functions is given in a table below. For a detailed d
 | TEE_CheckMemoryAccessRights     | No  |                                     |
 | TEE_SetInstanceData             | No  |                                     |
 | TEE_GetInstanceData             | No  |                                     |
-| TEE_Malloc                      | Yes |                                     |
-| TEE_Realloc                     | Yes |                                     |
-| TEE_Free                        | Yes |                                     |
+| TEE_Malloc                      | Yes | Covered in test suite               |
+| TEE_Realloc                     | Yes | Not tested                          |
+| TEE_Free                        | Yes | Covered in test suite               |
 | TEE_MemMove                     | Yes | Not tested                          |
 | TEE_MemCompare                  | Yes | Not tested                          |
 | TEE_MemFill                     | Yes | Not tested                          |
 | **Trusted Storage API for Data and Keys**||                                 |
 | **Generic Object Functions**    |     |                                     |
-| TEE_GetObjectInfo               | Yes |                                     |
-| TEE_RestrictObjectUsage         | Yes |                                     |
-| TEE_GetObjectBufferAttribute    | Yes |                                     |
-| TEE_GetObjectValueAttribute     | Yes |                                     |
-| TEE_CloseObject                 | Yes |                                     |
+| TEE_GetObjectInfo               | Yes | Partially covered in test suite     |
+| TEE_RestrictObjectUsage         | Yes | Not tested                          |
+| TEE_GetObjectBufferAttribute    | Yes | Not tested                          |
+| TEE_GetObjectValueAttribute     | Yes | Not tested                          |
+| TEE_CloseObject                 | Yes | Not tested                          |
 | **Transient Object Functions**  |     |                                     |
-| TEE_AllocateTransientObject     | Yes |                                     |
-| TEE_FreeTransientObject         | Yes |                                     |
-| TEE_ResetTransientObject        | Yes |                                     |
-| TEE_PopulateTransientObject     | Yes |                                     |
-| TEE_InitRefAttribute            | Yes |                                     |
-| TEE_InitValueAttribute          | Yes |                                     |
-| TEE_CopyObjectAttributes        | Yes |                                     |
-| TEE_GenerateKey                 | Yes |                                     |
+| TEE_AllocateTransientObject     | Yes | Partially covered in test suite     |
+| TEE_FreeTransientObject         | Yes | Partially covered in test suite     |
+| TEE_ResetTransientObject        | Yes | Partially covered in test suite     |
+| TEE_PopulateTransientObject     | Yes | Partially covered in test suite     |
+| TEE_InitRefAttribute            | Yes | Partially covered in test suite     |
+| TEE_InitValueAttribute          | Yes | Not tested                          |
+| TEE_CopyObjectAttributes        | Yes | Not tested                          |
+| TEE_GenerateKey                 | No  |                                     |
 | **Persistent Object Functions** |     |                                     |
 | TEE_OpenPersistentObject        | Yes | Not tested                          |
 | TEE_CreatePersistentObject      | Yes | Not tested                          |
@@ -101,24 +101,24 @@ A list of Secure World API functions is given in a table below. For a detailed d
 | TEE_SeekObjectData              | Yes | Not tested                          |
 | **Cryptographic Operations API**|     |                                     |
 | **Generic Operation Functions** |     |                                     |
-| TEE_AllocateOperation           | Yes |                                     |
-| TEE_FreeOperation               | Yes |                                     |
-| TEE_GetOperationInfo            | Yes |                                     |
-| TEE_ResetOperation              | Yes |                                     |
-| TEE_SetOperationKey             | Yes |                                     |
-| TEE_SetOperationKey2            | Yes |                                     |
+| TEE_AllocateOperation           | Yes | Partially covered in test suite     |
+| TEE_FreeOperation               | Yes | Partially covered in test suite     |
+| TEE_GetOperationInfo            | Yes | Partially covered in test suite     |
+| TEE_ResetOperation              | Yes | Partially covered in test suite     |
+| TEE_SetOperationKey             | Yes | Partially covered in test suite     |
+| TEE_SetOperationKey2            | Yes | Not tested                          |
 | TEE_CopyOperation               | Yes | Not tested                          |
 | **Message Digest Functions**    |     |                                     |
-| TEE_DigestUpdate                | Yes | Supports SHA only                   |
-| TEE_DigestDoFinal               | Yes | Supports SHA only                   |
+| TEE_DigestUpdate                | Yes | Supports SHA only. Not tested       |
+| TEE_DigestDoFinal               | Yes | Supports SHA only. Not tested       |
 | **Symmetric Cipher Functions**  |     |                                     |
-| TEE_CipherInit                  | Yes | Supports AES only                   |
-| TEE_CipherUpdate                | Yes | Supports AES only                   |
-| TEE_CipherDoFinal               | Yes | Supports AES only                   |
+| TEE_CipherInit                  | Yes | Supports AES only. Partially covered in test suite |
+| TEE_CipherUpdate                | Yes | Supports AES only. Partially covered in test suite |
+| TEE_CipherDoFinal               | Yes | Supports AES only. Not tested       |
 | **MAC Functions**               |     |                                     |
-| TEE_MACInit                     | Yes | Supports SHA only                   |
-| TEE_MACUpdate                   | Yes | Supports SHA only                   |
-| TEE_MACComputeFinal             | Yes | Supports SHA only                   |
+| TEE_MACInit                     | Yes | Supports SHA only. Not tested       |
+| TEE_MACUpdate                   | Yes | Supports SHA only. Not tested       |
+| TEE_MACComputeFinal             | Yes | Supports SHA only. Not tested       |
 | TEE_MACCompareFinal             | Yes | Not tested                          |
 | **Authenticated Encryption Functions** ||                                   |
 | TEE_AEInit                      | No  |                                     |

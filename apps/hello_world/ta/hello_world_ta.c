@@ -36,7 +36,7 @@
  * Called when the instance of the TA is created. This is the first call in
  * the TA.
  */
-TEE_Result TA_CreateEntryPoint(void)
+TEE_Result Hello_World_TA_CreateEntryPoint(void)
 {
 	DMSG("has been called");
 
@@ -47,7 +47,7 @@ TEE_Result TA_CreateEntryPoint(void)
  * Called when the instance of the TA is destroyed if the TA has not
  * crashed or panicked. This is the last call in the TA.
  */
-void TA_DestroyEntryPoint(void)
+void Hello_World_TA_DestroyEntryPoint(void)
 {
 	DMSG("has been called");
 }
@@ -58,7 +58,7 @@ void TA_DestroyEntryPoint(void)
  * TA. In this function you will normally do the global initialization for the
  * TA.
  */
-TEE_Result TA_OpenSessionEntryPoint(uint32_t param_types,
+TEE_Result Hello_World_TA_OpenSessionEntryPoint(uint32_t param_types,
 		TEE_Param __maybe_unused params[4],
 		void __maybe_unused **sess_ctx)
 {
@@ -90,7 +90,7 @@ TEE_Result TA_OpenSessionEntryPoint(uint32_t param_types,
  * Called when a session is closed, sess_ctx hold the value that was
  * assigned by TA_OpenSessionEntryPoint().
  */
-void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
+void Hello_World_TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
 {
 	(void)&sess_ctx; /* Unused parameter */
 	IMSG("Goodbye!\n");
@@ -158,6 +158,6 @@ TEE_Result TA_InvokeCommandEntryPoint(void __maybe_unused *sess_ctx,
 
 pseudo_ta_register(.uuid = TA_HELLO_WORLD_UUID, .name = "HelloWorld",
        .flags = PTA_DEFAULT_FLAGS | TA_FLAG_CONCURRENT,
-       .open_session_entry_point = TA_OpenSessionEntryPoint,
-       .close_session_entry_point = TA_CloseSessionEntryPoint,
-       .invoke_command_entry_point = TA_InvokeCommandEntryPoint);
+       .open_session_entry_point = Hello_World_TA_OpenSessionEntryPoint,
+       .close_session_entry_point = Hello_World_TA_CloseSessionEntryPoint,
+       .invoke_command_entry_point = Hello_World_TA_InvokeCommandEntryPoint);

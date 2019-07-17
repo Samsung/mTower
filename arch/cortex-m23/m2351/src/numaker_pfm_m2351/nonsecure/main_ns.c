@@ -87,6 +87,7 @@ extern void SystemCoreClockUpdate( void );
 extern int tee_hello_world(void);
 extern int tee_aes(void);
 extern int tee_hotp(void);
+extern int tee_tests(void);
 
 /* NonSecure Callable Functions from Secure Region */
 extern int32_t Secure_func(void);
@@ -407,6 +408,31 @@ static void teeTest4( void *pvParameters )
 }
 #endif // CONFIG_APPS_HOTP
 
+#ifdef CONFIG_APPS_TEST
+/**
+ * @brief         teeTest4 - .
+ *
+ * @param         None
+ *
+ * @returns       None
+ */
+static void teeTest5( void *pvParameters )
+{
+  const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
+
+  (void)pvParameters;
+
+  do {
+    printf(/*RED */"\nTEE test: test suite\n");
+    portDISABLE_INTERRUPTS();
+    tee_tests();
+//    printf(NORMAL);
+    portENABLE_INTERRUPTS();
+    vTaskDelay( xDelay );
+  } while (1);
+}
+#endif // CONFIG_APPS_TEST
+
 /* Public Functions. */
 /**
  * @brief         vApplicationMallocFailedHook - vApplicationMallocFailedHook()
@@ -524,6 +550,7 @@ int main( void )
   Secure_LED_On_callback(&NonSecure_LED_On);
   Secure_LED_Off_callback(&NonSecure_LED_Off);
 
+#ifndef CONFIG_APPS_TEST
   xTaskCreate( testTask1,     /* The function that implements the task. */
       "test1",                /* The text name assigned to the task - for debug only as it is not used by the kernel. */
       256,                    /* The size of the stack to allocate to the task. */
@@ -544,6 +571,7 @@ int main( void )
       ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
       tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
       NULL );
+#endif
 #ifdef CONFIG_APPS_HELLO_WORLD
   xTaskCreate( teeTest,       /* The function that implements the task. */
       "tee_test",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
@@ -574,6 +602,15 @@ int main( void )
 #ifdef CONFIG_APPS_HOTP
   xTaskCreate( teeTest4,       /* The function that implements the task. */
       "tee_test4",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+      256,                    /* The size of the stack to allocate to the task. */
+      ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
+      tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
+      NULL );
+#endif
+
+#ifdef CONFIG_APPS_TEST
+  xTaskCreate( teeTest5,       /* The function that implements the task. */
+      "tee_test5",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
       256,                    /* The size of the stack to allocate to the task. */
       ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
       tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */

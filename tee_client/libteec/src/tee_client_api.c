@@ -52,7 +52,7 @@
 extern int32_t ioctl(uint32_t cmd, struct tee_ioctl_buf_data *buf_data);
 
 /* How many device sequence numbers will be tried before giving up */
-//#define TEEC_MAX_DEV_SEQ	10
+#define TEEC_MAX_DEV_SEQ	1
 //
 //static pthread_mutex_t teec_mutex = PTHREAD_MUTEX_INITIALIZER;
 //
@@ -133,33 +133,6 @@ extern int32_t ioctl(uint32_t cmd, struct tee_ioctl_buf_data *buf_data);
 //	return shm_fd;
 //}
 
-//TEEC_Result TEEC_InitializeContext(const char *name, TEEC_Context *ctx)
-//{
-//  char devname[PATH_MAX];
-//  int fd;
-//  size_t n;
-//
-//  if (!ctx)
-//    return TEEC_ERROR_BAD_PARAMETERS;
-//
-//  for (n = 0; n < TEEC_MAX_DEV_SEQ; n++) {
-//    uint32_t gen_caps;
-//
-//    snprintf(devname, sizeof(devname), "/dev/tee%zu", n);
-//    fd = teec_open_dev(devname, name, &gen_caps);
-//    if (fd >= 0) {
-//      ctx->fd = fd;
-//      ctx->reg_mem = gen_caps & TEE_GEN_CAP_REG_MEM;
-//      return TEEC_SUCCESS;
-//    }
-//  }
-//
-//  return TEEC_ERROR_ITEM_NOT_FOUND;
-//}
-
-// Temporary defenition
-#define TEEC_MAX_DEV_SEQ 1
-
 TEEC_Result TEEC_InitializeContext(const char *name, TEEC_Context *ctx)
 {
 	char devname[PATH_MAX];
@@ -172,12 +145,13 @@ TEEC_Result TEEC_InitializeContext(const char *name, TEEC_Context *ctx)
 	for (n = 0; n < TEEC_MAX_DEV_SEQ; n++) {
 		uint32_t gen_caps;
 
-//    snprintf(devname, sizeof(devname), "/dev/tee%zu", n);
-    fd = 1; //teec_open_dev(devname, name, &gen_caps);
+		//    snprintf(devname, sizeof(devname), "/dev/tee%zu", n);
+		//    fd = teec_open_dev(devname, name, &gen_caps);
+    fd = 1;
     if (fd >= 0) {
       ctx->fd = fd;
+      //      ctx->reg_mem = gen_caps & TEE_GEN_CAP_REG_MEM;
       ctx->reg_mem = TEE_GEN_CAP_GP | TEE_GEN_CAP_REG_MEM;
-//      ctx->reg_mem = gen_caps & TEE_GEN_CAP_REG_MEM;
       return TEEC_SUCCESS;
     }
   }
@@ -187,7 +161,8 @@ TEEC_Result TEEC_InitializeContext(const char *name, TEEC_Context *ctx)
 
 void TEEC_FinalizeContext(TEEC_Context *ctx)
 {
-	if (ctx);
+	if (ctx)
+	  ctx->fd = -1;
 //		close(ctx->fd);
 }
 
@@ -584,9 +559,10 @@ void TEEC_CloseSession(TEEC_Session *session)
 	arg.session = session->session_id;
 	if (ioctl(/*session->ctx->fd,*/ TEE_IOC_CLOSE_SESSION, &arg))
 		printf("Failed to close session 0x%x\n", session->session_id);
-	else
+	else {
 		printf("Session successfully closed 0x%x\n", session->session_id);
-	session->session_id = 0;
+    session->session_id = 0;
+	}
 }
 
 TEEC_Result TEEC_InvokeCommand(TEEC_Session *session, uint32_t cmd_id,
@@ -636,8 +612,9 @@ TEEC_Result TEEC_InvokeCommand(TEEC_Session *session, uint32_t cmd_id,
 
 	rc = ioctl(/*session->ctx->fd,*/ TEE_IOC_INVOKE, &buf_data);
 	if (rc) {
-//		EMSG("TEE_IOC_INVOKE failed");
+//	  EMSG("TEE_IOC_INVOKE failed");
 		eorig = TEEC_ORIGIN_COMMS;
+		res = rc;
 //		res = ioctl_errno_to_res(errno);
 		goto out_free_temp_refs;
 	}
@@ -795,9 +772,9 @@ TEEC_Result TEEC_AllocateSharedMemory(TEEC_Context *ctx, TEEC_SharedMemory *shm)
 
 void TEEC_ReleaseSharedMemory(TEEC_SharedMemory *shm)
 {
-//	if (!shm || shm->id == -1)
-//		return;
-//
+	if (!shm /*|| shm->id == -1*/)
+		return;
+
 //	if (shm->shadow_buffer)
 //		munmap(shm->shadow_buffer, shm->alloced_size);
 //	else if (shm->buffer) {

@@ -59,6 +59,7 @@ COPYING -- Describes the terms under which mTower is distributed.
 apps/hello_world/
 apps/aes/
 apps/hotp/
+apps/test/
 tee_client/
 ^^^^^^^^^^^^^^^^^^
 /*

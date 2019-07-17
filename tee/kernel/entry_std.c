@@ -415,22 +415,28 @@ TEEC_Result tee_ioctl_invoke(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
   if (res != TEE_SUCCESS)
     goto out;
 
-  tee_ta_invoke_command(&err, sess, arg->func, &param);
+  res = tee_ta_invoke_command(&err, sess, arg->func, &param);
 
   copy_out_param(&param, arg->num_params, arg->params, saved_attr);
 
 out:
-  return TEEC_SUCCESS;
+  arg->ret = res;
+  //arg->ret_origin = err_orig;
+  return res;
 }
 
 TEEC_Result tee_ioctl_close_session(/*ctx,*/ struct tee_ioctl_close_session_arg *arg)
 {
+  TEE_Result res;
   struct tee_ta_session *s;
 
   s = (struct tee_ta_session *)arg->session;
 
-  tee_ta_close_session(s, &tee_open_sessions, NULL /* NSAPP_IDENTITY*/);
+  res = tee_ta_close_session(s, &tee_open_sessions, NULL /* NSAPP_IDENTITY*/);
 
-  return TEEC_SUCCESS;
+//  arg->ret = res;
+//  arg->ret_origin = TEE_ORIGIN_TEE;
+
+  return res; //TEEC_SUCCESS;
 }
 

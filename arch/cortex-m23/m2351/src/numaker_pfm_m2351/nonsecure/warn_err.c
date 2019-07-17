@@ -69,6 +69,6 @@ void errx(int eval, const char *fmt, ...)
   fflush(stdout);
   va_end(va);
 
-  vTaskDelete(NULL);
+//  vTaskDelete(NULL);
 }
 

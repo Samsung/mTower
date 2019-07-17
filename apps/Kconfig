@@ -7,12 +7,14 @@ comment "Pseudo TAs:"
 
 config APPS_HELLO_WORLD
 	bool "Hello world example"
+	depends on !APPS_TEST
 	default y
 	---help---
 		"Hello world example."
 
 config APPS_TEMPLATE
 	bool "Template example"
+	depends on !APPS_TEST
 	default y
 	---help---
 		"Template example."
@@ -21,13 +23,21 @@ comment "User TAs:"
 
 config APPS_AES
 	bool "AES example"
+	depends on !APPS_TEST
 	default y
 	---help---
 		"AES example."
 
 config APPS_HOTP
 	bool "HOTP example"
+	depends on !APPS_TEST
 	default y
 	---help---
 		"HOTP example. HMAC based One Time Passwords or shortly just 'HOTP' has
 		been around for many years and was initially defined in [RFC4226]."
+
+config APPS_TEST
+	bool "Test suite"
+	default n
+	---help---
+		"Test suite."

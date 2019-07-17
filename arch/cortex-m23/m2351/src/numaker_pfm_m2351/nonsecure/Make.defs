@@ -52,3 +52,7 @@ ifeq ($(CONFIG_APPS_HOTP),y)
 CHIP_CSRCS_NS += $(TOPDIR)/apps/hotp/ca/hotp_ns.c
 endif
 
+ifeq ($(CONFIG_APPS_TEST),y)
+CHIP_CSRCS_NS += $(TOPDIR)/apps/test/ca/test_ns.c
+endif
+
