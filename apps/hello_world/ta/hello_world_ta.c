@@ -140,7 +140,7 @@ static TEE_Result dec_value(uint32_t param_types,
  * assigned by TA_OpenSessionEntryPoint(). The rest of the paramters
  * comes from normal world.
  */
-TEE_Result TA_InvokeCommandEntryPoint(void __maybe_unused *sess_ctx,
+TEE_Result Hello_World_TA_InvokeCommandEntryPoint(void __maybe_unused *sess_ctx,
 			uint32_t cmd_id,
 			uint32_t param_types, TEE_Param params[4])
 {
