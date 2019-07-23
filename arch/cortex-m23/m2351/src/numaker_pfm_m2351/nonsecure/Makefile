@@ -40,10 +40,6 @@ ifeq ($(CONFIG_APPS_AES),y)
 CFLAGS += -I$(TOPDIR)/apps/aes
 endif
 
-ifeq ($(CONFIG_APPS_TEMPLATE),y)
-CFLAGS += -I$(TOPDIR)/apps/template
-endif
-
 ifeq ($(CONFIG_APPS_HOTP),y)
 CFLAGS += -I$(TOPDIR)/apps/hotp
 endif

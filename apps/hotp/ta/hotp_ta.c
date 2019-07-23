@@ -13,7 +13,6 @@
 #include <kernel/user_ta.h>
 #include <user_ta_header.h>
 
-
 /* The size of a SHA1 hash in bytes. */
 #define SHA1_HASH_SIZE 20
 
@@ -146,7 +145,6 @@ static TEE_Result register_shared_key(uint32_t param_types, TEE_Param params[4])
 	}
 
 	memset(counter, 0, sizeof(counter));
-
 	memset(K, 0, sizeof(K));
 	memcpy(K, params[0].memref.buffer, params[0].memref.size);
 

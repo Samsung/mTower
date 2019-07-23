@@ -12,13 +12,6 @@ config APPS_HELLO_WORLD
 	---help---
 		"Hello world example."
 
-config APPS_TEMPLATE
-	bool "Template example"
-	depends on !APPS_TEST
-	default y
-	---help---
-		"Template example."
-
 comment "User TAs:"
 
 config APPS_AES

@@ -28,14 +28,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * @file        tee/kernel/entry_std.c
- * @brief       .
- *
- * @author      Taras Drozdovskyi t.drozdovsky@samsung.com
- *
- */
-
 /* Included Files. */
 #include <arm_cmse.h>
 #include <stdio.h>

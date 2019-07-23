@@ -1,7 +1,10 @@
 COPYING -- Describes the terms under which mTower is distributed.
 
- mTower
- ^^^^^^
+ arch/cortex-m23/m2351/src/numaker_pfm_m2351/nonsecure/
+ arch/cortex-m23/m2351/src/numaker_pfm_m2351/secure/
+ include/mtower/
+ tee_client/public/tee_types.h
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 /****************************************************************************
  * Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
  *
@@ -19,10 +22,11 @@ COPYING -- Describes the terms under which mTower is distributed.
  *
  ****************************************************************************/
 
+
  tools/cfgdefine.c
        cfgdefine.h
        mkconfig.c
- ^^^^^^^^^^^^^^^^^^^^^
+ ^^^^^^^^^^^^^^^^^
 /****************************************************************************
  *   Copyright (C) 2007, 2008, 2011-2012, 2015, 2017 Gregory Nutt. All rights reserved.
  *   Author: Gregory Nutt <gnutt@nuttx.org>
@@ -56,12 +60,111 @@ COPYING -- Describes the terms under which mTower is distributed.
  *
  ***************************************************************************/
 
-apps/hello_world/
-apps/aes/
+
 apps/hotp/
+^^^^^^^^^^
+/* SPDX-License-Identifier: BSD-2-Clause */
+/*
+ * Copyright (c) 2017, Linaro Limited
+ */
+
+apps/hello_world/
+^^^^^^^^^^^^^^^^^
+/*
+ * Copyright (c) 2016, Linaro Limited
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
+apps/aes/
 apps/test/
-tee_client/
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^
+/*
+ * Copyright (c) 2017, Linaro Limited
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
+tee_client/libteec/
+tee_client/public/tee_client_api_extensions.h
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/*
+ * Copyright (c) 2015-2016, Linaro Limited
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+ 
+tee/include/kernel/tee_ta_manager.h
+tee/kernel/entry_std.c
+tee/kernel/pseudo_ta.c
+tee/kernel/user_ta.c
+tee_client/public/tee_client_api.h
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 /*
  * Copyright (c) 2014, STMicroelectronics International N.V.
  * All rights reserved.
@@ -91,9 +194,19 @@ tee_client/
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-tee/
-^^^
 
+tee/include/tee/tee_fs.h
+tee/include/tee/tee_obj.h
+tee/include/tee/tee_pobj.h
+tee/include/tee/tee_svc_cryp.h
+tee/include/tee/tee_svc_storage.h
+tee/include/tee/tee_svc.h
+tee/kernel/tee_ta_manager.c
+tee/tee/tee_obj.c
+tee/tee/tee_svc_cryp.c
+tee/tee/tee_svc.c
+tee_client/public/teec_trace.h
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 /* SPDX-License-Identifier: BSD-2-Clause */
 /*
  * Copyright (c) 2014, STMicroelectronics International N.V.
@@ -122,44 +235,71 @@ tee/
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-tee/tee/uuid.c
-tee/include/tee/uuid.h
-crypto/crypto/
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+tee/tee/uuid.c
+crypto/crypto/
+tee/include/crypto/
+tee/include/kernel/user_ta.h
+tee/include/tee/tee_cryp_utl.h
+tee/include/tee/uuid.h
+^^^^^^^^^^^^^^^^^^^^^^
 // SPDX-License-Identifier: BSD-2-Clause
 /*
- * Copyright (c) 2016, Linaro Limited
+ * Copyright (c) 2014-2017, Linaro Limited
  */
 
-arch/cortex-m23/m2351/src/CMSIS/
-arch/cortex-m23/m2351/src/Device/
-arch/cortex-m23/m2351/src/StdDriver/
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-* Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
 
-source code taken from:
-https://github.com/ARMmbed/mbed-os/tree/master/targets/TARGET_NUVOTON/TARGET_M2351
-
-/* mbed Microcontroller Library
- * Copyright (c) 2015-2016 Nuvoton
+arch/cortex-m23/m2351/src/CMSIS/Include/
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/*
+ * Copyright (c) 2009-2017 ARM Limited. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the License); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
+
+arch/cortex-m23/m2351/src/Device/
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/**
+  \mainpage Introduction
+  *
+  *
+  * This user manual describes the usage of M2351 device driver
+  *
+  * <b>Disclaimer</b>
+  *
+  * The Software is furnished "AS IS", without warranty as to performance or results, and
+  * the entire risk as to performance or results is assumed by YOU. Nuvoton disclaims all
+  * warranties, express, implied or otherwise, with regard to the Software, its use, or
+  * operation, including without limitation any and all warranties of merchantability, fitness
+  * for a particular purpose, and non-infringement of intellectual property rights.
+  *
+  * <b>Copyright Notice</b>
+  *
+  * Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.
+  */
+
+
+arch/cortex-m23/m2351/src/StdDriver/
+arch/cortex-m23/m2351/src/numaker_pfm_m2351/partition_M2351.h
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
+
+
 freertos/
 ^^^^^^^^
-
  /*
  * FreeRTOS Kernel V10.1.1
  * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -187,9 +327,176 @@ freertos/
  * 1 tab == 4 spaces!
  */
 
-crypto/libtomcrypt/
-^^^^^^^^^^^^^^^^^^
 
+crypto/libtomcrypt/include/tomcrypt_argchk.h
+crypto/libtomcrypt/include/tomcrypt_cfg.h
+crypto/libtomcrypt/include/tomcrypt_cipher.h
+crypto/libtomcrypt/include/tomcrypt_hash.h
+crypto/libtomcrypt/include/tomcrypt_mac.h
+crypto/libtomcrypt/include/tomcrypt_macros.h
+crypto/libtomcrypt/include/tomcrypt_math.h
+crypto/libtomcrypt/include/tomcrypt_misc.h
+crypto/libtomcrypt/include/tomcrypt_pk.h
+crypto/libtomcrypt/include/tomcrypt_pkcs.h
+crypto/libtomcrypt/include/tomcrypt_prng.h
+crypto/libtomcrypt/include/tomcrypt.h
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/* SPDX-License-Identifier: BSD-2-Clause */
+/*
+ * Copyright (c) 2001-2007, Tom St Denis
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
+crypto/libtomcrypt/src/tee_ltc_provider.c
+tee/lib/libutee/include/tee_api_defines_extensions.h\
+tee/tee/tee_cryp_utl.c
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// SPDX-License-Identifier: BSD-2-Clause
+/*
+ * Copyright (c) 2014, Linaro Limited
+ */
+
+
+crypto/libtomcrypt/include/tomcrypt_mpa.h
+tee/lib/libutee/
+tee/lib/libuttils/ext/
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/* SPDX-License-Identifier: BSD-2-Clause */
+/*
+ * Copyright (c) 2014, STMicroelectronics International N.V.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
+tee/lib/libuttils/isoc/include/sys/queue.h
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/* SPDX-License-Identifier: BSD-3-Clause */
+/*	$NetBSD: queue.h,v 1.49.6.1 2008/11/20 03:22:38 snj Exp $	*/
+
+/*
+ * Copyright (c) 1991, 1993
+ *	The Regents of the University of California.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ *	@(#)queue.h	8.5 (Berkeley) 8/20/94
+ */
+
+
+crypto/libtomcrypt/include/tomcrypt_custom.h
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/* SPDX-License-Identifier: BSD-2-Clause */
+/*
+ * Copyright (c) 2001-2007, Tom St Denis
+ * Copyright (c) 2014, STMicroelectronics International N.V.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
+crypto/libtomcrypt/include/tomcrypt_arm_neon.h
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/* SPDX-License-Identifier: BSD-2-Clause */
+/*
+ * Copyright (c) 2015, Linaro Limited
+ */
+
+
+crypto/libtomcrypt/src/cipher/
+crypto/libtomcrypt/src/hashes/
+crypto/libtomcrypt/src/mac/
+crypto/libtomcrypt/src/misc/
+crypto/libtomcrypt/src/cmodes/
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 // SPDX-License-Identifier: BSD-2-Clause
 /*
  * Copyright (c) 2001-2007, Tom St Denis

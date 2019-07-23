@@ -19,11 +19,10 @@ that based on Global Platform API standards to add security to their solution.
 
 ---
 ## 2. License
-The software is distributed mostly under the
-[Apache License, Version 2.0](https://opensource.org/licenses/Apache-2.0) open source
-license.
-Some third-party components are used. Licensing terms for these components can
-be seen in [COPYING] file.
+mTower software consists of multiple components that are individually available
+under different licensing terms. Terms for each individual file are listed at
+the beginnings of corresponding files; also, all licenses are listed in
+[COPYING] file.
 
 --- 
 ## 3. Platforms supported

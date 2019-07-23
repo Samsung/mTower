@@ -57,13 +57,8 @@ extern "C" {
 #define __HSI       (48000000UL)    /*!< PLL Output Clock Frequency */
 #define __HIRC48    (48000000UL)    /*!< Internal 48M RC Oscillator Frequency */
 #define __LIRC32    (32000UL)       /*!< Internal 32K RC Oscillator Frequency */
-/*
-# if defined (__GNUC__)
-#error "HERE = 3 !!!!!!!!!!!!!!!!!!!"
-# else
-#error "HERE = 4 !!!!!!!!!!!!!!!!!!!"
-# endif
-*/
+
+
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3L)
 # if defined (__ICCARM__)
 #  define __NONSECURE_ENTRY       __cmse_nonsecure_entry
@@ -151,4 +146,3 @@ void __TZ_set_PRIMASK_NS(uint32_t priMask);
 #endif
 
 #endif /* __SYSTEM_M2351_H__ */
-

@@ -14,12 +14,12 @@ described in detail below:
 │   │   └── ta
 │   │       └── hello_world_ta.c
 │   ├── Kconfig
-│   └── template
+│   └── hotp
 │       ├── ca
-│       │   └── template_ns.c
+│       │   └── hotp_ns.c
 │       ├── ta
-│       │   └── template_ta.c
-│       └── template_ta.h
+│       │   └── hotp_ta.c
+│       └── hotp_ta.h
 ├── arch
 │   └── <arch-name>
 │       └── <arch-family-name>

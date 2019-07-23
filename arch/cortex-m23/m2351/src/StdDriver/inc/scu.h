@@ -97,7 +97,7 @@ typedef enum NSATTR
 /*@}*/ /* end of group SCU_EXPORTED_CONSTANTS */
 
 
-/** @addtogroup CRC_EXPORTED_FUNCTIONS CRC Exported Functions
+/** @addtogroup SCU_EXPORTED_FUNCTIONS SCU Exported Functions
   @{
 */
 

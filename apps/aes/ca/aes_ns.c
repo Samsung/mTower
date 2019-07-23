@@ -182,7 +182,7 @@ void tee_aes(void)
 
 	printf("Encode buffer from TA\n");
 	memset(clear, 0x5a, sizeof(clear)); /* Load some dummy value */
-  memset(ciph, 0x0, sizeof(clear)); /* Load some dummy value */
+  	memset(ciph, 0x0, sizeof(clear)); /* Load some dummy value */
 	cipher_buffer(&ctx, clear, ciph, AES_TEST_BUFFER_SIZE);
 
 	printf("Prepare decode operation\n");
@@ -207,5 +207,4 @@ void tee_aes(void)
 		printf("Clear text and decoded text match\n");
 
 	terminate_tee_session(&ctx);
-
 }

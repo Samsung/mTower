@@ -22,7 +22,7 @@ system.
 ## 2. Add a new application: Non-secure and Secure part
 
 ### 2.1. Add new subfolders to apps folder
-To simplify the beginning, the `apps/template` folder contains necessary subfolderse
+To simplify the beginning, the `apps/hello_world` folder contains necessary subfolderse
 and files for basic application. Copy this folder and its contents into new subfolder
 (e.g., app1).
 
@@ -53,7 +53,7 @@ For example, to add a task into init sequence for m2351 board, add a following c
 into `arch/cortex-m23/m2351/src/numaker_pfm_m2351/main_ns.c`:
 
 ```
-#ifdef CONFIG_APPS_HELLO_WORLD
+#ifdef CONFIG_APPS_APP1
   xTaskCreate( app1_test,       /* The function that implements the task. */
       "app1_test",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
       256,                    /* The size of the stack to allocate to the task. */

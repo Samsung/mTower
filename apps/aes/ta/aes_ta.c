@@ -33,7 +33,6 @@
 #include <kernel/user_ta.h>
 #include <user_ta_header.h>
 
-
 #define AES128_KEY_BIT_SIZE		128
 #define AES128_KEY_BYTE_SIZE		(AES128_KEY_BIT_SIZE / 8)
 #define AES256_KEY_BIT_SIZE		256
@@ -160,7 +159,7 @@ static TEE_Result alloc_resources(void *session, uint32_t param_types,
 				    sess->mode,
 				    sess->key_size * 8);
 	if (res != TEE_SUCCESS) {
-	  EMSG("Failed to allocate operation");
+		EMSG("Failed to allocate operation");
 		sess->op_handle = TEE_HANDLE_NULL;
 		goto err;
 	}
@@ -193,15 +192,17 @@ static TEE_Result alloc_resources(void *session, uint32_t param_types,
 		res = TEE_ERROR_OUT_OF_MEMORY;
 		goto err;
 	}
-
 	TEE_InitRefAttribute(&attr, TEE_ATTR_SECRET_VALUE, key, sess->key_size);
 
 	res = TEE_PopulateTransientObject(sess->key_handle, &attr, 1);
-  TEE_Free(key);
-  if (res != TEE_SUCCESS) {
+  	
+	TEE_Free(key);
+
+	if (res != TEE_SUCCESS) {
 		EMSG("TEE_PopulateTransientObject failed, %x", res);
 		goto err;
 	}
+
 	res = TEE_SetOperationKey(sess->op_handle, sess->key_handle);
 	if (res != TEE_SUCCESS) {
 		EMSG("TEE_SetOperationKey failed %x", res);
@@ -244,10 +245,8 @@ static TEE_Result set_aes_key(void *session, uint32_t param_types,
 	sess = (struct aes_cipher *)session;
 
 	/* Safely get the invocation parameters */
-	if (param_types != exp_param_types) {
-	  DMSG("param_types != exp_param_types");
+	if (param_types != exp_param_types)
 		return TEE_ERROR_BAD_PARAMETERS;
-	}
 
 	key = params[0].memref.buffer;
 	key_sz = params[0].memref.size;
@@ -388,7 +387,7 @@ TEE_Result AES_TA_OpenSessionEntryPoint(uint32_t __unused param_types,
 	 * The address of the structure is used as session ID for
 	 * the client.
 	 */
-    sess = TEE_Malloc(sizeof(*sess), 0);
+	sess = TEE_Malloc(sizeof(*sess), 0);
 	if (!sess)
 		return TEE_ERROR_OUT_OF_MEMORY;
 
@@ -414,7 +413,7 @@ void AES_TA_CloseSessionEntryPoint(void *session)
 		TEE_FreeTransientObject(sess->key_handle);
 	if (sess->op_handle != TEE_HANDLE_NULL)
 		TEE_FreeOperation(sess->op_handle);
-  TEE_Free(sess);
+	TEE_Free(sess);
 }
 
 TEE_Result AES_TA_InvokeCommandEntryPoint(void *session,
