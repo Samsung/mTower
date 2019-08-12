@@ -8,6 +8,7 @@ comment "Pseudo TAs:"
 config APPS_HELLO_WORLD
 	bool "Hello world example"
 	depends on !APPS_TEST
+	depends on !APPS_HW_SECURITY_EXCEPTION_EXAMPLE
 	default y
 	---help---
 		"Hello world example."
@@ -17,6 +18,7 @@ comment "User TAs:"
 config APPS_AES
 	bool "AES example"
 	depends on !APPS_TEST
+	depends on !APPS_HW_SECURITY_EXCEPTION_EXAMPLE
 	default y
 	---help---
 		"AES example."
@@ -24,13 +26,24 @@ config APPS_AES
 config APPS_HOTP
 	bool "HOTP example"
 	depends on !APPS_TEST
+	depends on !APPS_HW_SECURITY_EXCEPTION_EXAMPLE
 	default y
 	---help---
 		"HOTP example. HMAC based One Time Passwords or shortly just 'HOTP' has
 		been around for many years and was initially defined in [RFC4226]."
 
+comment "Test suite:"
+
 config APPS_TEST
-	bool "Test suite"
+	bool "GP API test suite"
 	default n
 	---help---
-		"Test suite."
+		"GP TEE Client API and TEE Internal API test suite."
+
+comment "H/W Security exception:"
+
+config APPS_HW_SECURITY_EXCEPTION_EXAMPLE
+	bool "H/W security exception example"
+	default n
+	---help---
+		"H/W security exception example."

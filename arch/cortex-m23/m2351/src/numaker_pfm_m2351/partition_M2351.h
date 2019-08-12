@@ -274,6 +274,8 @@ __STATIC_INLINE void SCU_Setup(void)
         SCU->SRAMNSSET |= (1U << i);
     }
 
+    SCU->SVIOIEN = SCU_SVIOIEN_GPIOIEN_Msk;
+//    | SCU_SVIOIEN_SRAM0IEN_Msk | SCU_SVIOIEN_SRAM1IEN_Msk;
 
 }
 
@@ -314,15 +316,15 @@ __STATIC_INLINE void SCU_Setup(void)
 //   <e>SAU Region 0
 //   <i> Setup SAU Region 0
 */
-#define SAU_INIT_REGION0    0
+#define SAU_INIT_REGION0    1 //0
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
-#define SAU_INIT_START0     0x0003F000      /* start address of SAU region 0 */
+#define SAU_INIT_START0     0x20000000 //0x0003F000      /* start address of SAU region 0 */
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END0       0x0003FFFF      /* end address of SAU region 0 */
+#define SAU_INIT_END0       0x20008000 //0x0003FFFF      /* end address of SAU region 0 */
 /*
 //     <o>Region is
 //         <0=>Non-Secure

@@ -14,7 +14,7 @@
     .section .stack
     .align  3
 #ifndef Stack_Size
-    .equ    Stack_Size, 0x00000A00
+    .equ    Stack_Size, 0x00000B00
 #endif
     .global __StackTop
     .global __StackLimit

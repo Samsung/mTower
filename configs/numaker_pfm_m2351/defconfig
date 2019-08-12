@@ -61,4 +61,13 @@ CONFIG_APPS_HELLO_WORLD=y
 #
 CONFIG_APPS_AES=y
 CONFIG_APPS_HOTP=y
+
+#
+# Test suite:
+#
 # CONFIG_APPS_TEST is not set
+
+#
+# H/W Security exception:
+#
+# CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE is not set

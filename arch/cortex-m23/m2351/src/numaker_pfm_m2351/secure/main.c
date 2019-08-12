@@ -24,9 +24,20 @@
 #include <stdio.h>
 #include "M2351.h"
 #include "partition_M2351.h"
+#include "config.h"
 #include "version.h"
 
 /* Pre-processor Definitions. */
+#define NORMAL  "\033[0m"
+#define BLACK   "\033[0;30m1"
+#define RED     "\033[0;31m"
+#define GREEN   "\033[0;32m"
+#define YELLOW  "\033[0;33m"
+#define BLUE    "\033[0;34m"
+#define MAGENTA "\033[0;35m"
+#define CYAN    "\033[0;36m"
+#define GRAY    "\033[0;37m"
+
 /** Start address for non-secure boot image */
 #define NEXT_BOOT_BASE  0x10040000
 /** Instruction Code of "B ."  */
@@ -287,6 +298,138 @@ int32_t LED_Off(void)
   return 1;
 }
 
+#ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
+void hw_security_exception_init(void)
+{
+  /* Init PC for Nonsecure LED control */
+  GPIO_SetMode(PC_NS, BIT1, GPIO_MODE_OUTPUT);
+
+  /* Set Hard Fault to secure */
+//  SCB->AIRCR = (0x05FA << 16) | ((SCB->AIRCR&0xfffful) & (~(1 << SCB_AIRCR_BFHFNMINS_Pos)));
+//  SCB->AIRCR = (0x05FA << 16) | ((SCB->AIRCR & 0xfffful) | (1 << SCB_AIRCR_BFHFNMINS_Pos));
+
+  if (SCB->AIRCR & SCB_AIRCR_BFHFNMINS_Msk) {
+    printf("Non-secure Hard Fault handled by Non-secure code.\n");
+  } else {
+    printf("Non-secure Hard Fault handled by secure code.\n");
+  }
+//  printf("SCB->AIRCR = 0x%08x\n", SCB->AIRCR);
+
+  NVIC_EnableIRQ(SCU_IRQn);
+}
+void menu_security_exception_example(void)
+{
+  char ch;
+  int temp = 1;
+
+//  printf("SCU->SVIOIEN = 0x%08x\n",SCU->SVIOIEN);
+//  printf("SCU->SRAMNSSET = 0x%08x\n",SCU->SRAMNSSET);
+
+  printf("+---------------------------------------------------------------------+\n");
+  printf("| Type  | Range addresses         | Size      | Remarks               |\n");
+  printf("+---------------------------------------------------------------------+\n");
+  printf("| FLASH | 0x00000000 - 0x0003F000 | 0x3F000   | 252k                  |\n");
+  printf("| RAM   | 0x20000000 - 0x20007FFF | 0x8000    | 32k                   |\n");
+  printf("| NCS   | 0x0003F000 - 0x0003FFFF | 0x1000    | 4k                    |\n");
+  printf("| GPIO  | PC                      |           | Port C is non-secure  |\n");
+  printf("| GPIO  | PA,PB                   |           | Port A,B are secure   |\n");
+  printf("+---------------------------------------------------------------------+\n\n");
+
+  printf("+---------------------------------------------------------------------+\n");
+  printf("| Key | Action                                   | Expected response  |\n");
+  printf("+---------------------------------------------------------------------+\n");
+  printf("| [1] | Read SRAM non-secure address 0x30017000  | Access successful  |\n");
+  printf("|     | Read SRAM non-secure address 0x20017000  | RAZWI              |\n");
+  printf("| [2] | Read SRAM secure address 0x%08X      | Access successful  |\n",&temp);
+  printf("|     | Read SRAM secure address 0x%08X      | RAZWI              |\n",(0x10000000 + (unsigned int)&temp));
+  printf("| [3] | Read FLASH non-secure address 0x00000000 | Access successful  |\n");
+  printf("|     | Read FLASH non-secure address 0x10000000 | RAZWI              |\n");
+  printf("| [4] | Read FLASH secure address 0x10040000     | Access successful  |\n");
+  printf("|     | Read FLASH secure address 0x00040000     | RAZWI              |\n");
+  printf("| [5] | Read GPIO non-secure port PC1_NS         | Access successful  |\n");
+  printf("|     | Write 0 GPIO non-secure port by PC1_NS   | Access successful  |\n");
+  printf("|     | Write 1 GPIO non-secure port by PC1      | RAZWI              |\n");
+  printf("| [6] | Read GPIO secure port PA10               | Access successful  |\n");
+  printf("|     | Write 0 GPIO secure port by PA10         | Access successful  |\n");
+  printf("|     | Write 1 GPIO secure port by PA10_NS      | RAZWI, sec. violat.|\n");
+  printf("| [7] | Write 0 FLASH to address 0x0 (directly)  | Hard fault         |\n");
+  printf("| [8] | Read 0x20018000 address (nonexistent)    | Hard fault         |\n");
+  printf("|[any]| Go non-secure code                       | Exec. non-sec code |\n");
+  printf("+---------------------------------------------------------------------+\n");
+
+  printf("\n[%c] ", ch = getchar());
+
+  switch (ch) {
+    case '1':
+      printf("Read SRAM non-secure address 0x30017000 = %08x\n", M32(0x30017000));
+      printf("    Read SRAM non-secure address 0x20017000 = %08x\n", M32(0x20017000));
+      break;
+    case '2':
+      printf("Read SRAM secure address 0x%08X = %08x\n", &temp, M32(&temp));
+      printf("    Read SRAM secure address 0x%08X = %08x\n",(0x10000000 + (unsigned int)&temp), M32(0x10000000 + (unsigned int)&temp));
+      break;
+    case '3':
+      printf("Read FLASH secure address 0x00000000 = %08x\n", M32(0x00000000));
+      printf("    Read FLASH secure address 0x10000000 = %08x\n", M32(0x10000000));
+      break;
+    case '4':
+      printf("Read FLASH non-secure address 0x10040000 = %08x\n", M32(0x10040000));
+      printf("    Read FLASH non-secure address 0x00040000 = %08x\n", M32(0x00040000));
+      break;
+    case '5':
+      printf("Read GPIO non-secure port PC1_NS = %d\n", PC1_NS);
+      printf("    Write 0 GPIO non-secure port by PC1_NS.");
+      PC1_NS = 0;
+      printf(" Result: PC1_NS = %d\n", PC1_NS);
+      printf("    Write 1 GPIO non-secure port by PC1.");
+      PC1 = 1;
+      printf(" Result: PC1_NS = %d\n", PC1_NS);
+      break;
+    case '6':
+      printf("    Read GPIO secure port PA10 = %d\n", PA10);
+      printf("    Write 0 GPIO secure port by PA10.");
+      PA10 = 0;
+      printf(" Result: PA10 = %d\n", PA10);
+      printf("    Write 1 GPIO secure port by PA10_NS. Result: GPIO violation interrupt\n");
+      PA10_NS = 1;
+      break;
+    case '7':
+      M32(0) = 0;
+      break;
+    case '8':
+      M32(0x20018000);
+      break;
+    default:
+      break;
+  }
+}
+
+void HardFault_Handler(void)
+{
+  printf(RED "Secure HardFault_Handler: invalid memory access or malware activity detected\n" NORMAL);
+
+  while(1);
+}
+
+void SCU_IRQHandler(void)
+{
+  printf(RED "SCU_IRQHandler detected: ");
+  if((SCU->SVINTSTS & SCU_SVIOIEN_GPIOIEN_Msk) == SCU_SVIOIEN_GPIOIEN_Msk) {
+    SCU->SVINTSTS |= SCU_SVIOIEN_GPIOIEN_Msk;
+    printf("GPIO violation interrupt event\n");
+  }
+//  TBD
+//  if((SCU->SVINTSTS & SCU_SVIOIEN_SRAM0IEN_Msk) == SCU_SVIOIEN_SRAM0IEN_Msk) {
+//    SCU->SVINTSTS |= SCU_SVIOIEN_SRAM0IEN_Msk;
+//    printf("SRAM0 violation interrupt event\n");
+//  }
+//  if((SCU->SVINTSTS & SCU_SVIOIEN_SRAM1IEN_Msk) == SCU_SVIOIEN_SRAM1IEN_Msk) {
+//    SCU->SVINTSTS |= SCU_SVIOIEN_SRAM1IEN_Msk;
+//    printf("SRAM1 violation interrupt event\n");
+//  }
+  printf(NORMAL);
+}
+#endif
 /**
  * @brief         SysTick_Handler - SysTick IRQ Handler.
  *
@@ -294,35 +437,35 @@ int32_t LED_Off(void)
  *
  * @returns       None
  */
-void SysTick_Handler(void)
-{
-  static uint32_t u32Ticks;
-
-  switch (u32Ticks++) {
-    case 0:
-      LED_On();
-      break;
-    case 200:
-      LED_Off();
-      break;
-    case 300:
-      if (pfNonSecure_LED_On != NULL) {
-        pfNonSecure_LED_On(1u);
-      }
-      break;
-    case 500:
-      if (pfNonSecure_LED_Off != NULL) {
-        pfNonSecure_LED_Off(1u);
-      }
-      break;
-
-    default:
-      if (u32Ticks > 600) {
-        u32Ticks = 0;
-      }
-  }
-
-}
+//void SysTick_Handler(void)
+//{
+//  static uint32_t u32Ticks;
+//
+//  switch (u32Ticks++) {
+//    case 0:
+//      LED_On();
+//      break;
+//    case 200:
+//      LED_Off();
+//      break;
+//    case 300:
+//      if (pfNonSecure_LED_On != NULL) {
+//        pfNonSecure_LED_On(1u);
+//      }
+//      break;
+//    case 500:
+//      printf("*");
+//      if (pfNonSecure_LED_Off != NULL) {
+//        pfNonSecure_LED_Off(1u);
+//      }
+//      break;
+//
+//    default:
+//      if (u32Ticks > 600) {
+//        u32Ticks = 0;
+//      }
+//  }
+//}
 
 /**
  * @brief         main - entry point of mTower: secure world.
@@ -340,7 +483,7 @@ int main(void)
   /* UART is configured as debug port */
   DEBUG_PORT_Init();
 
-  printf("\n\n\t-=mTower v" VERSION "=-  " __DATE__ "  " __TIME__"\n\n");
+  printf(NORMAL "\n\n\t-=mTower v" VERSION "=-  " __DATE__ "  " __TIME__"\n\n");
 
   printf("+---------------------------------------------+\n");
   printf("|              Secure is running ...          |\n");
@@ -357,6 +500,11 @@ int main(void)
 
   /* Set GPIO Port C to non-secure for LED control */
   SCU_SET_IONSSET(SCU_IONSSET_PC_Msk);
+
+#ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
+  hw_security_exception_init();
+  menu_security_exception_example();
+#endif
 
   tee_cryp_init();
 

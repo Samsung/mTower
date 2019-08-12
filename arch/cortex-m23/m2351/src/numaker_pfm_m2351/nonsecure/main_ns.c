@@ -498,6 +498,98 @@ void vApplicationTickHook( void )
   ;
 }
 
+#ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
+void menu_security_exception_example_ns(void)
+{
+  char ch;
+  int temp = 1;
+
+  printf("+---------------------------------------------------------------------+\n");
+  printf("| Type  | Range addresses         | Size      | Remarks               |\n");
+  printf("+---------------------------------------------------------------------+\n");
+  printf("| FLASH | 0x10040000 - 0x0007FFFF | 0x40000   | 256k                  |\n");
+  printf("| RAM   | 0x30008000 - 0x30017FFF | 0x10000   | 64k                   |\n");
+  printf("| GPIO  | PC                      |           | Port C is non-secure  |\n");
+  printf("| GPIO  | PA,PB                   |           | Port A,B are secure   |\n");
+  printf("+---------------------------------------------------------------------+\n\n");
+
+  printf("+---------------------------------------------------------------------+\n");
+  printf("| Key | Action                                   | Expected response  |\n");
+  printf("+---------------------------------------------------------------------+\n");
+  printf("| [1] | Read SRAM secure address 0x30000000      | Hard fault         |\n");
+  printf("| [2] | Read SRAM secure address 0x20000000      | Hard fault         |\n");
+  printf("| [3] | Read SRAM non-secure address 0x%08X  | Access successful  |\n",&temp);
+  printf("|     | Read SRAM non-secure address 0x%08X  | Hard fault         |\n",(~0x10000000 & (unsigned int)&temp));
+  printf("| [4] | Read FLASH non-secure address 0x00000000 | Hard fault         |\n");
+  printf("| [5] | Read FLASH non-secure address 0x10000000 | Hard fault         |\n");
+  printf("| [6] | Read FLASH secure address 0x10040000     | Access successful  |\n");
+  printf("|     | Read FLASH secure address 0x00040000     | Hard fault         |\n");
+  printf("| [7] | Read GPIO non-secure port PC1_NS         | Access successful  |\n");
+  printf("|     | Write 0 GPIO non-secure port by PC1_NS   | Access successful  |\n");
+  printf("|     | Write 1 GPIO non-secure port by PC1      | Hard fault         |\n");
+  printf("| [8] | Read GPIO secure port PA10_NS            | RAZWI, sec. violat.|\n");
+  printf("|     | Write 0 GPIO secure port by PA10_NS      | RAZWI, sec. violat.|\n");
+  printf("|     | Write 1 GPIO secure port by PA10         | Hard fault         |\n");
+  printf("| [9] | Write 0 to address 0x0 (directly)        | Hard fault         |\n");
+  printf("| [a] | Read 0x30018000 address (nonexistent)    | Hard fault         |\n");
+  printf("+---------------------------------------------------------------------+\n");
+
+  printf("\n[%c] ", ch = getchar());
+
+  switch (ch) {
+    case '1':
+      printf("Read SRAM secure address 0x30000000: Hard fault occurs in secure\n");
+      M32(0x30000000);
+      break;
+    case '2':
+      printf("Read SRAM secure address 0x20000000: Hard fault occurs in secure\n");
+      M32(0x20000000);
+      break;
+    case '3':
+      printf("Read SRAM non-secure address 0x%08X = %08x\n", &temp, M32(&temp));
+      printf("    Read SRAM non-secure address 0x%08X: Hard fault occurs in secure\n", (~0x10000000 & (unsigned int)&temp));
+      M32((~0x10000000 & (unsigned int)&temp));
+      break;
+    case '4':
+      printf("Read FLASH secure address 0x00000000: Hard fault occurs in secure\n");
+      M32(0x00000000);
+      break;
+    case '5':
+      printf("Read FLASH secure address 0x10000000: Hard fault occurs in secure\n");
+      M32(0x10000000);
+      break;
+    case '6':
+      printf("Read FLASH non-secure address 0x10040000 = %08x\n", M32(0x10040000));
+      printf("    Read FLASH non-secure address 0x00040000: Hard fault occurs in secure\n");
+      M32(0x00040000);
+      break;
+    case '7':
+      printf("Read GPIO non-secure port PC1_NS = %d\n", PC1_NS);
+      printf("    Write 0 GPIO non-secure port by PC1_NS.");
+      PC1_NS = 0;
+      printf(" Result: PC1_NS = %d\n", PC1_NS);
+      printf("    Write 1 GPIO non-secure port by PC1. Hard fault occurs in secure\n");
+      PC1 = 1;
+      break;
+    case '8':
+      printf("Read GPIO secure port PA10_NS = %d. Result: GPIO violation interrupt occurs\n", PA10_NS);
+      printf("    Write 1 GPIO secure port by PA10_NS. Result: GPIO violation interrupt occurs\n");
+      PA10_NS = 1;
+      printf("    Write 1 GPIO secure port by PA10. Hard fault occurs in secure\n");
+      PA10 = 1;
+      break;
+    case '9':
+      M32(0x10000000) = 0;
+      break;
+    case 'a':
+      M32(0x30018000);
+      break;
+    default:
+      break;
+  }
+while(1);
+}
+#endif
 /**
  * @brief         main - entry point of mTower: nFreeRTOS.
  *
@@ -516,10 +608,14 @@ int main( void )
   printf("|     Nonsecure FreeRTOS is running ...       |\n");
   printf("+---------------------------------------------+\n");
 
-  Secure_func();
-
   /* Init PC for Nonsecure LED control */
   GPIO_SetMode(PC_NS, BIT1 | BIT0, GPIO_MODE_OUTPUT);
+
+#ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
+  menu_security_exception_example_ns();
+#endif
+
+  Secure_func();
 
   /* register NonSecure callbacks in Secure application */
   Secure_LED_On_callback(&NonSecure_LED_On);
