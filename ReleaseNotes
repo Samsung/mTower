@@ -31,6 +31,18 @@ Architecture support:
 * pseudo-TAs support (built-in TAs that are parts of single binary image)
 * two examples are included (HelloWorld and template application)
 
+mTower 0.2.0
+
+* Added files of JOSS article
+* Ported hotp example from OP-TEE
+* Enhanced documentation
+* Added GP TEE test suite
+* Added HW security exception example
+* Clarified licensing terms
+* Refactored parts of source code
+* Fixed bug related to incorrect parameter passing between Normal and Secure
+  Worlds
+
 Work in progress
 ----------------
 
