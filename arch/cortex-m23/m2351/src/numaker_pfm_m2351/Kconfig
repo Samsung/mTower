@@ -3,3 +3,186 @@
 # see the file kconfig-language.txt in the docs folder of mTower repository.
 #
 
+menu "Secure Attribution Configuration"
+
+menu "GPIO Secure Attribution Configuration"
+
+choice
+	prompt "Port A secure configuration"
+	default GPIO_SECURE_PA
+
+config GPIO_NONSECURE_PA
+	bool "PA non-secure"
+	---help---
+		GPIO PA is non-secure.
+
+config GPIO_SECURE_PA
+	bool "PA secure"
+	---help---
+		GPIO PA is secure.
+endchoice
+
+choice
+	prompt "Port B secure configuration"
+	default GPIO_SECURE_PB
+
+config GPIO_NONSECURE_PB
+	bool "PB non-secure"
+	---help---
+		GPIO PB is non-secure.
+
+config GPIO_SECURE_PB
+	bool "PB secure"
+	---help---
+		GPIO PB is secure.
+endchoice
+
+choice
+	prompt "Port C secure configuration"
+	default GPIO_SECURE_PC
+
+config GPIO_NONSECURE_PC
+	bool "PC non-secure"
+	---help---
+		GPIO PC is non-secure.
+
+config GPIO_SECURE_PC
+	bool "PC secure"
+	---help---
+		GPIO PC is secure.
+endchoice
+
+choice
+	prompt "Port D secure configuration"
+	default GPIO_SECURE_PD
+
+config GPIO_NONSECURE_PD
+	bool "PD non-secure"
+	---help---
+		GPIO PD is non-secure.
+
+config GPIO_SECURE_PD
+	bool "PD secure"
+	---help---
+		GPIO PD is secure.
+endchoice
+
+choice
+	prompt "Port E secure configuration"
+	default GPIO_SECURE_PE
+
+config GPIO_NONSECURE_PE
+	bool "PE non-secure"
+	---help---
+		GPIO PE is non-secure.
+
+config GPIO_SECURE_PE
+	bool "PE secure"
+	---help---
+		GPIO PE is secure.
+endchoice
+
+choice
+	prompt "Port F secure configuration"
+	default GPIO_SECURE_PF
+
+config GPIO_NONSECURE_PF
+	bool "PF non-secure"
+	---help---
+		GPIO PF is non-secure.
+
+config GPIO_SECURE_PF
+	bool "PF secure"
+	---help---
+		GPIO PF is secure.
+endchoice
+
+choice
+	prompt "Port G secure configuration"
+	default GPIO_SECURE_PG
+
+config GPIO_NONSECURE_PG
+	bool "PG non-secure"
+	---help---
+		GPIO PG is non-secure.
+
+config GPIO_SECURE_PG
+	bool "PG secure"
+	---help---
+		GPIO PG is secure.
+endchoice
+
+choice
+	prompt "Port H secure configuration"
+	default GPIO_SECURE_PH
+
+config GPIO_NONSECURE_PH
+	bool "PH non-secure"
+	---help---
+		GPIO PH is non-secure.
+
+config GPIO_SECURE_PH
+	bool "PH secure"
+	---help---
+		GPIO PH is secure.
+endchoice
+
+endmenu # GPIO Secure Attribution Configuration
+
+choice
+	prompt "Secure SRAM size"
+	default GPIO_SECURE_PH
+
+config SCU_SECURE_SRAM_0
+	bool "Secure SRAM 0KB"
+config SCU_SECURE_SRAM_8
+	bool "Secure SRAM 8KB"
+config SCU_SECURE_SRAM_16
+	bool "Secure SRAM 16KB"
+config SCU_SECURE_SRAM_24
+	bool "Secure SRAM 24KB"
+config SCU_SECURE_SRAM_32
+	bool "Secure SRAM 32KB"
+config SCU_SECURE_SRAM_40
+	bool "Secure SRAM 40KB"
+config SCU_SECURE_SRAM_48
+	bool "Secure SRAM 48KB"
+config SCU_SECURE_SRAM_56
+	bool "Secure SRAM 56KB"
+config SCU_SECURE_SRAM_64
+	bool "Secure SRAM 64KB"
+config SCU_SECURE_SRAM_72
+	bool "Secure SRAM 72KB"
+config SCU_SECURE_SRAM_80
+	bool "Secure SRAM 80KB"
+config SCU_SECURE_SRAM_88
+	bool "Secure SRAM 88KB"
+config SCU_SECURE_SRAM_96
+	bool "Secure SRAM 96KB"
+endchoice
+
+config SCU_SECURE_SRAM_SIZE
+	hex
+	default 0x0000   if SCU_SECURE_SRAM_0
+	default 0x2000   if SCU_SECURE_SRAM_8
+	default 0x4000   if SCU_SECURE_SRAM_16
+	default 0x6000   if SCU_SECURE_SRAM_24
+	default 0x8000   if SCU_SECURE_SRAM_32
+	default 0xA000   if SCU_SECURE_SRAM_40
+	default 0xC000   if SCU_SECURE_SRAM_48
+	default 0xC000   if SCU_SECURE_SRAM_56
+	default 0x10000   if SCU_SECURE_SRAM_64
+	default 0x12000   if SCU_SECURE_SRAM_72
+	default 0x14000   if SCU_SECURE_SRAM_80
+	default 0x16000   if SCU_SECURE_SRAM_88
+	default 0x18000   if SCU_SECURE_SRAM_96
+
+config FMC_SECURE_ROM_SIZE
+	hex "Secure Flash ROM Size"
+	default	0x40000
+	range 0x1000 0x40000
+	---help---
+		"Secure Flash ROM Size."
+
+endmenu # Secure Attribution Configuration
+

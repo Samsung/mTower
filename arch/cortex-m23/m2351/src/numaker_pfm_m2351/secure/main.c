@@ -301,6 +301,8 @@ int32_t LED_Off(void)
 #ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
 void hw_security_exception_init(void)
 {
+  /* Set GPIO Port C to non-secure for LED control */
+  //  SCU_SET_IONSSET(SCU_IONSSET_PC_Msk); // Should be set before by setting up configuration
   /* Init PC for Nonsecure LED control */
   GPIO_SetMode(PC_NS, BIT1, GPIO_MODE_OUTPUT);
 
@@ -497,9 +499,6 @@ int main(void)
 
   /* Generate Systick interrupt each 10 ms */
 //  SysTick_Config(SystemCoreClock / 100);
-
-  /* Set GPIO Port C to non-secure for LED control */
-  SCU_SET_IONSSET(SCU_IONSSET_PC_Msk);
 
 #ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
   hw_security_exception_init();

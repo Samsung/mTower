@@ -8,37 +8,15 @@
  *
  ******************************************************************************/
 
+#include "M2351.h"
+#include "config.h"
+
 #ifndef PARTITION_M2351
 #define PARTITION_M2351
 
-/*
-//-------- <<< Use Configuration Wizard in Context Menu >>> -----------------
-*/
-
-
-/*
-    SRAMNSSET
-*/
-/*
-// Bit 0..16
-// <o.0..16> Secure SRAM Size              <0=> 0 KB
-//                                         <0x2000=> 8KB
-//                                         <0x4000=> 16KB
-//                                         <0x6000=> 24KB
-//                                         <0x8000=> 32KB
-//                                         <0xa000=> 40KB
-//                                         <0xc000=> 48KB
-//                                         <0xe000=> 56KB
-//                                         <0x10000=> 64KB
-//                                         <0x12000=> 72KB
-//                                         <0x14000=> 80KB
-//                                         <0x16000=> 88KB
-//                                         <0x18000=> 96KB
-*/
-#define SCU_SECURE_SRAM_SIZE      0x8000
-#define NON_SECURE_SRAM_BASE    (0x30000000 + SCU_SECURE_SRAM_SIZE)
-
-
+/* SRAMNSSET */
+//#define SCU_SECURE_SRAM_SIZE      0x8000
+#define NON_SECURE_SRAM_BASE    (0x30000000 + CONFIG_SCU_SECURE_SRAM_SIZE)
 
 /*--------------------------------------------------------------------------------------------------------*/
 
@@ -222,33 +200,6 @@ __STATIC_INLINE void FMC_NSBA_Setup(void)
 // </h>
 */
 
-
-
-/*
-// <h> GPIO Secure Attribution Configuration
-*/
-
-/*
-    IONSSET
-*/
-/*
-// Bit 0..31
-//   <o.0>  PA       <0=> Secure <1=> Non-Secure
-//   <o.1>  PB   <0=> Secure <1=> Non-Secure
-//   <o.2>  PC      <0=> Secure <1=> Non-Secure
-//   <o.3>  PD    <0=> Secure <1=> Non-Secure
-//   <o.4>  PE      <0=> Secure <1=> Non-Secure
-//   <o.5>  PF      <0=> Secure <1=> Non-Secure
-//   <o.6>  PG      <0=> Secure <1=> Non-Secure
-//   <o.7>  PH      <0=> Secure <1=> Non-Secure
-*/
-#define SCU_INIT_IONSSET_VAL      0x0
-/*
-// </h>
-*/
-
-
-
 /**
   \brief   Setup SCU Configuration Unit
   \details
@@ -266,10 +217,51 @@ __STATIC_INLINE void SCU_Setup(void)
     SCU->PNSSET[5] = SCU_INIT_PNSSET5_VAL;
     SCU->PNSSET[6] = SCU_INIT_PNSSET6_VAL;
 
-    SCU->IONSSET = SCU_INIT_IONSSET_VAL;
+    /* GPIO Secure Attribution Configuration */
+    /* Px     0 = Secure; 1 = Non-Secure */
+
+    /* Set GPIO Port A to non-secure */
+#ifdef CONFIG_GPIO_NONSECURE_PA
+    SCU_SET_IONSSET(SCU_IONSSET_PA_Msk);
+#endif
+
+    /* Set GPIO Port B to non-secure */
+#ifdef CONFIG_GPIO_NONSECURE_PB
+  SCU_SET_IONSSET(SCU_IONSSET_PB_Msk);
+#endif
+
+  /* Set GPIO Port C to non-secure */
+#ifdef CONFIG_GPIO_NONSECURE_PC
+  SCU_SET_IONSSET(SCU_IONSSET_PC_Msk);
+#endif
+
+  /* Set GPIO Port D to non-secure */
+#ifdef CONFIG_GPIO_NONSECURE_PD
+  SCU_SET_IONSSET(SCU_IONSSET_PD_Msk);
+#endif
+
+  /* Set GPIO Port E to non-secure */
+#ifdef CONFIG_GPIO_NONSECURE_PE
+  SCU_SET_IONSSET(SCU_IONSSET_PE_Msk);
+#endif
+
+  /* Set GPIO Port F to non-secure */
+#ifdef CONFIG_GPIO_NONSECURE_PF
+  SCU_SET_IONSSET(SCU_IONSSET_PF_Msk);
+#endif
+
+  /* Set GPIO Port G to non-secure */
+#ifdef CONFIG_GPIO_NONSECURE_PG
+  SCU_SET_IONSSET(SCU_IONSSET_PG_Msk);
+#endif
+
+  /* Set GPIO Port H to non-secure */
+#ifdef CONFIG_GPIO_NONSECURE_PH
+  SCU_SET_IONSSET(SCU_IONSSET_PH_Msk);
+#endif
 
     /* Set Non-secure SRAM */
-    for(i = 11; i >= SCU_SECURE_SRAM_SIZE / 8192; i--)
+    for(i = 11; i >= CONFIG_SCU_SECURE_SRAM_SIZE / 8192; i--)
     {
         SCU->SRAMNSSET |= (1U << i);
     }
