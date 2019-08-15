@@ -87,118 +87,6 @@ __STATIC_INLINE void FMC_NSBA_Setup(void)
 // <h> Peripheral Secure Attribution Configuration
 */
 
-/*
-    PNSSET0
-*/
-/*
-// Module 0..31
-//   <o.9>  USBH       <0=> Secure <1=> Non-Secure
-//   <o.13>  SD0   <0=> Secure <1=> Non-Secure
-//   <o.16>  EBI    <0=> Secure <1=> Non-Secure
-//   <o.24>  PDMA1      <0=> Secure <1=> Non-Secure
-*/
-#define SCU_INIT_PNSSET0_VAL      0x0
-/*
-    PNSSET1
-*/
-/*
-// Module 0..31
-//   <o.17>  CRC       <0=> Secure <1=> Non-Secure
-//   <o.18>  CRPT   <0=> Secure <1=> Non-Secure
-*/
-#define SCU_INIT_PNSSET1_VAL      0x0
-/*
-    PNSSET2
-*/
-/*
-// Module 0..31
-//   <o.1>  RTC       <0=> Secure <1=> Non-Secure
-//   <o.3>  EADC   <0=> Secure <1=> Non-Secure
-//   <o.5>  ACMP01     <0=> Secure <1=> Non-Secure
-//
-//   <o.7>  DAC      <0=> Secure <1=> Non-Secure
-//   <o.8>  I2S0      <0=> Secure <1=> Non-Secure
-//   <o.13>  OTG      <0=> Secure <1=> Non-Secure
-//   <o.17>  TMR23      <0=> Secure <1=> Non-Secure
-//   <h> EPWM
-//   <o.24>  EPWM0      <0=> Secure <1=> Non-Secure
-//   <o.25>  EPWM1      <0=> Secure <1=> Non-Secure
-//   <o.26>  BPWM0      <0=> Secure <1=> Non-Secure
-//   <o.27>  BPWM1      <0=> Secure <1=> Non-Secure
-//   </h>
-*/
-#define SCU_INIT_PNSSET2_VAL      0x0
-/*
-    PNSSET3
-*/
-/*
-// Module 0..31
-//   <h>  SPI
-//   <o.0>  QSPI0       <0=> Secure <1=> Non-Secure
-//   <o.1>  SPI0   <0=> Secure <1=> Non-Secure
-//   <o.2>  SPI1      <0=> Secure <1=> Non-Secure
-//   <o.3>  SPI2    <0=> Secure <1=> Non-Secure
-//   <o.4>  SPI3      <0=> Secure <1=> Non-Secure
-//   </h>
-//   <h> UART
-//   <o.16>  UART0      <0=> Secure <1=> Non-Secure
-//   <o.17>  UART1      <0=> Secure <1=> Non-Secure
-//   <o.18>  UART2      <0=> Secure <1=> Non-Secure
-//   <o.19>  UART3      <0=> Secure <1=> Non-Secure
-//   <o.20>  UART4      <0=> Secure <1=> Non-Secure
-//   <o.21>  UART5      <0=> Secure <1=> Non-Secure
-//   </h>
-*/
-#define SCU_INIT_PNSSET3_VAL      0x20000
-/*
-    PNSSET4
-*/
-/*
-// Module 0..31
-//   <h> I2C
-//   <o.0>  I2C0       <0=> Secure <1=> Non-Secure
-//   <o.1>  I2C1   <0=> Secure <1=> Non-Secure
-//   <o.2>  I2C2      <0=> Secure <1=> Non-Secure
-//   </h>
-//   <h> Smart Card
-//   <o.16>  SC0      <0=> Secure <1=> Non-Secure
-//   <o.17>  SC1      <0=> Secure <1=> Non-Secure
-//   <o.18>  SC2      <0=> Secure <1=> Non-Secure
-//   </h>
-*/
-#define SCU_INIT_PNSSET4_VAL      0x0
-/*
-    PNSSET5
-*/
-/*
-// Module 0..31
-//   <o.0>  CAN0       <0=> Secure <1=> Non-Secure
-//   <h> QEI
-//   <o.16>  QEI0   <0=> Secure <1=> Non-Secure
-//   <o.17>  QEI1      <0=> Secure <1=> Non-Secure
-//   </h>
-//   <h> ECAP
-//   <o.20>  ECAP0    <0=> Secure <1=> Non-Secure
-//   <o.21>  ECAP1      <0=> Secure <1=> Non-Secure
-//   </h>
-//   <o.25>  TRNG    <0=> Secure <1=> Non-Secure
-*/
-#define SCU_INIT_PNSSET5_VAL      0x0
-/*
-    PNSSET6
-*/
-/*
-// Module 0..31
-//   <o.0>  USBD       <0=> Secure <1=> Non-Secure
-//   <h> USCI
-//   <o.16>  USCI0   <0=> Secure <1=> Non-Secure
-//   <o.17>  USCI1      <0=> Secure <1=> Non-Secure
-//   </h>
-*/
-#define SCU_INIT_PNSSET6_VAL      0x0
-/*
-// </h>
-*/
 
 /**
   \brief   Setup SCU Configuration Unit
@@ -207,25 +95,190 @@ __STATIC_INLINE void FMC_NSBA_Setup(void)
  */
 __STATIC_INLINE void SCU_Setup(void)
 {
-    int32_t i;
+  int32_t i;
 
-    SCU->PNSSET[0] = SCU_INIT_PNSSET0_VAL;
-    SCU->PNSSET[1] = SCU_INIT_PNSSET1_VAL;
-    SCU->PNSSET[2] = SCU_INIT_PNSSET2_VAL;
-    SCU->PNSSET[3] = SCU_INIT_PNSSET3_VAL;
-    SCU->PNSSET[4] = SCU_INIT_PNSSET4_VAL;
-    SCU->PNSSET[5] = SCU_INIT_PNSSET5_VAL;
-    SCU->PNSSET[6] = SCU_INIT_PNSSET6_VAL;
-
-    /* GPIO Secure Attribution Configuration */
-    /* Px     0 = Secure; 1 = Non-Secure */
-
-    /* Set GPIO Port A to non-secure */
-#ifdef CONFIG_GPIO_NONSECURE_PA
-    SCU_SET_IONSSET(SCU_IONSSET_PA_Msk);
+  /* Peripheral Secure Attribution Configuration */
+#ifdef CONFIG_USBH_NONSECURE
+  SCU_SET_PNSSET(USBH_Attr);
 #endif
 
-    /* Set GPIO Port B to non-secure */
+#ifdef CONFIG_SD0_NONSECURE
+  SCU_SET_PNSSET(SD0_Attr);
+#endif
+
+#ifdef CONFIG_EBI_NONSECURE
+  SCU_SET_PNSSET(EBI_Attr);
+#endif
+
+#ifdef CONFIG_PDMA1_NONSECURE
+  SCU_SET_PNSSET(PDMA1_Attr);
+#endif
+
+#ifdef CONFIG_CRC_NONSECURE
+  SCU_SET_PNSSET(CRC_Attr);
+#endif
+
+#ifdef CONFIG_CRPT_NONSECURE
+  SCU_SET_PNSSET(CRPT_Attr);
+#endif
+
+#ifdef CONFIG_RTC_NONSECURE
+  SCU_SET_PNSSET(RTC_Attr);
+#endif
+
+#ifdef CONFIG_EADC_NONSECURE
+  SCU_SET_PNSSET(EADC_Attr);
+#endif
+
+#ifdef CONFIG_ACMP01_NONSECURE
+  SCU_SET_PNSSET(ACMP01_Attr);
+#endif
+
+#ifdef CONFIG_DAC_NONSECURE
+  SCU_SET_PNSSET(DAC_Attr);
+#endif
+
+#ifdef CONFIG_I2S0_NONSECURE
+  SCU_SET_PNSSET(I2S0_Attr);
+#endif
+
+#ifdef CONFIG_OTG_NONSECURE
+  SCU_SET_PNSSET(OTG_Attr);
+#endif
+
+#ifdef CONFIG_TMR23_NONSECURE
+  SCU_SET_PNSSET(TMR23_Attr);
+#endif
+
+#ifdef CONFIG_EPWM0_NONSECURE
+  SCU_SET_PNSSET(EPWM0_Attr);
+#endif
+
+#ifdef CONFIG_EPWM1_NONSECURE
+  SCU_SET_PNSSET(EPWM1_Attr);
+#endif
+
+#ifdef CONFIG_BPWM0_NONSECURE
+  SCU_SET_PNSSET(BPWM0_Attr);
+#endif
+
+#ifdef CONFIG_BPWM1_NONSECURE
+  SCU_SET_PNSSET(BPWM1_Attr);
+#endif
+
+#ifdef CONFIG_QSPI0_NONSECURE
+  SCU_SET_PNSSET(QSPI0_Attr);
+#endif
+
+#ifdef CONFIG_SPI0_NONSECURE
+  SCU_SET_PNSSET(SPI0_Attr);
+#endif
+
+#ifdef CONFIG_SPI1_NONSECURE
+  SCU_SET_PNSSET(SPI1_Attr);
+#endif
+
+#ifdef CONFIG_SPI2_NONSECURE
+  SCU_SET_PNSSET(SPI2_Attr);
+#endif
+
+#ifdef CONFIG_SPI3_NONSECURE
+  SCU_SET_PNSSET(SPI3_Attr);
+#endif
+
+#ifdef CONFIG_UART0_NONSECURE
+  SCU_SET_PNSSET(UART0_Attr);
+#endif
+
+#ifdef CONFIG_UART1_NONSECURE
+  SCU_SET_PNSSET(UART1_Attr);
+#endif
+
+#ifdef CONFIG_UART2_NONSECURE
+  SCU_SET_PNSSET(UART2_Attr);
+#endif
+
+#ifdef CONFIG_UART3_NONSECURE
+  SCU_SET_PNSSET(UART3_Attr);
+#endif
+
+#ifdef CONFIG_UART4_NONSECURE
+  SCU_SET_PNSSET(UART4_Attr);
+#endif
+
+#ifdef CONFIG_UART5_NONSECURE
+  SCU_SET_PNSSET(UART5_Attr);
+#endif
+
+#ifdef CONFIG_I2C0_NONSECURE
+  SCU_SET_PNSSET(I2C0_Attr);
+#endif
+
+#ifdef CONFIG_I2C1_NONSECURE
+  SCU_SET_PNSSET(I2C1_Attr);
+#endif
+
+#ifdef CONFIG_I2C2_NONSECURE
+  SCU_SET_PNSSET(I2C2_Attr);
+#endif
+
+#ifdef CONFIG_SC0_NONSECURE
+  SCU_SET_PNSSET(SC0_Attr);
+#endif
+
+#ifdef CONFIG_SC1_NONSECURE
+  SCU_SET_PNSSET(SC1_Attr);
+#endif
+
+#ifdef CONFIG_SC2_NONSECURE
+  SCU_SET_PNSSET(SC2_Attr);
+#endif
+
+#ifdef CONFIG_CAN0_NONSECURE
+  SCU_SET_PNSSET(CAN0_Attr);
+#endif
+
+#ifdef CONFIG_QEI0_NONSECURE
+  SCU_SET_PNSSET(QEI0_Attr);
+#endif
+
+#ifdef CONFIG_QEI1_NONSECURE
+  SCU_SET_PNSSET(QEI1_Attr);
+#endif
+
+#ifdef CONFIG_ECAP0_NONSECURE
+  SCU_SET_PNSSET(ECAP0_Attr);
+#endif
+
+#ifdef CONFIG_ECAP1_NONSECURE
+  SCU_SET_PNSSET(ECAP1_Attr);
+#endif
+
+#ifdef CONFIG_TRNG_NONSECURE
+  SCU_SET_PNSSET(TRNG_Attr);
+#endif
+
+#ifdef CONFIG_USBD_NONSECURE
+  SCU_SET_PNSSET(USBD_Attr);
+#endif
+
+#ifdef CONFIG_USCI0_NONSECURE
+  SCU_SET_PNSSET(USCI0_Attr);
+#endif
+
+#ifdef CONFIG_USCI1_NONSECURE
+  SCU_SET_PNSSET(USCI1_Attr);
+#endif
+
+  /* GPIO Secure Attribution Configuration */
+  /* Px     0 = Secure; 1 = Non-Secure */
+
+  /* Set GPIO Port A to non-secure */
+#ifdef CONFIG_GPIO_NONSECURE_PA
+  SCU_SET_IONSSET(SCU_IONSSET_PA_Msk);
+#endif
+
+  /* Set GPIO Port B to non-secure */
 #ifdef CONFIG_GPIO_NONSECURE_PB
   SCU_SET_IONSSET(SCU_IONSSET_PB_Msk);
 #endif
@@ -260,13 +313,12 @@ __STATIC_INLINE void SCU_Setup(void)
   SCU_SET_IONSSET(SCU_IONSSET_PH_Msk);
 #endif
 
-    /* Set Non-secure SRAM */
-    for(i = 11; i >= CONFIG_SCU_SECURE_SRAM_SIZE / 8192; i--)
-    {
-        SCU->SRAMNSSET |= (1U << i);
-    }
+  /* Set Non-secure SRAM */
+  for (i = 11; i >= CONFIG_SCU_SECURE_SRAM_SIZE / 8192; i--) {
+    SCU->SRAMNSSET |= (1U << i);
+  }
 
-    SCU->SVIOIEN = SCU_SVIOIEN_GPIOIEN_Msk;
+  SCU->SVIOIEN = SCU_SVIOIEN_GPIOIEN_Msk;
 //    | SCU_SVIOIEN_SRAM0IEN_Msk | SCU_SVIOIEN_SRAM1IEN_Msk;
 
 }

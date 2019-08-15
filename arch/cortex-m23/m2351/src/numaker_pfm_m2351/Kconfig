@@ -184,5 +184,654 @@ config FMC_SECURE_ROM_SIZE
 	---help---
 		"Secure Flash ROM Size."
 
+menu "Peripheral Secure Attribution Configuration"
+
+choice
+	prompt "USBH secure configuration"
+	default USBH_SECURE
+
+config USBH_NONSECURE
+	bool "USBH non-secure"
+	---help---
+		USBH is non-secure.
+
+config USBH_SECURE
+	bool "USBH secure"
+	---help---
+		USBH is secure.
+endchoice
+
+choice
+	prompt "SDO secure configuration"
+	default SDO_SECURE
+
+config SDO_NONSECURE
+	bool "SDO non-secure"
+	---help---
+		SDO is non-secure.
+
+config SDO_SECURE
+	bool "SDO secure"
+	---help---
+		SDO is secure.
+endchoice
+
+choice
+	prompt "EBI secure configuration"
+	default EBI_SECURE
+
+config EBI_NONSECURE
+	bool "EBI non-secure"
+	---help---
+		EBI is non-secure.
+
+config EBI_SECURE
+	bool "EBI secure"
+	---help---
+		EBI is secure.
+endchoice
+
+choice
+	prompt "PDMA1 secure configuration"
+	default PDMA1_SECURE
+
+config PDMA1_NONSECURE
+	bool "PDMA1 non-secure"
+	---help---
+		PDMA1 is non-secure.
+
+config PDMA1_SECURE
+	bool "PDMA1 secure"
+	---help---
+		PDMA1 is secure.
+endchoice
+
+choice
+	prompt "CRC secure configuration"
+	default CRC_SECURE
+
+config CRC_NONSECURE
+	bool "CRC non-secure"
+	---help---
+		CRC is non-secure.
+
+config CRC_SECURE
+	bool "CRC secure"
+	---help---
+		CRC is secure.
+endchoice
+
+choice
+	prompt "CRPT secure configuration"
+	default CRPT_SECURE
+
+config CRPT_NONSECURE
+	bool "CRPT non-secure"
+	---help---
+		CRPT is non-secure.
+
+config CRPT_SECURE
+	bool "CRPT secure"
+	---help---
+		CRPT is secure.
+endchoice
+
+choice
+	prompt "RTC secure configuration"
+	default RTC_SECURE
+
+config RTC_NONSECURE
+	bool "RTC non-secure"
+	---help---
+		RTC is non-secure.
+
+config RTC_SECURE
+	bool "RTC secure"
+	---help---
+		RTC is secure.
+endchoice
+
+choice
+	prompt "EADC secure configuration"
+	default EADC_SECURE
+
+config EADC_NONSECURE
+	bool "EADC non-secure"
+	---help---
+		EADC is non-secure.
+
+config EADC_SECURE
+	bool "EADC secure"
+	---help---
+		EADC is secure.
+endchoice
+
+choice
+	prompt "ACMP01 secure configuration"
+	default ACMP01_SECURE
+
+config ACMP01_NONSECURE
+	bool "ACMP01 non-secure"
+	---help---
+		ACMP01 is non-secure.
+
+config ACMP01_SECURE
+	bool "ACMP01 secure"
+	---help---
+		ACMP01 is secure.
+endchoice
+
+choice
+	prompt "DAC secure configuration"
+	default DAC_SECURE
+
+config DAC_NONSECURE
+	bool "DAC non-secure"
+	---help---
+		DAC is non-secure.
+
+config DAC_SECURE
+	bool "DAC secure"
+	---help---
+		DAC is secure.
+endchoice
+
+choice
+	prompt "I2S0 secure configuration"
+	default I2S0_SECURE
+
+config I2S0_NONSECURE
+	bool "I2S0 non-secure"
+	---help---
+		I2S0 is non-secure.
+
+config I2S0_SECURE
+	bool "I2S0 secure"
+	---help---
+		I2S0 is secure.
+endchoice
+
+choice
+	prompt "OTG secure configuration"
+	default OTG_SECURE
+
+config OTG_NONSECURE
+	bool "OTG non-secure"
+	---help---
+		OTG is non-secure.
+
+config OTG_SECURE
+	bool "OTG secure"
+	---help---
+		OTG is secure.
+endchoice
+
+choice
+	prompt "TMR23 secure configuration"
+	default TMR23_SECURE
+
+config TMR23_NONSECURE
+	bool "TMR23 non-secure"
+	---help---
+		TMR23 is non-secure.
+
+config TMR23_SECURE
+	bool "TMR23 secure"
+	---help---
+		TMR23 is secure.
+endchoice
+
+choice
+	prompt "EPWM0 secure configuration"
+	default EPWM0_SECURE
+
+config EPWM0_NONSECURE
+	bool "EPWM0 non-secure"
+	---help---
+		EPWM0 is non-secure.
+
+config EPWM0_SECURE
+	bool "EPWM0 secure"
+	---help---
+		EPWM0 is secure.
+endchoice
+
+choice
+	prompt "EPWM1 secure configuration"
+	default EPWM1_SECURE
+
+config EPWM1_NONSECURE
+	bool "EPWM1 non-secure"
+	---help---
+		EPWM1 is non-secure.
+
+config EPWM1_SECURE
+	bool "EPWM1 secure"
+	---help---
+		EPWM1 is secure.
+endchoice
+
+choice
+	prompt "BPWM0 secure configuration"
+	default BPWM0_SECURE
+
+config BPWM0_NONSECURE
+	bool "BPWM0 non-secure"
+	---help---
+		BPWM0 is non-secure.
+
+config BPWM0_SECURE
+	bool "BPWM0 secure"
+	---help---
+		BPWM0 is secure.
+endchoice
+
+choice
+	prompt "BPWM1 secure configuration"
+	default BPWM1_SECURE
+
+config BPWM1_NONSECURE
+	bool "BPWM1 non-secure"
+	---help---
+		BPWM1 is non-secure.
+
+config BPWM1_SECURE
+	bool "BPWM1 secure"
+	---help---
+		BPWM1 is secure.
+endchoice
+
+choice
+	prompt "QSPI0 secure configuration"
+	default QSPI0_SECURE
+
+config QSPI0_NONSECURE
+	bool "QSPI0 non-secure"
+	---help---
+		QSPI0 is non-secure.
+
+config QSPI0_SECURE
+	bool "QSPI0 secure"
+	---help---
+		QSPI0 is secure.
+endchoice
+
+choice
+	prompt "SPI0 secure configuration"
+	default SPI0_SECURE
+
+config SPI0_NONSECURE
+	bool "SPI0 non-secure"
+	---help---
+		SPI0 is non-secure.
+
+config SPI0_SECURE
+	bool "SPI0 secure"
+	---help---
+		SPI0 is secure.
+endchoice
+
+choice
+	prompt "SPI1 secure configuration"
+	default SPI1_SECURE
+
+config SPI1_NONSECURE
+	bool "SPI1 non-secure"
+	---help---
+		SPI1 is non-secure.
+
+config SPI1_SECURE
+	bool "SPI1 secure"
+	---help---
+		SPI1 is secure.
+endchoice
+
+choice
+	prompt "SPI2 secure configuration"
+	default SPI2_SECURE
+
+config SPI2_NONSECURE
+	bool "SPI2 non-secure"
+	---help---
+		SPI2 is non-secure.
+
+config SPI2_SECURE
+	bool "SPI2 secure"
+	---help---
+		SPI2 is secure.
+endchoice
+
+choice
+	prompt "SPI3 secure configuration"
+	default SPI3_SECURE
+
+config SPI3_NONSECURE
+	bool "SPI3 non-secure"
+	---help---
+		SPI3 is non-secure.
+
+config SPI3_SECURE
+	bool "SPI3 secure"
+	---help---
+		SPI3 is secure.
+endchoice
+
+choice
+	prompt "UART0 secure configuration"
+	default UART0_SECURE
+
+config UART0_NONSECURE
+	bool "UART0 non-secure"
+	---help---
+		UART0 is non-secure.
+
+config UART0_SECURE
+	bool "UART0 secure"
+	---help---
+		UART0 is secure.
+endchoice
+
+choice
+	prompt "UART1 secure configuration"
+	default UART1_SECURE
+
+config UART1_NONSECURE
+	bool "UART1 non-secure"
+	---help---
+		UART1 is non-secure.
+
+config UART1_SECURE
+	bool "UART1 secure"
+	---help---
+		UART1 is secure.
+endchoice
+
+choice
+	prompt "UART2 secure configuration"
+	default UART2_SECURE
+
+config UART2_NONSECURE
+	bool "UART2 non-secure"
+	---help---
+		UART2 is non-secure.
+
+config UART2_SECURE
+	bool "UART2 secure"
+	---help---
+		UART2 is secure.
+endchoice
+
+choice
+	prompt "UART3 secure configuration"
+	default UART3_SECURE
+
+config UART3_NONSECURE
+	bool "UART3 non-secure"
+	---help---
+		UART3 is non-secure.
+
+config UART3_SECURE
+	bool "UART3 secure"
+	---help---
+		UART3 is secure.
+endchoice
+
+choice
+	prompt "UART4 secure configuration"
+	default UART4_SECURE
+
+config UART4_NONSECURE
+	bool "UART4 non-secure"
+	---help---
+		UART4 is non-secure.
+
+config UART4_SECURE
+	bool "UART4 secure"
+	---help---
+		UART4 is secure.
+endchoice
+
+choice
+	prompt "UART5 secure configuration"
+	default UART5_SECURE
+
+config UART5_NONSECURE
+	bool "UART5 non-secure"
+	---help---
+		UART5 is non-secure.
+
+config UART5_SECURE
+	bool "UART5 secure"
+	---help---
+		UART5 is secure.
+endchoice
+
+choice
+	prompt "I2C0 secure configuration"
+	default I2C0_SECURE
+
+config I2C0_NONSECURE
+	bool "I2C0 non-secure"
+	---help---
+		I2C0 is non-secure.
+
+config I2C0_SECURE
+	bool "I2C0 secure"
+	---help---
+		I2C0 is secure.
+endchoice
+
+choice
+	prompt "I2C1 secure configuration"
+	default I2C1_SECURE
+
+config I2C1_NONSECURE
+	bool "I2C1 non-secure"
+	---help---
+		I2C1 is non-secure.
+
+config I2C1_SECURE
+	bool "I2C1 secure"
+	---help---
+		I2C1 is secure.
+endchoice
+
+choice
+	prompt "I2C2 secure configuration"
+	default I2C2_SECURE
+
+config I2C2_NONSECURE
+	bool "I2C2 non-secure"
+	---help---
+		I2C2 is non-secure.
+
+config I2C2_SECURE
+	bool "I2C2 secure"
+	---help---
+		I2C2 is secure.
+endchoice
+
+choice
+	prompt "SC0 secure configuration"
+	default SC0_SECURE
+
+config SC0_NONSECURE
+	bool "SC0 non-secure"
+	---help---
+		SC0 is non-secure.
+
+config SC0_SECURE
+	bool "SC0 secure"
+	---help---
+		SC0 is secure.
+endchoice
+
+choice
+	prompt "SC1 secure configuration"
+	default SC1_SECURE
+
+config SC1_NONSECURE
+	bool "SC1 non-secure"
+	---help---
+		SC1 is non-secure.
+
+config SC1_SECURE
+	bool "SC1 secure"
+	---help---
+		SC1 is secure.
+endchoice
+
+choice
+	prompt "SC2 secure configuration"
+	default SC2_SECURE
+
+config SC2_NONSECURE
+	bool "SC2 non-secure"
+	---help---
+		SC2 is non-secure.
+
+config SC2_SECURE
+	bool "SC2 secure"
+	---help---
+		SC2 is secure.
+endchoice
+
+choice
+	prompt "CAN0 secure configuration"
+	default CAN0_SECURE
+
+config CAN0_NONSECURE
+	bool "CAN0 non-secure"
+	---help---
+		CAN0 is non-secure.
+
+config CAN0_SECURE
+	bool "CAN0 secure"
+	---help---
+		CAN0 is secure.
+endchoice
+
+choice
+	prompt "QEI0 secure configuration"
+	default QEI0_SECURE
+
+config QEI0_NONSECURE
+	bool "QEI0 non-secure"
+	---help---
+		QEI0 is non-secure.
+
+config QEI0_SECURE
+	bool "QEI0 secure"
+	---help---
+		QEI0 is secure.
+endchoice
+
+choice
+	prompt "QEI1 secure configuration"
+	default QEI1_SECURE
+
+config QEI1_NONSECURE
+	bool "QEI1 non-secure"
+	---help---
+		QEI1 is non-secure.
+
+config QEI1_SECURE
+	bool "QEI1 secure"
+	---help---
+		QEI1 is secure.
+endchoice
+
+choice
+	prompt "ECAP0 secure configuration"
+	default ECAP0_SECURE
+
+config ECAP0_NONSECURE
+	bool "ECAP0 non-secure"
+	---help---
+		ECAP0 is non-secure.
+
+config ECAP0_SECURE
+	bool "ECAP0 secure"
+	---help---
+		ECAP0 is secure.
+endchoice
+
+choice
+	prompt "ECAP1 secure configuration"
+	default ECAP1_SECURE
+
+config ECAP1_NONSECURE
+	bool "ECAP1 non-secure"
+	---help---
+		ECAP1 is non-secure.
+
+config ECAP1_SECURE
+	bool "ECAP1 secure"
+	---help---
+		ECAP1 is secure.
+endchoice
+
+choice
+	prompt "TRNG secure configuration"
+	default TRNG_SECURE
+
+config TRNG_NONSECURE
+	bool "TRNG non-secure"
+	---help---
+		TRNG is non-secure.
+
+config TRNG_SECURE
+	bool "TRNG secure"
+	---help---
+		TRNG is secure.
+endchoice
+
+choice
+	prompt "USBD secure configuration"
+	default USBD_SECURE
+
+config USBD_NONSECURE
+	bool "USBD non-secure"
+	---help---
+		USBD is non-secure.
+
+config USBD_SECURE
+	bool "USBD secure"
+	---help---
+		USBD is secure.
+endchoice
+
+choice
+	prompt "USCI0 secure configuration"
+	default USCI0_SECURE
+
+config USCI0_NONSECURE
+	bool "USCI0 non-secure"
+	---help---
+		USCI0 is non-secure.
+
+config USCI0_SECURE
+	bool "USCI0 secure"
+	---help---
+		USCI0 is secure.
+endchoice
+
+choice
+	prompt "USCI1 secure configuration"
+	default USCI1_SECURE
+
+config USCI1_NONSECURE
+	bool "USCI1 non-secure"
+	---help---
+		USCI1 is non-secure.
+
+config USCI1_SECURE
+	bool "USCI1 secure"
+	---help---
+		USCI1 is secure.
+endchoice
+
+endmenu # Peripheral Secure Attribution Configuration
+
 endmenu # Secure Attribution Configuration
 
