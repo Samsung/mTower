@@ -833,5 +833,297 @@ endchoice
 
 endmenu # Peripheral Secure Attribution Configuration
 
+menu "Enable and Set Secure/Non-Secure region"
+
+config SAU_INIT_REGION0
+	bool "Setup SAU Region 0"
+	default y
+	---help---
+		Setup SAU Region 0.
+
+config SAU_INIT_START0
+	hex "Start address of SAU region 0"
+	depends on SAU_INIT_REGION0
+	default	0x20000000
+	---help---
+		"Start address of SAU region 0."
+
+config SAU_INIT_END0
+	hex "End address of SAU region 0"
+	depends on SAU_INIT_REGION0
+	default	0x20008000
+	---help---
+		"End address of SAU region 0."
+
+choice
+	prompt "Region 0 secure configuration"
+	depends on SAU_INIT_REGION0
+	default REGION0_SECURE
+
+config REGION0_NONSECURE
+	bool "Region 0 non-secure"
+	---help---
+		Region 0 is non-secure.
+
+config REGION0_SECURE
+	bool "Region 0 secure"
+	---help---
+		Region 0 is secure.
+endchoice
+
+config SAU_INIT_REGION1
+	bool "Setup SAU Region 1"
+	default n
+	---help---
+		Setup SAU Region 1.
+
+config SAU_INIT_START1
+	hex "Start address of SAU region 1"
+	depends on SAU_INIT_REGION1
+	default	0x10040000
+	---help---
+		"Start address of SAU region 1."
+
+config SAU_INIT_END1
+	hex "End address of SAU region 1"
+	depends on SAU_INIT_REGION1
+	default	0x1007FFFF
+	---help---
+		"End address of SAU region 1."
+
+choice
+	prompt "Region 1 secure configuration"
+	depends on SAU_INIT_REGION1
+	default REGION1_NONSECURE
+
+config REGION1_NONSECURE
+	bool "Region 1 non-secure"
+	---help---
+		Region 1 is non-secure.
+
+config REGION1_SECURE
+	bool "Region 1 secure"
+	---help---
+		Region 1 is secure.
+endchoice
+
+config SAU_INIT_REGION2
+	bool "Setup SAU Region 2"
+	default n
+	---help---
+		Setup SAU Region 2.
+
+config SAU_INIT_START2
+	hex "Start address of SAU region 2"
+	depends on SAU_INIT_REGION2
+	default	0x2000F000
+	---help---
+		"Start address of SAU region 2."
+
+config SAU_INIT_END2
+	hex "End address of SAU region 2"
+	depends on SAU_INIT_REGION2
+	default	0x2000FFFF
+	---help---
+		"End address of SAU region 2."
+
+choice
+	prompt "Region 2 secure configuration"
+	depends on SAU_INIT_REGION2
+	default REGION2_SECURE
+
+config REGION2_NONSECURE
+	bool "Region 2 non-secure"
+	---help---
+		Region 2 is non-secure.
+
+config REGION2_SECURE
+	bool "Region 2 secure"
+	---help---
+		Region 2 is secure.
+endchoice
+
+config SAU_INIT_REGION3
+	bool "Setup SAU Region 3"
+	default y
+	---help---
+		Setup SAU Region 3.
+
+config SAU_INIT_START3
+	hex "Start address of SAU region 3"
+	depends on SAU_INIT_REGION3
+	default	0x0003F000
+	---help---
+		"Start address of SAU region 3."
+
+config SAU_INIT_END3
+	hex "End address of SAU region 3"
+	depends on SAU_INIT_REGION3
+	default	0x0003F7FF
+	---help---
+		"End address of SAU region 3."
+
+choice
+	prompt "Region 3 secure configuration"
+	depends on SAU_INIT_REGION3
+	default REGION3_SECURE
+
+config REGION3_NONSECURE
+	bool "Region 3 non-secure"
+	---help---
+		Region 3 is non-secure.
+
+config REGION3_SECURE
+	bool "Region 3 secure"
+	---help---
+		Region 3 is secure.
+endchoice
+
+config SAU_INIT_REGION4
+	bool "Setup SAU Region 4"
+	default y
+	---help---
+		Setup SAU Region 4.
+
+config SAU_INIT_START4
+	hex "Start address of SAU region 4"
+	depends on SAU_INIT_REGION4
+	default	0x10040000
+	---help---
+		"Start address of SAU region 4."
+
+config SAU_INIT_END4
+	hex "End address of SAU region 4"
+	depends on SAU_INIT_REGION4
+	default	0x1007FFFF
+	---help---
+		"End address of SAU region 4."
+
+choice
+	prompt "Region 4 secure configuration"
+	depends on SAU_INIT_REGION4
+	default REGION4_NONSECURE
+
+config REGION4_NONSECURE
+	bool "Region 4 non-secure"
+	---help---
+		Region 4 is non-secure.
+
+config REGION4_SECURE
+	bool "Region 4 secure"
+	---help---
+		Region 4 is secure.
+endchoice
+
+config SAU_INIT_REGION5
+	bool "Setup SAU Region 5"
+	default y
+	---help---
+		Setup SAU Region 5.
+
+config SAU_INIT_START5
+	hex "Start address of SAU region 5"
+	depends on SAU_INIT_REGION5
+	default	0x00807E00
+	---help---
+		"Start address of SAU region 5."
+
+config SAU_INIT_END5
+	hex "End address of SAU region 5"
+	depends on SAU_INIT_REGION5
+	default	0x00807FFF
+	---help---
+		"End address of SAU region 5."
+
+choice
+	prompt "Region 5 secure configuration"
+	depends on SAU_INIT_REGION5
+	default REGION5_SECURE
+
+config REGION5_NONSECURE
+	bool "Region 5 non-secure"
+	---help---
+		Region 5 is non-secure.
+
+config REGION5_SECURE
+	bool "Region 5 secure"
+	---help---
+		Region 5 is secure.
+endchoice
+
+config SAU_INIT_REGION6
+	bool "Setup SAU Region 6"
+	default y
+	---help---
+		Setup SAU Region 6.
+
+config SAU_INIT_START6
+	hex "Start address of SAU region 6"
+	depends on SAU_INIT_REGION6
+	default	0x30008000
+	---help---
+		"Start address of SAU region 6."
+
+config SAU_INIT_END6
+	hex "End address of SAU region 6"
+	depends on SAU_INIT_REGION6
+	default	0x30017FFF
+	---help---
+		"End address of SAU region 6."
+
+choice
+	prompt "Region 6 secure configuration"
+	depends on SAU_INIT_REGION6
+	default REGION6_NONSECURE
+
+config REGION6_NONSECURE
+	bool "Region 6 non-secure"
+	---help---
+		Region 6 is non-secure.
+
+config REGION6_SECURE
+	bool "Region 6 secure"
+	---help---
+		Region 6 is secure.
+endchoice
+
+config SAU_INIT_REGION7
+	bool "Setup SAU Region 7"
+	default y
+	---help---
+		Setup SAU Region 7.
+
+config SAU_INIT_START7
+	hex "Start address of SAU region 7"
+	depends on SAU_INIT_REGION7
+	default	0x50000000
+	---help---
+		"Start address of SAU region 7."
+
+config SAU_INIT_END7
+	hex "End address of SAU region 7"
+	depends on SAU_INIT_REGION7
+	default	0x5FFFFFFF
+	---help---
+		"End address of SAU region 7."
+
+choice
+	prompt "Region 7 secure configuration"
+	depends on SAU_INIT_REGION7
+	default REGION7_NONSECURE
+
+config REGION7_NONSECURE
+	bool "Region 7 non-secure"
+	---help---
+		Region 7 is non-secure.
+
+config REGION7_SECURE
+	bool "Region 7 secure"
+	---help---
+		Region 7 is secure.
+endchoice
+
+endmenu # Enable and Set Secure/Non-Secure region
+
 endmenu # Secure Attribution Configuration
 

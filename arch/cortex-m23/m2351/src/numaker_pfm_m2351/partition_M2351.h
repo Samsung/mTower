@@ -350,211 +350,6 @@ __STATIC_INLINE void SCU_Setup(void)
 // </e>
 */
 
-
-/*
-// <h>Enable and Set Secure/Non-Secure region
-*/
-#define SAU_REGIONS_MAX   8                 /* Max. number of SAU regions */
-
-/*
-//   <e>SAU Region 0
-//   <i> Setup SAU Region 0
-*/
-#define SAU_INIT_REGION0    1 //0
-/*
-//     <o>Start Address <0-0xFFFFFFE0>
-*/
-#define SAU_INIT_START0     0x20000000 //0x0003F000      /* start address of SAU region 0 */
-/*
-//     <o>End Address <0x1F-0xFFFFFFFF>
-*/
-#define SAU_INIT_END0       0x20008000 //0x0003FFFF      /* end address of SAU region 0 */
-/*
-//     <o>Region is
-//         <0=>Non-Secure
-//         <1=>Secure, Non-Secure Callable
-*/
-#define SAU_INIT_NSC0       1
-/*
-//   </e>
-*/
-
-/*
-//   <e>SAU Region 1
-//   <i> Setup SAU Region 1
-*/
-#define SAU_INIT_REGION1    0
-/*
-//     <o>Start Address <0-0xFFFFFFE0>
-*/
-#define SAU_INIT_START1     0x10040000
-/*
-//     <o>End Address <0x1F-0xFFFFFFFF>
-*/
-#define SAU_INIT_END1       0x1007FFFF
-/*
-//     <o>Region is
-//         <0=>Non-Secure
-//         <1=>Secure, Non-Secure Callable
-*/
-#define SAU_INIT_NSC1       0
-/*
-//   </e>
-*/
-
-/*
-//   <e>SAU Region 2
-//   <i> Setup SAU Region 2
-*/
-#define SAU_INIT_REGION2    0
-/*
-//     <o>Start Address <0-0xFFFFFFE0>
-*/
-#define SAU_INIT_START2     0x2000F000
-/*
-//     <o>End Address <0x1F-0xFFFFFFFF>
-*/
-#define SAU_INIT_END2       0x2000FFFF
-/*
-//     <o>Region is
-//         <0=>Non-Secure
-//         <1=>Secure, Non-Secure Callable
-*/
-#define SAU_INIT_NSC2       1
-/*
-//   </e>
-*/
-
-/*
-//   <e>SAU Region 3
-//   <i> Setup SAU Region 3
-*/
-#define SAU_INIT_REGION3    1
-/*
-//     <o>Start Address <0-0xFFFFFFE0>
-*/
-#define SAU_INIT_START3     0x3f000
-/*
-//     <o>End Address <0x1F-0xFFFFFFFF>
-*/
-#define SAU_INIT_END3       0x3f7ff
-/*
-//     <o>Region is
-//         <0=>Non-Secure
-//         <1=>Secure, Non-Secure Callable
-*/
-#define SAU_INIT_NSC3       1
-/*
-//   </e>
-*/
-
-/*
-   <e>SAU Region 4
-   <i> Setup SAU Region 4
-*/
-#define SAU_INIT_REGION4    1
-/*
-     <o>Start Address <0-0xFFFFFFE0>
-*/
-#define SAU_INIT_START4     FMC_NON_SECURE_BASE      /* start address of SAU region 4 */
-
-/*
-     <o>End Address <0x1F-0xFFFFFFFF>
-*/
-#define SAU_INIT_END4       0x1007FFFF      /* end address of SAU region 4 */
-
-/*
-     <o>Region is
-         <0=>Non-Secure
-         <1=>Secure, Non-Secure Callable
-*/
-#define SAU_INIT_NSC4       0
-/*
-   </e>
-*/
-
-/*
-   <e>SAU Region 5
-   <i> Setup SAU Region 5
-*/
-#define SAU_INIT_REGION5    1
-
-/*
-     <o>Start Address <0-0xFFFFFFE0>
-*/
-#define SAU_INIT_START5     0x00807E00
-
-/*
-     <o>End Address <0x1F-0xFFFFFFFF>
-*/
-#define SAU_INIT_END5       0x00807FFF
-
-/*
-     <o>Region is
-         <0=>Non-Secure
-         <1=>Secure, Non-Secure Callable
-*/
-#define SAU_INIT_NSC5       1
-/*
-   </e>
-*/
-
-/*
-   <e>SAU Region 6
-   <i> Setup SAU Region 6
-*/
-#define SAU_INIT_REGION6    1
-
-/*
-     <o>Start Address <0-0xFFFFFFE0>
-*/
-#define SAU_INIT_START6     NON_SECURE_SRAM_BASE
-
-/*
-     <o>End Address <0x1F-0xFFFFFFFF>
-*/
-#define SAU_INIT_END6       0x30017FFF
-
-/*
-     <o>Region is
-         <0=>Non-Secure
-         <1=>Secure, Non-Secure Callable
-*/
-#define SAU_INIT_NSC6       0
-/*
-   </e>
-*/
-
-/*
-   <e>SAU Region 7
-   <i> Setup SAU Region 7
-*/
-#define SAU_INIT_REGION7    1
-
-/*
-     <o>Start Address <0-0xFFFFFFE0>
-*/
-#define SAU_INIT_START7     0x50000000
-
-/*
-     <o>End Address <0x1F-0xFFFFFFFF>
-*/
-#define SAU_INIT_END7       0x5FFFFFFF
-
-/*
-     <o>Region is
-         <0=>Non-Secure
-         <1=>Secure, Non-Secure Callable
-*/
-#define SAU_INIT_NSC7       0
-/*
-   </e>
-*/
-
-/*
-// </h>
-*/
-
 /*
 // <e>Setup behavior of Sleep and Exception Handling
 */
@@ -758,8 +553,8 @@ __STATIC_INLINE void SCU_Setup(void)
 
 #define SAU_INIT_REGION(n) \
     SAU->RNR  =  (n                                     & SAU_RNR_REGION_Msk); \
-    SAU->RBAR =  (SAU_INIT_START##n                     & SAU_RBAR_BADDR_Msk); \
-    SAU->RLAR =  (SAU_INIT_END##n                       & SAU_RLAR_LADDR_Msk) | \
+    SAU->RBAR =  (CONFIG_SAU_INIT_START##n                     & SAU_RBAR_BADDR_Msk); \
+    SAU->RLAR =  (CONFIG_SAU_INIT_END##n                       & SAU_RLAR_LADDR_Msk) | \
                 ((SAU_INIT_NSC##n << SAU_RLAR_NSC_Pos)  & SAU_RLAR_NSC_Msk)   | 1U
 
 /**
@@ -772,36 +567,76 @@ __STATIC_INLINE void TZ_SAU_Setup(void)
 
 #if defined (__SAU_PRESENT) && (__SAU_PRESENT == 1U)
 
-#if defined (SAU_INIT_REGION0) && (SAU_INIT_REGION0 == 1U)
-    SAU_INIT_REGION(0);
+#ifdef CONFIG_SAU_INIT_REGION0
+# ifdef CONFIG_REGION0_SECURE
+#   define SAU_INIT_NSC0 1
+# else
+#   define SAU_INIT_NSC0 0
+# endif
+  SAU_INIT_REGION(0);
 #endif
 
-#if defined (SAU_INIT_REGION1) && (SAU_INIT_REGION1 == 1U)
-    SAU_INIT_REGION(1);
+#ifdef CONFIG_SAU_INIT_REGION1
+# ifdef CONFIG_REGION1_SECURE
+#   define SAU_INIT_NSC1 1
+# else
+#   define SAU_INIT_NSC1 0
+# endif
+  SAU_INIT_REGION(1);
 #endif
 
-#if defined (SAU_INIT_REGION2) && (SAU_INIT_REGION2 == 1U)
-    SAU_INIT_REGION(2);
+#ifdef CONFIG_SAU_INIT_REGION2
+# ifdef CONFIG_REGION2_SECURE
+#   define SAU_INIT_NSC2 1
+# else
+#   define SAU_INIT_NSC2 0
+# endif
+  SAU_INIT_REGION(2);
 #endif
 
-#if defined (SAU_INIT_REGION3) && (SAU_INIT_REGION3 == 1U)
-    SAU_INIT_REGION(3);
+#ifdef CONFIG_SAU_INIT_REGION3
+# ifdef CONFIG_REGION3_SECURE
+#   define SAU_INIT_NSC3 1
+# else
+#   define SAU_INIT_NSC3 0
+# endif
+  SAU_INIT_REGION(3);
 #endif
 
-#if defined (SAU_INIT_REGION4) && (SAU_INIT_REGION4 == 1U)
-    SAU_INIT_REGION(4);
+#ifdef CONFIG_SAU_INIT_REGION4
+# ifdef CONFIG_REGION4_SECURE
+#   define SAU_INIT_NSC4 1
+# else
+#   define SAU_INIT_NSC4 0
+# endif
+  SAU_INIT_REGION(4);
 #endif
 
-#if defined (SAU_INIT_REGION5) && (SAU_INIT_REGION5 == 1U)
-    SAU_INIT_REGION(5);
+#ifdef CONFIG_SAU_INIT_REGION5
+# ifdef CONFIG_REGION5_SECURE
+#   define SAU_INIT_NSC5 1
+# else
+#   define SAU_INIT_NSC5 0
+# endif
+  SAU_INIT_REGION(5);
 #endif
 
-#if defined (SAU_INIT_REGION6) && (SAU_INIT_REGION6 == 1U)
-    SAU_INIT_REGION(6);
+#ifdef CONFIG_SAU_INIT_REGION6
+# ifdef CONFIG_REGION6_SECURE
+#   define SAU_INIT_NSC6 1
+# else
+#   define SAU_INIT_NSC6 0
+# endif
+  SAU_INIT_REGION(6);
 #endif
 
-#if defined (SAU_INIT_REGION7) && (SAU_INIT_REGION7 == 1U)
-    SAU_INIT_REGION(7);
+#ifdef CONFIG_SAU_INIT_REGION7
+# ifdef CONFIG_REGION7_SECURE
+#   define SAU_INIT_NSC7 1
+# else
+#   define SAU_INIT_NSC7 0
+# endif
+  SAU_INIT_REGION(7);
 #endif
 
     /* repeat this for all possible SAU regions */
