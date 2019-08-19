@@ -833,6 +833,135 @@ endchoice
 
 endmenu # Peripheral Secure Attribution Configuration
 
+menu "Enable secure violation interrupts"
+
+config APB0IEN_SECURE_VIOLATION_INTERRUPT
+	bool "APB0 secure violation interrupt enable"
+	default n
+	---help---
+		APB0 secure violation interrupt enable.
+
+config APB1IEN_SECURE_VIOLATION_INTERRUPT
+	bool "APB1 secure violation interrupt enable"
+	default n
+	---help---
+		APB1 secure violation interrupt enable.
+
+config GPIOIEN_SECURE_VIOLATION_INTERRUPT
+	bool "GPIO secure violation interrupt enable"
+	default n
+	---help---
+		GPIO secure violation interrupt enable.
+
+config EBIIEN_SECURE_VIOLATION_INTERRUPT
+	bool "EBI secure violation interrupt enable"
+	default n
+	---help---
+		EBI secure violation interrupt enable.
+
+config USBHIEN_SECURE_VIOLATION_INTERRUPT
+	bool "USBH secure violation interrupt enable"
+	default n
+	---help---
+		USBH secure violation interrupt enable.
+
+config CRCIEN_SECURE_VIOLATION_INTERRUPT
+	bool "CRC secure violation interrupt enable"
+	default n
+	---help---
+		CRC secure violation interrupt enable.
+
+config SDH0IEN_SECURE_VIOLATION_INTERRUPT
+	bool "SDH0 secure violation interrupt enable"
+	default n
+	---help---
+		SDH0 secure violation interrupt enable.
+
+config PDMA0IEN_SECURE_VIOLATION_INTERRUPT
+	bool "PDMA0 secure violation interrupt enable"
+	default n
+	---help---
+		PDMA0 secure violation interrupt enable.
+
+config PDMA1IEN_SECURE_VIOLATION_INTERRUPT
+	bool "PDMA1 secure violation interrupt enable"
+	default n
+	---help---
+		PDMA1 secure violation interrupt enable.
+
+config SRAM0IEN_SECURE_VIOLATION_INTERRUPT
+	bool "SRAM0 secure violation interrupt enable"
+	default n
+	---help---
+		SRAM0 secure violation interrupt enable.
+
+config SRAM1IEN_SECURE_VIOLATION_INTERRUPT
+	bool "SRAM1 secure violation interrupt enable"
+	default n
+	---help---
+		SRAM1 secure violation interrupt enable.
+
+config FMCIEN_SECURE_VIOLATION_INTERRUPT
+	bool "FMC secure violation interrupt enable"
+	default n
+	---help---
+		FMC secure violation interrupt enable.
+
+config FLASHIEN_SECURE_VIOLATION_INTERRUPT
+	bool "FLASH secure violation interrupt enable"
+	default n
+	---help---
+		FLASH secure violation interrupt enable.
+
+config SCUIEN_SECURE_VIOLATION_INTERRUPT
+	bool "SCU secure violation interrupt enable"
+	default n
+	---help---
+		SCU secure violation interrupt enable.
+
+config SYSIEN_SECURE_VIOLATION_INTERRUPT
+	bool "SYS secure violation interrupt enable"
+	default n
+	---help---
+		SYS secure violation interrupt enable.
+
+config CRPTIEN_SECURE_VIOLATION_INTERRUPT
+	bool "CRPT secure violation interrupt enable"
+	default n
+	---help---
+		CRPT secure violation interrupt enable.
+
+endmenu # Enable sercure violation interrupts
+
+config SAU_CONTROL
+	bool "Secure Attribute Unit (SAU) Control"
+	default y
+	---help---
+		 "Secure Attribute Unit (SAU) Control".
+
+config ENABLE_SAU
+	bool "Enable SAU"
+	depends on SAU_CONTROL
+	default y
+	---help---
+		 "Enable SAU".
+
+choice
+	prompt "All Memory Attribute When SAU is disabled"
+	depends on SAU_CONTROL
+	default ALL_MEMORY_SECURE
+
+config ALL_MEMORY_NONSECURE
+	bool "All Memory non-secure"
+	---help---
+		All Memory  is non-secure.
+
+config ALL_MEMORY_SECURE
+	bool "All Memory secure"
+	---help---
+		All Memory is secure.
+endchoice
+
 menu "Enable and Set Secure/Non-Secure region"
 
 config SAU_INIT_REGION0

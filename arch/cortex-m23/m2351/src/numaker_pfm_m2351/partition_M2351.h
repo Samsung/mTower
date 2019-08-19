@@ -318,37 +318,71 @@ __STATIC_INLINE void SCU_Setup(void)
     SCU->SRAMNSSET |= (1U << i);
   }
 
-  SCU->SVIOIEN = SCU_SVIOIEN_GPIOIEN_Msk;
-//    | SCU_SVIOIEN_SRAM0IEN_Msk | SCU_SVIOIEN_SRAM1IEN_Msk;
+#ifdef CONFIG_APB0IEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_APB0IEN_Msk);
+#endif
+
+#ifdef CONFIG_APB1IEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_APB1IEN_Msk);
+#endif
+
+#ifdef CONFIG_GPIOIEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_GPIOIEN_Msk);
+#endif
+
+#ifdef CONFIG_EBIIEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_EBIIEN_Msk);
+#endif
+
+#ifdef CONFIG_USBHIEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_USBHIEN_Msk);
+#endif
+
+#ifdef CONFIG_CRCIEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_CRCIEN_Msk);
+#endif
+
+#ifdef CONFIG_SDH0IEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_SDH0IEN_Msk);
+#endif
+
+#ifdef CONFIG_PDMA0IEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_PDMA0IEN_Msk);
+#endif
+
+#ifdef CONFIG_PDMA1IEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_PDMA1IEN_Msk);
+#endif
+
+#ifdef CONFIG_SRAM0IEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_SRAM0IEN_Msk);
+#endif
+
+#ifdef CONFIG_SRAM1IEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_SRAM1IEN_Msk);
+#endif
+
+#ifdef CONFIG_FMCIEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_FMCIEN_Msk);
+#endif
+
+#ifdef CONFIG_FLASHIEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_FLASHIEN_Msk);
+#endif
+
+#ifdef CONFIG_SCUIEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_SCUIEN_Msk);
+#endif
+
+#ifdef CONFIG_SYSIEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_SYSIEN_Msk);
+#endif
+
+#ifdef CONFIG_CRPTIEN_SECURE_VIOLATION_INTERRUPT
+  SCU_ENABLE_INT(SCU_SVIOIEN_CRPTIEN_Msk);
+#endif
 
 }
-
-
-/* ---------------------------------------------------------------------------------------------------- */
-
-/*
-// <e>Secure Attribute Unit (SAU) Control
-*/
-#define SAU_INIT_CTRL 1
-
-/*
-//   <q> Enable SAU
-//   <i> To enable Secure Attribute Unit (SAU).
-*/
-#define SAU_INIT_CTRL_ENABLE 1
-
-/*
-//   <o> All Memory Attribute When SAU is disabled
-//     <0=> All Memory is Secure
-//     <1=> All Memory is Non-Secure
-//   <i> To set the ALLNS bit in SAU CTRL.
-//   <i> When all Memory is Non-Secure (ALLNS is 1), IDAU can override memory map configuration.
-*/
-#define SAU_INIT_CTRL_ALLNS  0
-
-/*
-// </e>
-*/
 
 /*
 // <e>Setup behavior of Sleep and Exception Handling
@@ -639,10 +673,21 @@ __STATIC_INLINE void TZ_SAU_Setup(void)
   SAU_INIT_REGION(7);
 #endif
 
-    /* repeat this for all possible SAU regions */
+  /* repeat this for all possible SAU regions */
 
+#ifdef CONFIG_ENABLE_SAU
+#define SAU_INIT_CTRL_ENABLE 1
+#else
+#define SAU_INIT_CTRL_ENABLE 0
+#endif
 
-#if defined (SAU_INIT_CTRL) && (SAU_INIT_CTRL == 1U)
+#ifdef CONFIG_ALL_MEMORY_NONSECURE
+#define SAU_INIT_CTRL_ALLNS 1
+#else
+#define SAU_INIT_CTRL_ALLNS 0
+#endif
+
+#ifdef CONFIG_SAU_CONTROL
     SAU->CTRL = ((SAU_INIT_CTRL_ENABLE << SAU_CTRL_ENABLE_Pos) & SAU_CTRL_ENABLE_Msk) |
                 ((SAU_INIT_CTRL_ALLNS  << SAU_CTRL_ALLNS_Pos)  & SAU_CTRL_ALLNS_Msk)   ;
 #endif
