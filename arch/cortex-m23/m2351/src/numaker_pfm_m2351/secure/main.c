@@ -408,7 +408,7 @@ void menu_security_exception_example(void)
 
 void HardFault_Handler(void)
 {
-  printf(RED "Secure HardFault_Handler: invalid memory access or malware activity detected\n" NORMAL);
+  printf(RED "Secure Hard Fault Handler: invalid memory access or malware activity detected\n" NORMAL);
 
   while(1);
 }
@@ -419,99 +419,100 @@ void SCU_IRQHandler(void)
 #ifdef CONFIG_APB0IEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_APB0IEN_Msk) == SCU_SVIOIEN_APB0IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_APB0IEN_Msk;
-    printf("APB0 violation interrupt event\n");
+    printf("APB0 ");
 }
 #endif
 #ifdef CONFIG_APB1IEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_APB1IEN_Msk) == SCU_SVIOIEN_APB1IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_APB1IEN_Msk;
-    printf("APB1 violation interrupt event\n");
+    printf("APB1 ");
 }
 #endif
 #ifdef CONFIG_GPIOIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_GPIOIEN_Msk) == SCU_SVIOIEN_GPIOIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_GPIOIEN_Msk;
-    printf("GPIO violation interrupt event\n");
+    printf("GPIO ");
 }
 #endif
 #ifdef CONFIG_EBIIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_EBIIEN_Msk) == SCU_SVIOIEN_EBIIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_EBIIEN_Msk;
-    printf("EBI violation interrupt event\n");
+    printf("EBI ");
 }
 #endif
 #ifdef CONFIG_USBHIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_USBHIEN_Msk) == SCU_SVIOIEN_USBHIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_USBHIEN_Msk;
-    printf("USBH violation interrupt event\n");
+    printf("USBH ");
 }
 #endif
 #ifdef CONFIG_CRCIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_CRCIEN_Msk) == SCU_SVIOIEN_CRCIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_CRCIEN_Msk;
-    printf("CRC violation interrupt event\n");
+    printf("CRC ");
 }
 #endif
 #ifdef CONFIG_SDH0IEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_SDH0IEN_Msk) == SCU_SVIOIEN_SDH0IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_SDH0IEN_Msk;
-    printf("SDH0 violation interrupt event\n");
+    printf("SDH0 ");
 }
 #endif
 #ifdef CONFIG_PDMA0IEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_PDMA0IEN_Msk) == SCU_SVIOIEN_PDMA0IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_PDMA0IEN_Msk;
-    printf("PDMA0 violation interrupt event\n");
+    printf("PDMA0 ");
 }
 #endif
 #ifdef CONFIG_PDMA1IEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_PDMA1IEN_Msk) == SCU_SVIOIEN_PDMA1IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_PDMA1IEN_Msk;
-    printf("PDMA1 violation interrupt event\n");
+    printf("PDMA1 ");
 }
 #endif
 #ifdef CONFIG_SRAM0IEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_SRAM0IEN_Msk) == SCU_SVIOIEN_SRAM0IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_SRAM0IEN_Msk;
-    printf("SRAM0 violation interrupt event\n");
+    printf("SRAM0 ");
 }
 #endif
 #ifdef CONFIG_SRAM1IEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_SRAM1IEN_Msk) == SCU_SVIOIEN_SRAM1IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_SRAM1IEN_Msk;
-    printf("SRAM1 violation interrupt event\n");
+    printf("SRAM1 ");
 }
 #endif
 #ifdef CONFIG_FMCIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_FMCIEN_Msk) == SCU_SVIOIEN_FMCIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_FMCIEN_Msk;
-    printf("FMC violation interrupt event\n");
+    printf("FMC ");
 }
 #endif
 #ifdef CONFIG_FLASHIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_FLASHIEN_Msk) == SCU_SVIOIEN_FLASHIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_FLASHIEN_Msk;
-    printf("FLASH violation interrupt event\n");
+    printf("FLASH ");
 }
 #endif
 #ifdef CONFIG_SCUIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_SCUIEN_Msk) == SCU_SVIOIEN_SCUIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_SCUIEN_Msk;
-    printf("SCU violation interrupt event\n");
+    printf("SCU ");
 }
 #endif
 #ifdef CONFIG_SYSIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_SYSIEN_Msk) == SCU_SVIOIEN_SYSIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_SYSIEN_Msk;
-    printf("SYS violation interrupt event\n");
+    printf("SYS ");
 }
 #endif
 #ifdef CONFIG_CRPTIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_CRPTIEN_Msk) == SCU_SVIOIEN_CRPTIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_CRPTIEN_Msk;
-    printf("CRPT violation interrupt event\n");
+    printf("CRPT ");
 }
-#endif  printf(NORMAL);
+#endif
+  printf("violation interrupt event\n"NORMAL);
 }
 #endif
 /**
