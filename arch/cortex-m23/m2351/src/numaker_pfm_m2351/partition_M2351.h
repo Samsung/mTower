@@ -417,170 +417,6 @@ __STATIC_INLINE void SCU_Setup(void)
 #define SCB_AIRCR_BFHFNMINS_VAL 0
 
 /*
-// </e>
-*/
-
-
-/*
-// <h>Assign Interrupt to Secure or Non-secure Vector
-*/
-
-
-/*
-    Initialize ITNS 0 (Interrupts 0..31)
-*/
-#define NVIC_INIT_ITNS0    1
-/*
-// BODOUT       Always secure
-// IRC          Always secure
-// PWRWU_       Always secure
-// SRAM_PERR    Always secure
-// CLKFAIL      Always secure
-
-//   <o.6>  RTC                   <0=> Secure <1=> Non-Secure
-//   <o.7>  TAMPER                <0=> Secure <1=> Non-Secure
-// WDT  Always secure
-// WWDT Always secure
-//   <h> EINT
-//   <o.10> EINT0                 <0=> Secure <1=> Non-Secure
-//   <o.11> EINT1                 <0=> Secure <1=> Non-Secure
-//   <o.12> EINT2                 <0=> Secure <1=> Non-Secure
-//   <o.13> EINT3                 <0=> Secure <1=> Non-Secure
-//   <o.14> EINT4                 <0=> Secure <1=> Non-Secure
-//   <o.15> EINT5                 <0=> Secure <1=> Non-Secure
-//   </h>
-//   <h> GPIO
-//   <o.16> GPA                   <0=> Secure <1=> Non-Secure
-//   <o.17> GPB                   <0=> Secure <1=> Non-Secure
-//   <o.18> GPC                   <0=> Secure <1=> Non-Secure
-//   <o.19> GPD                   <0=> Secure <1=> Non-Secure
-//   <o.20> GPE                   <0=> Secure <1=> Non-Secure
-//   <o.21> GPF               <0=> Secure <1=> Non-Secure
-//   </h>
-//   <o.22> QSPI0              <0=> Secure <1=> Non-Secure
-//   <o.23> SPI0              <0=> Secure <1=> Non-Secure
-//   <h> EPWM
-//   <o.24> BRAKE0            <0=> Secure <1=> Non-Secure
-//   <o.25> EPWM0_P0          <0=> Secure <1=> Non-Secure
-//   <o.26> EPWM0_P1          <0=> Secure <1=> Non-Secure
-//   <o.27> EPWM0_P2          <0=> Secure <1=> Non-Secure
-//   <o.28> BRAKE1            <0=> Secure <1=> Non-Secure
-//   <o.29> EPWM1_P0          <0=> Secure <1=> Non-Secure
-//   <o.30> EPWM1_P1          <0=> Secure <1=> Non-Secure
-//   <o.31> EPWM1_P2          <0=> Secure <1=> Non-Secure
-//   </h>
-//
-*/
-#define NVIC_INIT_ITNS0_VAL      0x0
-
-/*
-    Initialize ITNS 1 (Interrupts 0..31)
-*/
-#define NVIC_INIT_ITNS1    1
-/*
-//   <h> TIMER
-// TMR0 Always secure
-// TMR1 Always secure
-//   <o.2>  TMR2              <0=> Secure <1=> Non-Secure
-//   <o.3>  TMR3              <0=> Secure <1=> Non-Secure
-//   </h>
-//   <o.4>  UART0             <0=> Secure <1=> Non-Secure
-//   <o.5>  UART1             <0=> Secure <1=> Non-Secure
-//   <o.6>  I2C0              <0=> Secure <1=> Non-Secure
-//   <o.7>  I2C1              <0=> Secure <1=> Non-Secure
-// PDMA0 is secure only
-//   <o.9>  DAC               <0=> Secure <1=> Non-Secure
-//   <o.10> EADC0             <0=> Secure <1=> Non-Secure
-//   <o.11> EADC1             <0=> Secure <1=> Non-Secure
-//   <o.12> ACMP01            <0=> Secure <1=> Non-Secure
-
-//   <o.14> EADC2             <0=> Secure <1=> Non-Secure
-//   <o.15> EADC3             <0=> Secure <1=> Non-Secure
-//   <o.16> UART2             <0=> Secure <1=> Non-Secure
-//   <o.17> UART3             <0=> Secure <1=> Non-Secure
-
-//   <o.19> SPI1              <0=> Secure <1=> Non-Secure
-//   <o.20> SPI2              <0=> Secure <1=> Non-Secure
-//   <o.21> USBD              <0=> Secure <1=> Non-Secure
-//   <o.22> USBH              <0=> Secure <1=> Non-Secure
-//   <o.23> USBOTG            <0=> Secure <1=> Non-Secure
-//   <o.24> CAN0              <0=> Secure <1=> Non-Secure
-
-//   <h> Smart Card
-//   <o.26> SC0               <0=> Secure <1=> Non-Secure
-//   <o.27> SC1               <0=> Secure <1=> Non-Secure
-//   <o.28> SC2               <0=> Secure <1=> Non-Secure
-//   </h>
-
-//   <o.30> SPI3              <0=> Secure <1=> Non-Secure
-
-//
-*/
-#define NVIC_INIT_ITNS1_VAL      0x20
-
-/*
-    Initialize ITNS 2 (Interrupts 0..31)
-*/
-#define NVIC_INIT_ITNS2    1
-/*
-//   <o.0>  SDH0              <0=> Secure <1=> Non-Secure
-
-
-
-//   <o.4>  I2S0              <0=> Secure <1=> Non-Secure
-
-//
-//   <o.7>  CRYPTO                <0=> Secure <1=> Non-Secure
-//   <o.8>  GPG               <0=> Secure <1=> Non-Secure
-//   <o.9>  EINT6             <0=> Secure <1=> Non-Secure
-//   <o.10> UART4             <0=> Secure <1=> Non-Secure
-//   <o.11> UART5             <0=> Secure <1=> Non-Secure
-//   <o.12> USCI0             <0=> Secure <1=> Non-Secure
-//   <o.13> USCI1             <0=> Secure <1=> Non-Secure
-//   <o.14> BPWM0             <0=> Secure <1=> Non-Secure
-//   <o.15> BPWM1             <0=> Secure <1=> Non-Secure
-
-
-//   <o.18> I2C2              <0=> Secure <1=> Non-Secure
-
-//   <o.20> QEI0              <0=> Secure <1=> Non-Secure
-//   <o.21> QEI1              <0=> Secure <1=> Non-Secure
-//   <o.22> ECAP0             <0=> Secure <1=> Non-Secure
-//   <o.23> ECAP1             <0=> Secure <1=> Non-Secure
-//   <o.24> GPH               <0=> Secure <1=> Non-Secure
-//   <o.25> EINT7             <0=> Secure <1=> Non-Secure
-
-
-//   <o.28> USBH              <0=> Secure <1=> Non-Secure
-
-
-
-//
-*/
-#define NVIC_INIT_ITNS2_VAL      0x0
-
-
-/*
-    Initialize ITNS 3 (Interrupts 0..31)
-*/
-#define NVIC_INIT_ITNS3    1
-/*
-//   <o.2>  PDMA1             <0=> Secure <1=> Non-Secure
-// SCU  Always secure
-//
-//   <o.5>  TRNG              <0=> Secure <1=> Non-Secure
-*/
-#define NVIC_INIT_ITNS3_VAL      0x0
-
-
-
-/*
-// </h>
-*/
-
-
-
-/*
     max 128 SAU regions.
     SAU regions are defined in partition.h
  */
@@ -717,27 +553,228 @@ __STATIC_INLINE void TZ_SAU_Setup(void)
                  ((SCB_ICSR_STTNS_VAL         << SCB_ICSR_STTNS_Pos)         & SCB_ICSR_STTNS_Msk);
 #endif /* defined (SCB_ICSR_INIT) && (SCB_ICSR_INIT == 1U) */
 
-#if defined (NVIC_INIT_ITNS0) && (NVIC_INIT_ITNS0 == 1U)
-    NVIC->ITNS[0] = NVIC_INIT_ITNS0_VAL;
+#define SCU_SET_INTSSET(IRQn) ((uint32_t)(1UL << (((uint32_t)(int32_t)IRQn) & 0x1FUL)))
+
+  NVIC->ITNS[0] =
+#ifdef  CONFIG_RTC_INTERRUPT_NONSECURE
+      SCU_SET_INTSSET(RTC_IRQn) |
 #endif
-
-#if defined (NVIC_INIT_ITNS1) && (NVIC_INIT_ITNS1 == 1U)
-    NVIC->ITNS[1] = NVIC_INIT_ITNS1_VAL;
+#ifdef CONFIG_TAMPER_INTERRUPT_NONSECURE
+          SCU_SET_INTSSET(TAMPER_IRQn) |
 #endif
-
-#if defined (NVIC_INIT_ITNS2) && (NVIC_INIT_ITNS2 == 1U)
-    NVIC->ITNS[2] = NVIC_INIT_ITNS2_VAL;
+#ifdef CONFIG_EINT0_INTERRUPT_NONSECURE
+          SCU_SET_INTSSET(EINT0_IRQn) |
 #endif
-
-#if defined (NVIC_INIT_ITNS3) && (NVIC_INIT_ITNS3 == 1U)
-    NVIC->ITNS[3] = NVIC_INIT_ITNS3_VAL;
+#ifdef CONFIG_EINT1_INTERRUPT_NONSECURE
+          SCU_SET_INTSSET(EINT1_IRQn) |
 #endif
+#ifdef CONFIG_EINT2_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EINT2_IRQn) |
+#endif
+#ifdef CONFIG_EINT3_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EINT3_IRQn) |
+#endif
+#ifdef CONFIG_EINT4_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EINT4_IRQn) |
+#endif
+#ifdef CONFIG_EINT5_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EINT5_IRQn) |
+#endif
+#ifdef CONFIG_GPA_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(GPA_IRQn) |
+#endif
+#ifdef CONFIG_GPB_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(GPB_IRQn) |
+#endif
+#ifdef CONFIG_GPC_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(GPC_IRQn) |
+#endif
+#ifdef CONFIG_GPD_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(GPD_IRQn) |
+#endif
+#ifdef CONFIG_GPE_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(GPE_IRQn) |
+#endif
+#ifdef CONFIG_GPF_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(GPF_IRQn) |
+#endif
+#ifdef CONFIG_QSPI0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(QSPI0_IRQn) |
+#endif
+#ifdef CONFIG_SPI0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(SPI0_IRQn) |
+#endif
+#ifdef CONFIG_BRAKE0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(BRAKE0_IRQn) |
+#endif
+#ifdef CONFIG_EPWM0_P0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EPWM0_P0_IRQn) |
+#endif
+#ifdef CONFIG_EPWM0_P1_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EPWM0_P1_IRQn) |
+#endif
+#ifdef CONFIG_EPWM0_P2_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EPWM0_P2_IRQn) |
+#endif
+#ifdef CONFIG_BRAKE1_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(BRAKE1_IRQn) |
+#endif
+#ifdef CONFIG_EPWM1_P0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EPWM1_P0_IRQn) |
+#endif
+#ifdef CONFIG_EPWM1_P1_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EPWM1_P1_IRQn) |
+#endif
+#ifdef CONFIG_EPWM1_P2_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EPWM1_P2_IRQn) |
+#endif
+  0;
 
+  NVIC->ITNS[1] =
+#ifdef CONFIG_TMR2_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(TMR2_IRQn) |
+#endif
+#ifdef CONFIG_TMR3_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(TMR3_IRQn) |
+#endif
+#ifdef CONFIG_UART0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(UART0_IRQn) |
+#endif
+#ifdef CONFIG_UART1_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(UART1_IRQn) |
+#endif
+#ifdef CONFIG_I2C0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(I2C0_IRQn) |
+#endif
+#ifdef CONFIG_I2C1_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(I2C1_IRQn) |
+#endif
+#ifdef CONFIG_DAC_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(DAC_IRQn) |
+#endif
+#ifdef CONFIG_EADC0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EADC0_IRQn) |
+#endif
+#ifdef CONFIG_EADC1_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EADC1_IRQn) |
+#endif
+#ifdef CONFIG_ACMP01_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(ACMP01_IRQn) |
+#endif
+#ifdef CONFIG_EADC2_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EADC2_IRQn) |
+#endif
+#ifdef CONFIG_EADC3_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EADC3_IRQn) |
+#endif
+#ifdef CONFIG_UART2_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(UART2_IRQn) |
+#endif
+#ifdef CONFIG_UART3_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(UART3_IRQn) |
+#endif
+#ifdef CONFIG_SPI1_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(SPI1_IRQn) |
+#endif
+#ifdef CONFIG_SPI2_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(SPI2_IRQn) |
+#endif
+#ifdef CONFIG_USBD_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(USBD_IRQn) |
+#endif
+#ifdef CONFIG_USBH_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(USBH_IRQn) |
+#endif
+#ifdef CONFIG_USBOTG_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(USBOTG_IRQn) |
+#endif
+#ifdef CONFIG_CAN0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(CAN0_IRQn) |
+#endif
+#ifdef CONFIG_SC0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(SC0_IRQn) |
+#endif
+#ifdef CONFIG_SC1_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(SC1_IRQn) |
+#endif
+#ifdef CONFIG_SC2_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(SC2_IRQn) |
+#endif
+#ifdef CONFIG_SPI3_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(SPI3_IRQn) |
+#endif
+  0;
 
-    /* repeat this for all possible ITNS elements */
+  NVIC->ITNS[2] =
+#ifdef CONFIG_SDH0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(SDH0_IRQn) |
+#endif
+#ifdef CONFIG_I2S0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(I2S0_IRQn) |
+#endif
+#ifdef CONFIG_CRYPTO_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(CRYPTO_IRQn) |
+#endif
+#ifdef CONFIG_GPG_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(GPG_IRQn) |
+#endif
+#ifdef CONFIG_EINT6_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EINT6_IRQn) |
+#endif
+#ifdef CONFIG_UART4_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(UART4_IRQn) |
+#endif
+#ifdef CONFIG_UART5_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(UART5_IRQn) |
+#endif
+#ifdef CONFIG_USCI0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(USCI0_IRQn) |
+#endif
+#ifdef CONFIG_USCI1_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(USCI1_IRQn) |
+#endif
+#ifdef CONFIG_BPWM0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(BPWM0_IRQn) |
+#endif
+#ifdef CONFIG_BPWM1_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(BPWM1_IRQn) |
+#endif
+#ifdef CONFIG_I2C2_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(I2C2_IRQn) |
+#endif
+#ifdef CONFIG_QEI0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(QEI0_IRQn) |
+#endif
+#ifdef CONFIG_QEI1_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(QEI1_IRQn) |
+#endif
+#ifdef CONFIG_ECAP0_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(ECAP0_IRQn) |
+#endif
+#ifdef CONFIG_ECAP1_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(ECAP1_IRQn) |
+#endif
+#ifdef CONFIG_GPH_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(GPH_IRQn) |
+#endif
+#ifdef CONFIG_EINT7_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(EINT7_IRQn) |
+#endif
+#ifdef CONFIG_USBH_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(USBH_IRQn) |
+#endif
+  0;
+
+  NVIC->ITNS[3] =
+#ifdef CONFIG_PDMA1_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(PDMA1_IRQn) |
+#endif
+#ifdef CONFIG_TRNG_INTERRUPT_NONSECURE
+  SCU_SET_INTSSET(TRNG_IRQn) |
+#endif
+  0;
 
 }
-
 
 #endif  /* PARTITION_M2351 */
 

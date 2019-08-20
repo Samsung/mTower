@@ -833,6 +833,1044 @@ endchoice
 
 endmenu # Peripheral Secure Attribution Configuration
 
+menu "Assign Interrupt to Secure or Non-secure Vector"
+choice
+	prompt "RTC Interrupt target secure configuration"
+	default RTC_INTERRUPT_SECURE
+
+config RTC_INTERRUPT_NONSECURE
+	bool "RTC interrupt non-secure"
+	---help---
+		RTC interrupt is non-secure.
+
+config RTC_INTERRUPT_SECURE
+	bool "RTC interrupt secure"
+	---help---
+		RTC interrupt is secure.
+endchoice
+
+choice
+	prompt "TAMPER Interrupt target secure configuration"
+	default TAMPER_INTERRUPT_SECURE
+
+config TAMPER_INTERRUPT_NONSECURE
+	bool "TAMPER interrupt non-secure"
+	---help---
+		TAMPER interrupt is non-secure.
+
+config TAMPER_INTERRUPT_SECURE
+	bool "TAMPER interrupt secure"
+	---help---
+		TAMPER interrupt is secure.
+endchoice
+
+choice
+	prompt "EINT0 Interrupt target secure configuration"
+	default EINT0_INTERRUPT_SECURE
+
+config EINT0_INTERRUPT_NONSECURE
+	bool "EINT0 interrupt non-secure"
+	---help---
+		EINT0 interrupt is non-secure.
+
+config EINT0_INTERRUPT_SECURE
+	bool "EINT0 interrupt secure"
+	---help---
+		EINT0 interrupt is secure.
+endchoice
+
+choice
+	prompt "EINT1 Interrupt target secure configuration"
+	default EINT1_INTERRUPT_SECURE
+
+config EINT1_INTERRUPT_NONSECURE
+	bool "EINT1 interrupt non-secure"
+	---help---
+		EINT1 interrupt is non-secure.
+
+config EINT1_INTERRUPT_SECURE
+	bool "EINT1 interrupt secure"
+	---help---
+		EINT1 interrupt is secure.
+endchoice
+
+choice
+	prompt "EINT2 Interrupt target secure configuration"
+	default EINT2_INTERRUPT_SECURE
+
+config EINT2_INTERRUPT_NONSECURE
+	bool "EINT2 interrupt non-secure"
+	---help---
+		EINT2 interrupt is non-secure.
+
+config EINT2_INTERRUPT_SECURE
+	bool "EINT2 interrupt secure"
+	---help---
+		EINT2 interrupt is secure.
+endchoice
+
+choice
+	prompt "EINT3 Interrupt target secure configuration"
+	default EINT3_INTERRUPT_SECURE
+
+config EINT3_INTERRUPT_NONSECURE
+	bool "EINT3 interrupt non-secure"
+	---help---
+		EINT3 interrupt is non-secure.
+
+config EINT3_INTERRUPT_SECURE
+	bool "EINT3 interrupt secure"
+	---help---
+		EINT3 interrupt is secure.
+endchoice
+
+choice
+	prompt "EINT4 Interrupt target secure configuration"
+	default EINT4_INTERRUPT_SECURE
+
+config EINT4_INTERRUPT_NONSECURE
+	bool "EINT4 interrupt non-secure"
+	---help---
+		EINT4 interrupt is non-secure.
+
+config EINT4_INTERRUPT_SECURE
+	bool "EINT4 interrupt secure"
+	---help---
+		EINT4 interrupt is secure.
+endchoice
+
+choice
+	prompt "EINT5 Interrupt target secure configuration"
+	default EINT5_INTERRUPT_SECURE
+
+config EINT5_INTERRUPT_NONSECURE
+	bool "EINT5 interrupt non-secure"
+	---help---
+		EINT5 interrupt is non-secure.
+
+config EINT5_INTERRUPT_SECURE
+	bool "EINT5 interrupt secure"
+	---help---
+		EINT5 interrupt is secure.
+endchoice
+
+choice
+	prompt "GPA Interrupt target secure configuration"
+	default GPA_INTERRUPT_SECURE
+
+config GPA_INTERRUPT_NONSECURE
+	bool "GPA interrupt non-secure"
+	---help---
+		GPA interrupt is non-secure.
+
+config GPA_INTERRUPT_SECURE
+	bool "GPA interrupt secure"
+	---help---
+		GPA interrupt is secure.
+endchoice
+
+choice
+	prompt "GPB Interrupt target secure configuration"
+	default GPB_INTERRUPT_SECURE
+
+config GPB_INTERRUPT_NONSECURE
+	bool "GPB interrupt non-secure"
+	---help---
+		GPB interrupt is non-secure.
+
+config GPB_INTERRUPT_SECURE
+	bool "GPB interrupt secure"
+	---help---
+		GPB interrupt is secure.
+endchoice
+
+choice
+	prompt "GPC Interrupt target secure configuration"
+	default GPC_INTERRUPT_SECURE
+
+config GPC_INTERRUPT_NONSECURE
+	bool "GPC interrupt non-secure"
+	---help---
+		GPC interrupt is non-secure.
+
+config GPC_INTERRUPT_SECURE
+	bool "GPC interrupt secure"
+	---help---
+		GPC interrupt is secure.
+endchoice
+
+choice
+	prompt "GPD Interrupt target secure configuration"
+	default GPD_INTERRUPT_SECURE
+
+config GPD_INTERRUPT_NONSECURE
+	bool "GPD interrupt non-secure"
+	---help---
+		GPD interrupt is non-secure.
+
+config GPD_INTERRUPT_SECURE
+	bool "GPD interrupt secure"
+	---help---
+		GPD interrupt is secure.
+endchoice
+
+choice
+	prompt "GPE Interrupt target secure configuration"
+	default GPE_INTERRUPT_SECURE
+
+config GPE_INTERRUPT_NONSECURE
+	bool "GPE interrupt non-secure"
+	---help---
+		GPE interrupt is non-secure.
+
+config GPE_INTERRUPT_SECURE
+	bool "GPE interrupt secure"
+	---help---
+		GPE interrupt is secure.
+endchoice
+
+choice
+	prompt "GPF Interrupt target secure configuration"
+	default GPF_INTERRUPT_SECURE
+
+config GPF_INTERRUPT_NONSECURE
+	bool "GPF interrupt non-secure"
+	---help---
+		GPF interrupt is non-secure.
+
+config GPF_INTERRUPT_SECURE
+	bool "GPF interrupt secure"
+	---help---
+		GPF interrupt is secure.
+endchoice
+
+choice
+	prompt "QSPI0 Interrupt target secure configuration"
+	default QSPI0_INTERRUPT_SECURE
+
+config QSPI0_INTERRUPT_NONSECURE
+	bool "QSPI0 interrupt non-secure"
+	---help---
+		QSPI0 interrupt is non-secure.
+
+config QSPI0_INTERRUPT_SECURE
+	bool "QSPI0 interrupt secure"
+	---help---
+		QSPI0 interrupt is secure.
+endchoice
+
+choice
+	prompt "SPI0 Interrupt target secure configuration"
+	default SPI0_INTERRUPT_SECURE
+
+config SPI0_INTERRUPT_NONSECURE
+	bool "SPI0 interrupt non-secure"
+	---help---
+		SPI0 interrupt is non-secure.
+
+config SPI0_INTERRUPT_SECURE
+	bool "SPI0 interrupt secure"
+	---help---
+		SPI0 interrupt is secure.
+endchoice
+
+choice
+	prompt "BRAKE0 Interrupt target secure configuration"
+	default BRAKE0_INTERRUPT_SECURE
+
+config BRAKE0_INTERRUPT_NONSECURE
+	bool "BRAKE0 interrupt non-secure"
+	---help---
+		BRAKE0 interrupt is non-secure.
+
+config BRAKE0_INTERRUPT_SECURE
+	bool "BRAKE0 interrupt secure"
+	---help---
+		BRAKE0 interrupt is secure.
+endchoice
+
+choice
+	prompt "EPWM0_P0 Interrupt target secure configuration"
+	default EPWM0_P0_INTERRUPT_SECURE
+
+config EPWM0_P0_INTERRUPT_NONSECURE
+	bool "EPWM0_P0 interrupt non-secure"
+	---help---
+		EPWM0_P0 interrupt is non-secure.
+
+config EPWM0_P0_INTERRUPT_SECURE
+	bool "EPWM0_P0 interrupt secure"
+	---help---
+		EPWM0_P0 interrupt is secure.
+endchoice
+
+choice
+	prompt "EPWM0_P1 Interrupt target secure configuration"
+	default EPWM0_P1_INTERRUPT_SECURE
+
+config EPWM0_P1_INTERRUPT_NONSECURE
+	bool "EPWM0_P1 interrupt non-secure"
+	---help---
+		EPWM0_P1 interrupt is non-secure.
+
+config EPWM0_P1_INTERRUPT_SECURE
+	bool "EPWM0_P1 interrupt secure"
+	---help---
+		EPWM0_P1 interrupt is secure.
+endchoice
+
+choice
+	prompt "EPWM0_P2 Interrupt target secure configuration"
+	default EPWM0_P2_INTERRUPT_SECURE
+
+config EPWM0_P2_INTERRUPT_NONSECURE
+	bool "EPWM0_P2 interrupt non-secure"
+	---help---
+		EPWM0_P2 interrupt is non-secure.
+
+config EPWM0_P2_INTERRUPT_SECURE
+	bool "EPWM0_P2 interrupt secure"
+	---help---
+		EPWM0_P2 interrupt is secure.
+endchoice
+
+choice
+	prompt "BRAKE1 Interrupt target secure configuration"
+	default BRAKE1_INTERRUPT_SECURE
+
+config BRAKE1_INTERRUPT_NONSECURE
+	bool "BRAKE1 interrupt non-secure"
+	---help---
+		BRAKE1 interrupt is non-secure.
+
+config BRAKE1_INTERRUPT_SECURE
+	bool "BRAKE1 interrupt secure"
+	---help---
+		BRAKE1 interrupt is secure.
+endchoice
+
+choice
+	prompt "EPWM1_P0 Interrupt target secure configuration"
+	default EPWM1_P0_INTERRUPT_SECURE
+
+config EPWM1_P0_INTERRUPT_NONSECURE
+	bool "EPWM1_P0 interrupt non-secure"
+	---help---
+		EPWM1_P0 interrupt is non-secure.
+
+config EPWM1_P0_INTERRUPT_SECURE
+	bool "EPWM1_P0 interrupt secure"
+	---help---
+		EPWM1_P0 interrupt is secure.
+endchoice
+
+choice
+	prompt "EPWM1_P1 Interrupt target secure configuration"
+	default EPWM1_P1_INTERRUPT_SECURE
+
+config EPWM1_P1_INTERRUPT_NONSECURE
+	bool "EPWM1_P1 interrupt non-secure"
+	---help---
+		EPWM1_P1 interrupt is non-secure.
+
+config EPWM1_P1_INTERRUPT_SECURE
+	bool "EPWM1_P1 interrupt secure"
+	---help---
+		EPWM1_P1 interrupt is secure.
+endchoice
+
+choice
+	prompt "EPWM1_P2 Interrupt target secure configuration"
+	default EPWM1_P2_INTERRUPT_SECURE
+
+config EPWM1_P2_INTERRUPT_NONSECURE
+	bool "EPWM1_P2 interrupt non-secure"
+	---help---
+		EPWM1_P2 interrupt is non-secure.
+
+config EPWM1_P2_INTERRUPT_SECURE
+	bool "EPWM1_P2 interrupt secure"
+	---help---
+		EPWM1_P2 interrupt is secure.
+endchoice
+
+choice
+	prompt "TMR2 Interrupt target secure configuration"
+	default TMR2_INTERRUPT_SECURE
+
+config TMR2_INTERRUPT_NONSECURE
+	bool "TMR2 interrupt non-secure"
+	---help---
+		TMR2 interrupt is non-secure.
+
+config TMR2_INTERRUPT_SECURE
+	bool "TMR2 interrupt secure"
+	---help---
+		TMR2 interrupt is secure.
+endchoice
+
+choice
+	prompt "TMR3 Interrupt target secure configuration"
+	default TMR3_INTERRUPT_SECURE
+
+config TMR3_INTERRUPT_NONSECURE
+	bool "TMR3 interrupt non-secure"
+	---help---
+		TMR3 interrupt is non-secure.
+
+config TMR3_INTERRUPT_SECURE
+	bool "TMR3 interrupt secure"
+	---help---
+		TMR3 interrupt is secure.
+endchoice
+
+choice
+	prompt "UART0 Interrupt target secure configuration"
+	default UART0_INTERRUPT_SECURE
+
+config UART0_INTERRUPT_NONSECURE
+	bool "UART0 interrupt non-secure"
+	---help---
+		UART0 interrupt is non-secure.
+
+config UART0_INTERRUPT_SECURE
+	bool "UART0 interrupt secure"
+	---help---
+		UART0 interrupt is secure.
+endchoice
+
+choice
+	prompt "UART1 Interrupt target secure configuration"
+	default UART1_INTERRUPT_SECURE
+
+config UART1_INTERRUPT_NONSECURE
+	bool "UART1 interrupt non-secure"
+	---help---
+		UART1 interrupt is non-secure.
+
+config UART1_INTERRUPT_SECURE
+	bool "UART1 interrupt secure"
+	---help---
+		UART1 interrupt is secure.
+endchoice
+
+choice
+	prompt "I2C0 Interrupt target secure configuration"
+	default I2C0_INTERRUPT_SECURE
+
+config I2C0_INTERRUPT_NONSECURE
+	bool "I2C0 interrupt non-secure"
+	---help---
+		I2C0 interrupt is non-secure.
+
+config I2C0_INTERRUPT_SECURE
+	bool "I2C0 interrupt secure"
+	---help---
+		I2C0 interrupt is secure.
+endchoice
+
+choice
+	prompt "I2C1 Interrupt target secure configuration"
+	default I2C1_INTERRUPT_SECURE
+
+config I2C1_INTERRUPT_NONSECURE
+	bool "I2C1 interrupt non-secure"
+	---help---
+		I2C1 interrupt is non-secure.
+
+config I2C1_INTERRUPT_SECURE
+	bool "I2C1 interrupt secure"
+	---help---
+		I2C1 interrupt is secure.
+endchoice
+
+choice
+	prompt "DAC Interrupt target secure configuration"
+	default DAC_INTERRUPT_SECURE
+
+config DAC_INTERRUPT_NONSECURE
+	bool "DAC interrupt non-secure"
+	---help---
+		DAC interrupt is non-secure.
+
+config DAC_INTERRUPT_SECURE
+	bool "DAC interrupt secure"
+	---help---
+		DAC interrupt is secure.
+endchoice
+
+choice
+	prompt "EADC0 Interrupt target secure configuration"
+	default EADC0_INTERRUPT_SECURE
+
+config EADC0_INTERRUPT_NONSECURE
+	bool "EADC0 interrupt non-secure"
+	---help---
+		EADC0 interrupt is non-secure.
+
+config EADC0_INTERRUPT_SECURE
+	bool "EADC0 interrupt secure"
+	---help---
+		EADC0 interrupt is secure.
+endchoice
+
+choice
+	prompt "EADC1 Interrupt target secure configuration"
+	default EADC1_INTERRUPT_SECURE
+
+config EADC1_INTERRUPT_NONSECURE
+	bool "EADC1 interrupt non-secure"
+	---help---
+		EADC1 interrupt is non-secure.
+
+config EADC1_INTERRUPT_SECURE
+	bool "EADC1 interrupt secure"
+	---help---
+		EADC1 interrupt is secure.
+endchoice
+
+choice
+	prompt "ACMP01 Interrupt target secure configuration"
+	default ACMP01_INTERRUPT_SECURE
+
+config ACMP01_INTERRUPT_NONSECURE
+	bool "ACMP01 interrupt non-secure"
+	---help---
+		ACMP01 interrupt is non-secure.
+
+config ACMP01_INTERRUPT_SECURE
+	bool "ACMP01 interrupt secure"
+	---help---
+		ACMP01 interrupt is secure.
+endchoice
+
+choice
+	prompt "EADC2 Interrupt target secure configuration"
+	default EADC2_INTERRUPT_SECURE
+
+config EADC2_INTERRUPT_NONSECURE
+	bool "EADC2 interrupt non-secure"
+	---help---
+		EADC2 interrupt is non-secure.
+
+config EADC2_INTERRUPT_SECURE
+	bool "EADC2 interrupt secure"
+	---help---
+		EADC2 interrupt is secure.
+endchoice
+
+choice
+	prompt "EADC3 Interrupt target secure configuration"
+	default EADC3_INTERRUPT_SECURE
+
+config EADC3_INTERRUPT_NONSECURE
+	bool "EADC3 interrupt non-secure"
+	---help---
+		EADC3 interrupt is non-secure.
+
+config EADC3_INTERRUPT_SECURE
+	bool "EADC3 interrupt secure"
+	---help---
+		EADC3 interrupt is secure.
+endchoice
+
+choice
+	prompt "UART2 Interrupt target secure configuration"
+	default UART2_INTERRUPT_SECURE
+
+config UART2_INTERRUPT_NONSECURE
+	bool "UART2 interrupt non-secure"
+	---help---
+		UART2 interrupt is non-secure.
+
+config UART2_INTERRUPT_SECURE
+	bool "UART2 interrupt secure"
+	---help---
+		UART2 interrupt is secure.
+endchoice
+
+choice
+	prompt "UART3 Interrupt target secure configuration"
+	default UART3_INTERRUPT_SECURE
+
+config UART3_INTERRUPT_NONSECURE
+	bool "UART3 interrupt non-secure"
+	---help---
+		UART3 interrupt is non-secure.
+
+config UART3_INTERRUPT_SECURE
+	bool "UART3 interrupt secure"
+	---help---
+		UART3 interrupt is secure.
+endchoice
+
+choice
+	prompt "SPI1 Interrupt target secure configuration"
+	default SPI1_INTERRUPT_SECURE
+
+config SPI1_INTERRUPT_NONSECURE
+	bool "SPI1 interrupt non-secure"
+	---help---
+		SPI1 interrupt is non-secure.
+
+config SPI1_INTERRUPT_SECURE
+	bool "SPI1 interrupt secure"
+	---help---
+		SPI1 interrupt is secure.
+endchoice
+
+choice
+	prompt "SPI2 Interrupt target secure configuration"
+	default SPI2_INTERRUPT_SECURE
+
+config SPI2_INTERRUPT_NONSECURE
+	bool "SPI2 interrupt non-secure"
+	---help---
+		SPI2 interrupt is non-secure.
+
+config SPI2_INTERRUPT_SECURE
+	bool "SPI2 interrupt secure"
+	---help---
+		SPI2 interrupt is secure.
+endchoice
+
+choice
+	prompt "USBD Interrupt target secure configuration"
+	default USBD_INTERRUPT_SECURE
+
+config USBD_INTERRUPT_NONSECURE
+	bool "USBD interrupt non-secure"
+	---help---
+		USBD interrupt is non-secure.
+
+config USBD_INTERRUPT_SECURE
+	bool "USBD interrupt secure"
+	---help---
+		USBD interrupt is secure.
+endchoice
+
+choice
+	prompt "USBH Interrupt target secure configuration"
+	default USBH_INTERRUPT_SECURE
+
+config USBH_INTERRUPT_NONSECURE
+	bool "USBH interrupt non-secure"
+	---help---
+		USBH interrupt is non-secure.
+
+config USBH_INTERRUPT_SECURE
+	bool "USBH interrupt secure"
+	---help---
+		USBH interrupt is secure.
+endchoice
+
+choice
+	prompt "USBOTG Interrupt target secure configuration"
+	default USBOTG_INTERRUPT_SECURE
+
+config USBOTG_INTERRUPT_NONSECURE
+	bool "USBOTG interrupt non-secure"
+	---help---
+		USBOTG interrupt is non-secure.
+
+config USBOTG_INTERRUPT_SECURE
+	bool "USBOTG interrupt secure"
+	---help---
+		USBOTG interrupt is secure.
+endchoice
+
+choice
+	prompt "CAN0 Interrupt target secure configuration"
+	default CAN0_INTERRUPT_SECURE
+
+config CAN0_INTERRUPT_NONSECURE
+	bool "CAN0 interrupt non-secure"
+	---help---
+		CAN0 interrupt is non-secure.
+
+config CAN0_INTERRUPT_SECURE
+	bool "CAN0 interrupt secure"
+	---help---
+		CAN0 interrupt is secure.
+endchoice
+
+choice
+	prompt "SC0 Interrupt target secure configuration"
+	default SC0_INTERRUPT_SECURE
+
+config SC0_INTERRUPT_NONSECURE
+	bool "SC0 interrupt non-secure"
+	---help---
+		SC0 interrupt is non-secure.
+
+config SC0_INTERRUPT_SECURE
+	bool "SC0 interrupt secure"
+	---help---
+		SC0 interrupt is secure.
+endchoice
+
+choice
+	prompt "SC1 Interrupt target secure configuration"
+	default SC1_INTERRUPT_SECURE
+
+config SC1_INTERRUPT_NONSECURE
+	bool "SC1 interrupt non-secure"
+	---help---
+		SC1 interrupt is non-secure.
+
+config SC1_INTERRUPT_SECURE
+	bool "SC1 interrupt secure"
+	---help---
+		SC1 interrupt is secure.
+endchoice
+
+choice
+	prompt "SC2 Interrupt target secure configuration"
+	default SC2_INTERRUPT_SECURE
+
+config SC2_INTERRUPT_NONSECURE
+	bool "SC2 interrupt non-secure"
+	---help---
+		SC2 interrupt is non-secure.
+
+config SC2_INTERRUPT_SECURE
+	bool "SC2 interrupt secure"
+	---help---
+		SC2 interrupt is secure.
+endchoice
+
+choice
+	prompt "SPI3 Interrupt target secure configuration"
+	default SPI3_INTERRUPT_SECURE
+
+config SPI3_INTERRUPT_NONSECURE
+	bool "SPI3 interrupt non-secure"
+	---help---
+		SPI3 interrupt is non-secure.
+
+config SPI3_INTERRUPT_SECURE
+	bool "SPI3 interrupt secure"
+	---help---
+		SPI3 interrupt is secure.
+endchoice
+
+choice
+	prompt "SDH0 Interrupt target secure configuration"
+	default SDH0_INTERRUPT_SECURE
+
+config SDH0_INTERRUPT_NONSECURE
+	bool "SDH0 interrupt non-secure"
+	---help---
+		SDH0 interrupt is non-secure.
+
+config SDH0_INTERRUPT_SECURE
+	bool "SDH0 interrupt secure"
+	---help---
+		SDH0 interrupt is secure.
+endchoice
+
+choice
+	prompt "I2S0 Interrupt target secure configuration"
+	default I2S0_INTERRUPT_SECURE
+
+config I2S0_INTERRUPT_NONSECURE
+	bool "I2S0 interrupt non-secure"
+	---help---
+		I2S0 interrupt is non-secure.
+
+config I2S0_INTERRUPT_SECURE
+	bool "I2S0 interrupt secure"
+	---help---
+		I2S0 interrupt is secure.
+endchoice
+
+choice
+	prompt "CRYPTO Interrupt target secure configuration"
+	default CRYPTO_INTERRUPT_SECURE
+
+config CRYPTO_INTERRUPT_NONSECURE
+	bool "CRYPTO interrupt non-secure"
+	---help---
+		CRYPTO interrupt is non-secure.
+
+config CRYPTO_INTERRUPT_SECURE
+	bool "CRYPTO interrupt secure"
+	---help---
+		CRYPTO interrupt is secure.
+endchoice
+
+choice
+	prompt "GPG Interrupt target secure configuration"
+	default GPG_INTERRUPT_SECURE
+
+config GPG_INTERRUPT_NONSECURE
+	bool "GPG interrupt non-secure"
+	---help---
+		GPG interrupt is non-secure.
+
+config GPG_INTERRUPT_SECURE
+	bool "GPG interrupt secure"
+	---help---
+		GPG interrupt is secure.
+endchoice
+
+choice
+	prompt "EINT6 Interrupt target secure configuration"
+	default EINT6_INTERRUPT_SECURE
+
+config EINT6_INTERRUPT_NONSECURE
+	bool "EINT6 interrupt non-secure"
+	---help---
+		EINT6 interrupt is non-secure.
+
+config EINT6_INTERRUPT_SECURE
+	bool "EINT6 interrupt secure"
+	---help---
+		EINT6 interrupt is secure.
+endchoice
+
+choice
+	prompt "UART4 Interrupt target secure configuration"
+	default UART4_INTERRUPT_SECURE
+
+config UART4_INTERRUPT_NONSECURE
+	bool "UART4 interrupt non-secure"
+	---help---
+		UART4 interrupt is non-secure.
+
+config UART4_INTERRUPT_SECURE
+	bool "UART4 interrupt secure"
+	---help---
+		UART4 interrupt is secure.
+endchoice
+
+choice
+	prompt "UART5 Interrupt target secure configuration"
+	default UART5_INTERRUPT_SECURE
+
+config UART5_INTERRUPT_NONSECURE
+	bool "UART5 interrupt non-secure"
+	---help---
+		UART5 interrupt is non-secure.
+
+config UART5_INTERRUPT_SECURE
+	bool "UART5 interrupt secure"
+	---help---
+		UART5 interrupt is secure.
+endchoice
+
+choice
+	prompt "USCI0 Interrupt target secure configuration"
+	default USCI0_INTERRUPT_SECURE
+
+config USCI0_INTERRUPT_NONSECURE
+	bool "USCI0 interrupt non-secure"
+	---help---
+		USCI0 interrupt is non-secure.
+
+config USCI0_INTERRUPT_SECURE
+	bool "USCI0 interrupt secure"
+	---help---
+		USCI0 interrupt is secure.
+endchoice
+
+choice
+	prompt "USCI1 Interrupt target secure configuration"
+	default USCI1_INTERRUPT_SECURE
+
+config USCI1_INTERRUPT_NONSECURE
+	bool "USCI1 interrupt non-secure"
+	---help---
+		USCI1 interrupt is non-secure.
+
+config USCI1_INTERRUPT_SECURE
+	bool "USCI1 interrupt secure"
+	---help---
+		USCI1 interrupt is secure.
+endchoice
+
+choice
+	prompt "BPWM0 Interrupt target secure configuration"
+	default BPWM0_INTERRUPT_SECURE
+
+config BPWM0_INTERRUPT_NONSECURE
+	bool "BPWM0 interrupt non-secure"
+	---help---
+		BPWM0 interrupt is non-secure.
+
+config BPWM0_INTERRUPT_SECURE
+	bool "BPWM0 interrupt secure"
+	---help---
+		BPWM0 interrupt is secure.
+endchoice
+
+choice
+	prompt "BPWM1 Interrupt target secure configuration"
+	default BPWM1_INTERRUPT_SECURE
+
+config BPWM1_INTERRUPT_NONSECURE
+	bool "BPWM1 interrupt non-secure"
+	---help---
+		BPWM1 interrupt is non-secure.
+
+config BPWM1_INTERRUPT_SECURE
+	bool "BPWM1 interrupt secure"
+	---help---
+		BPWM1 interrupt is secure.
+endchoice
+
+choice
+	prompt "I2C2 Interrupt target secure configuration"
+	default I2C2_INTERRUPT_SECURE
+
+config I2C2_INTERRUPT_NONSECURE
+	bool "I2C2 interrupt non-secure"
+	---help---
+		I2C2 interrupt is non-secure.
+
+config I2C2_INTERRUPT_SECURE
+	bool "I2C2 interrupt secure"
+	---help---
+		I2C2 interrupt is secure.
+endchoice
+
+choice
+	prompt "QEI0 Interrupt target secure configuration"
+	default QEI0_INTERRUPT_SECURE
+
+config QEI0_INTERRUPT_NONSECURE
+	bool "QEI0 interrupt non-secure"
+	---help---
+		QEI0 interrupt is non-secure.
+
+config QEI0_INTERRUPT_SECURE
+	bool "QEI0 interrupt secure"
+	---help---
+		QEI0 interrupt is secure.
+endchoice
+
+choice
+	prompt "QEI1 Interrupt target secure configuration"
+	default QEI1_INTERRUPT_SECURE
+
+config QEI1_INTERRUPT_NONSECURE
+	bool "QEI1 interrupt non-secure"
+	---help---
+		QEI1 interrupt is non-secure.
+
+config QEI1_INTERRUPT_SECURE
+	bool "QEI1 interrupt secure"
+	---help---
+		QEI1 interrupt is secure.
+endchoice
+
+choice
+	prompt "ECAP0 Interrupt target secure configuration"
+	default ECAP0_INTERRUPT_SECURE
+
+config ECAP0_INTERRUPT_NONSECURE
+	bool "ECAP0 interrupt non-secure"
+	---help---
+		ECAP0 interrupt is non-secure.
+
+config ECAP0_INTERRUPT_SECURE
+	bool "ECAP0 interrupt secure"
+	---help---
+		ECAP0 interrupt is secure.
+endchoice
+
+choice
+	prompt "ECAP1 Interrupt target secure configuration"
+	default ECAP1_INTERRUPT_SECURE
+
+config ECAP1_INTERRUPT_NONSECURE
+	bool "ECAP1 interrupt non-secure"
+	---help---
+		ECAP1 interrupt is non-secure.
+
+config ECAP1_INTERRUPT_SECURE
+	bool "ECAP1 interrupt secure"
+	---help---
+		ECAP1 interrupt is secure.
+endchoice
+
+choice
+	prompt "GPH Interrupt target secure configuration"
+	default GPH_INTERRUPT_SECURE
+
+config GPH_INTERRUPT_NONSECURE
+	bool "GPH interrupt non-secure"
+	---help---
+		GPH interrupt is non-secure.
+
+config GPH_INTERRUPT_SECURE
+	bool "GPH interrupt secure"
+	---help---
+		GPH interrupt is secure.
+endchoice
+
+choice
+	prompt "EINT7 Interrupt target secure configuration"
+	default EINT7_INTERRUPT_SECURE
+
+config EINT7_INTERRUPT_NONSECURE
+	bool "EINT7 interrupt non-secure"
+	---help---
+		EINT7 interrupt is non-secure.
+
+config EINT7_INTERRUPT_SECURE
+	bool "EINT7 interrupt secure"
+	---help---
+		EINT7 interrupt is secure.
+endchoice
+
+choice
+	prompt "USBH Interrupt target secure configuration"
+	default USBH_INTERRUPT_SECURE
+
+config USBH_INTERRUPT_NONSECURE
+	bool "USBH interrupt non-secure"
+	---help---
+		USBH interrupt is non-secure.
+
+config USBH_INTERRUPT_SECURE
+	bool "USBH interrupt secure"
+	---help---
+		USBH interrupt is secure.
+endchoice
+
+choice
+	prompt "PDMA1 Interrupt target secure configuration"
+	default PDMA1_INTERRUPT_SECURE
+
+config PDMA1_INTERRUPT_NONSECURE
+	bool "PDMA1 interrupt non-secure"
+	---help---
+		PDMA1 interrupt is non-secure.
+
+config PDMA1_INTERRUPT_SECURE
+	bool "PDMA1 interrupt secure"
+	---help---
+		PDMA1 interrupt is secure.
+endchoice
+
+choice
+	prompt "TRNG Interrupt target secure configuration"
+	default TRNG_INTERRUPT_SECURE
+
+config TRNG_INTERRUPT_NONSECURE
+	bool "TRNG interrupt non-secure"
+	---help---
+		TRNG interrupt is non-secure.
+
+config TRNG_INTERRUPT_SECURE
+	bool "TRNG interrupt secure"
+	---help---
+		TRNG interrupt is secure.
+endchoice
+
+endmenu # Assign Interrupt to Secure or Non-secure Vector
+
 menu "Enable secure violation interrupts"
 
 config APB0IEN_SECURE_VIOLATION_INTERRUPT
