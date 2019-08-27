@@ -23,7 +23,6 @@ bibliography: paper.bib
 # Background
 Embedded computing systems have already become ubiquitous in daily life. In many cases these systems deal with confidential data and control access to valuable resources. Significant efforts are put into securing these systems against malicious access. However, the software and data are often protected by outdated mechanisms that contain well-known vulnerabilities, thus do not pose any real obstacles for technically savvy adversary. Consequences of deliberate attack against embedded systems can be severe, e.g.:
 
-* poorly implemented authorization/authentication mechanism allows hackers to unlock a smart door lock [@ZWave]
 * poor data protection in network-connected medical device can pose life risk [@Forbes]
 * hardcoded cryptographic keys and application vulnerable to reverse engineering in automotive platform [@IOactive]
 
