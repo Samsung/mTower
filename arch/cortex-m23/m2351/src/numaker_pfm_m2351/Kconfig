@@ -3,6 +3,100 @@
 # see the file kconfig-language.txt in the docs folder of mTower repository.
 #
 
+choice
+	prompt "Non-secure debug UART configuration"
+	default NONSECURE_DEBUG_UART1
+
+config NONSECURE_DEBUG_UART0
+	bool "UART0"
+	---help---
+		UART0 is non-secure debug port.
+
+config NONSECURE_DEBUG_UART1
+	bool "UART1"
+	---help---
+		UART1 is non-secure debug port.
+
+config NONSECURE_DEBUG_UART2
+	bool "UART2"
+	---help---
+		UART2 is non-secure debug port.
+
+config NONSECURE_DEBUG_UART3
+	bool "UART3"
+	---help---
+		UART3 is non-secure debug port.
+
+config NONSECURE_DEBUG_UART4
+	bool "UART4"
+	---help---
+		UART4 is non-secure debug port.
+
+config NONSECURE_DEBUG_UART5
+	bool "UART5"
+	---help---
+		UART5 is non-secure debug port.
+endchoice
+
+config NONSECURE_DEBUG_UART
+	string
+	default "UART0_NS"            if NONSECURE_DEBUG_UART0
+	default "UART1_NS"            if NONSECURE_DEBUG_UART1
+	default "UART2_NS"            if NONSECURE_DEBUG_UART2
+	default "UART3_NS"            if NONSECURE_DEBUG_UART3
+	default "UART4_NS"            if NONSECURE_DEBUG_UART4
+	default "UART5_NS"            if NONSECURE_DEBUG_UART5
+
+choice
+	prompt "Secure debug UART configuration"
+	default SECURE_DEBUG_UART0
+
+config SECURE_DEBUG_UART0
+	bool "UART0"
+	---help---
+		UART0 is secure debug port.
+
+config SECURE_DEBUG_UART1
+	bool "UART1"
+	---help---
+		UART1 is secure debug port.
+
+config SECURE_DEBUG_UART2
+	bool "UART2"
+	---help---
+		UART2 is secure debug port.
+
+config SECURE_DEBUG_UART3
+	bool "UART3"
+	---help---
+		UART3 is secure debug port.
+
+config SECURE_DEBUG_UART4
+	bool "UART4"
+	---help---
+		UART4 is secure debug port.
+
+config SECURE_DEBUG_UART5
+	bool "UART5"
+	---help---
+		UART5 is secure debug port.
+endchoice
+
+config SECURE_DEBUG_UART
+	string
+	default "UART0"            if SECURE_DEBUG_UART0 && !NONSECURE_DEBUG_UART0
+	default "UART1"            if SECURE_DEBUG_UART1 && !NONSECURE_DEBUG_UART1
+	default "UART2"            if SECURE_DEBUG_UART2 && !NONSECURE_DEBUG_UART2
+	default "UART3"            if SECURE_DEBUG_UART3 && !NONSECURE_DEBUG_UART3
+	default "UART4"            if SECURE_DEBUG_UART4 && !NONSECURE_DEBUG_UART4
+	default "UART5"            if SECURE_DEBUG_UART5 && !NONSECURE_DEBUG_UART5
+	default "UART0_NS"         if SECURE_DEBUG_UART0 && NONSECURE_DEBUG_UART0
+	default "UART1_NS"         if SECURE_DEBUG_UART1 && NONSECURE_DEBUG_UART1
+	default "UART2_NS"         if SECURE_DEBUG_UART2 && NONSECURE_DEBUG_UART2
+	default "UART3_NS"         if SECURE_DEBUG_UART3 && NONSECURE_DEBUG_UART3
+	default "UART4_NS"         if SECURE_DEBUG_UART4 && NONSECURE_DEBUG_UART4
+	default "UART5_NS"         if SECURE_DEBUG_UART5 && NONSECURE_DEBUG_UART5
+
 menu "Secure Attribution Configuration"
 
 menu "GPIO Secure Attribution Configuration"

@@ -48,7 +48,7 @@ ifeq ($(CONFIG_APPS_TEST),y)
 CFLAGS += -I$(TOPDIR)/apps/test
 endif
 
-CFLAGS += -DDEBUG_PORT=UART1_NS
+CFLAGS += -DDEBUG_PORT=$(subst ",,$(CONFIG_NONSECURE_DEBUG_UART))
 
 OBJDIR = $(TOPDIR)/build/nonsecure$(subst $(TOPDIR),,$(shell pwd))
 

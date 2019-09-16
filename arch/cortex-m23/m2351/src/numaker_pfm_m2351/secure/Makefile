@@ -50,6 +50,8 @@ ifeq ($(CONFIG_APPS_TEST),y)
 CFLAGS += -I$(TOPDIR)/apps/test
 endif
 
+CFLAGS += -DDEBUG_PORT=$(subst ",,$(CONFIG_SECURE_DEBUG_UART))
+
 OBJDIR = $(TOPDIR)/build/secure$(subst $(TOPDIR),,$(shell pwd))
 
 MTOWER_S = $(TOPDIR)/mtower_s$(EXEEXT)

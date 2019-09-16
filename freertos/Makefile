@@ -35,11 +35,12 @@ SRCS  = croutine.c list.c queue.c stream_buffer.c tasks.c timers.c
 SRCS += portable/GCC/ARM_V8M/port.c portable/MemMang/heap_2.c
 
 ifneq ($(WORLD), secure)
-CFLAGS += -DDEBUG_PORT=UART1_NS
+CFLAGS += -DDEBUG_PORT=$(subst ",,$(CONFIG_NONSECURE_DEBUG_UART))
 OBJDIR = $(TOPDIR)/build/nonsecure$(subst $(TOPDIR),,$(shell pwd))
 endif
 
 ifeq ($(WORLD), secure)
+CFLAGS += -DDEBUG_PORT=$(subst ",,$(CONFIG_SECURE_DEBUG_UART))
 OBJDIR = $(TOPDIR)/build/secure$(subst $(TOPDIR),,$(shell pwd))
 endif
 
