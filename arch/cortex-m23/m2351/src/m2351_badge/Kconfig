@@ -3,7 +3,9 @@
 # see the file kconfig-language.txt in the docs folder of mTower repository.
 #
 
-if PLATFORM_NUMAKER_PFM_M2351
-comment "NuMaker-PFM-M2351 Peripheral Configuration Options"
+if PLATFORM_M2351_BADGE
+comment "M2351-Badge Peripheral Configuration Options"
 
-endif # PLATFORM_NUMAKER_PFM_M2351
+endif # PLATFORM_M2351_BADGE
+
+

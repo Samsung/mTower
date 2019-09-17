@@ -27,9 +27,9 @@ the beginnings of corresponding files; also, all licenses are listed in
 --- 
 ## 3. Platforms supported
 
-| **NuMaker-PFM-M2351** | **How to add a platform** |             |           |
+| **NuMaker-PFM-M2351** | **M2351-Badge** | **How to add a platform**             |           |
 |-----------------------|---------------------------|-------------|-----------|
-|[![](docs/images/platforms/numaker_pfm_m2351/numaker_pfm_m2351.png)](docs/numaker_pfm_m2351.md)| [![](docs/images/platforms/add_new_board.jpg)](docs/port-new-platform.md)|||
+|[![](docs/images/platforms/numaker_pfm_m2351/numaker_pfm_m2351.png)](docs/numaker_pfm_m2351.md)|[![](docs/images/platforms/no_image.jpg)](docs/m2351_badge.md) |[![](docs/images/platforms/add_new_board.jpg)](docs/port-new-platform.md)||
 
 
 Several platforms are supported. In order to manage slight differences
@@ -37,7 +37,8 @@ between platforms, a `PLATFORM` flag has been introduced.
 
 | Platform              | Composite PLATFORM flag            | Maintained |
 |-----------------------|------------------------------------|------------|
-| [NuMaker-PFM-M2351]   |`PLATFORM=numaker_pfm_m2351`    | v0.2       |
+| [NuMaker-PFM-M2351]   |`PLATFORM=numaker_pfm_m2351`        | v0.2       |
+| [M2351-Badge]         |`PLATFORM=m2351_badge`              | v0.2       |
 
 Fo information on adding a new platform see the [how to add a platform].
 

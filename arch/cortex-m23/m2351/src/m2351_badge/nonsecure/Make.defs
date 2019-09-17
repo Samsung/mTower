@@ -1,0 +1,54 @@
+############################################################################
+# arch/cortex-m23/m2351/src/m2351_badge/nonsecure/Make.defs
+#
+# Copyright (c) 2018-2019 Samsung Electronics Co., Ltd. All Rights Reserved.
+# Author: Taras Drozdovskyi t.drozdovsky@samsung.com
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+############################################################################
+
+HEAD_ASRC = 
+
+# Common m2351 files
+
+CMN_ASRCS = 
+
+CMN_CSRCS = 
+
+# Required CHIP files
+
+CHIP_ASRCS_NS = ../../Device/Nuvoton/M2351/Source/GCC/startup_M2351.S
+
+CHIP_CSRCS_NS = ../../Device/Nuvoton/M2351/Source/system_M2351.c \
+                ../../Device/Nuvoton/M2351/Source/GCC/_syscalls.c \
+                main_ns.c \
+                warn_err.c \
+                $(TOPDIR)/tee_client/libteec/src/tee_client_api.c
+
+ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
+CHIP_CSRCS_NS += $(TOPDIR)/apps/hello_world/ca/hello_world_ns.c
+endif
+
+ifeq ($(CONFIG_APPS_AES),y)
+CHIP_CSRCS_NS += $(TOPDIR)/apps/aes/ca/aes_ns.c
+endif
+
+ifeq ($(CONFIG_APPS_HOTP),y)
+CHIP_CSRCS_NS += $(TOPDIR)/apps/hotp/ca/hotp_ns.c
+endif
+
+ifeq ($(CONFIG_APPS_TEST),y)
+CHIP_CSRCS_NS += $(TOPDIR)/apps/test/ca/test_ns.c
+endif
+
