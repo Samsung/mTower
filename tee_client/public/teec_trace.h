@@ -34,6 +34,7 @@ extern "C" {
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <config.h>
 
 #ifndef BINARY_PREFIX
 #error "BINARY_PREFIX not defined"
@@ -83,6 +84,8 @@ extern "C" {
 /* Default debug level. */
 #define DEBUGLEVEL TRACE_INFO
 #endif
+
+#define DEBUGLEVEL  CONFIG_DEBUGLEVEL
 
 /*
  * This define make sure that parameters are checked in the same manner as it

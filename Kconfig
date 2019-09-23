@@ -130,6 +130,80 @@ config DEBUG_SYMBOLS
 	---help---
 		Build with debug symbols (needed for use with a debugger).
 
+comment "GP TEE API Debug Options"
+
+choice
+	prompt "TEE Internal API trace level"
+	default TRACE_LEVEL_INFO
+
+config TRACE_LEVEL_MSG
+	bool "MSG"
+	---help---
+		"Formatted trace tagged with level independent"
+
+config TRACE_LEVEL_ERROR
+	bool "MSG ERROR"
+	---help---
+		"Formatted trace tagged with TRACE_ERROR level"
+
+config TRACE_LEVEL_INFO
+	bool "MSG + ERROR + INFO"
+	---help---
+		"Formatted trace tagged with TRACE_INFO level"
+
+config TRACE_LEVEL_DEBUG
+	bool "MSG + ERROR + INFO + DEBUG"
+	---help---
+		"Formatted trace tagged with TRACE_DEBUG level"
+
+config TRACE_LEVEL_FLOW
+	bool "MSG + ERROR + INFO + DEBUG + FLOW"
+	---help---
+		"Formatted trace tagged with TRACE_FLOW level"
+
+endchoice
+
+config TRACE_LEVEL
+	int
+	default 0    if TRACE_LEVEL_MSG
+	default 1    if TRACE_LEVEL_ERROR
+	default 2    if TRACE_LEVEL_INFO
+	default 3    if TRACE_LEVEL_DEBUG
+	default 4    if TRACE_LEVEL_FLOW
+
+choice
+	prompt "TEE Client API trace level"
+	default DEBUGLEVEL_INFO
+
+config DEBUGLEVEL_ERROR
+	bool "ERROR"
+	---help---
+		"Formatted trace tagged with TRACE_ERROR level"
+
+config DEBUGLEVEL_INFO
+	bool "ERROR + INFO"
+	---help---
+		"Formatted trace tagged with TRACE_INFO level"
+
+config DEBUGLEVEL_DEBUG
+	bool "ERROR + INFO + DEBUG"
+	---help---
+		"Formatted trace tagged with TRACE_DEBUG level"
+
+config DEBUGLEVEL_FLOW
+	bool "ERROR + INFO + DEBUG + FLOW"
+	---help---
+		"Formatted trace tagged with TRACE_FLOW level"
+
+endchoice
+
+config DEBUGLEVEL
+	int
+	default 1    if DEBUGLEVEL_ERROR
+	default 2    if DEBUGLEVEL_INFO
+	default 3    if DEBUGLEVEL_DEBUG
+	default 4    if DEBUGLEVEL_FLOW
+
 endmenu # Debug Options
 
 endmenu # Build Setup

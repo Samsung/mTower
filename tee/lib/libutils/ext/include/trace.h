@@ -32,13 +32,15 @@
 #include <stddef.h>
 #include <compiler.h>
 #include <trace_levels.h>
+#include <config.h>
 
 #define MAX_PRINT_SIZE      256
 #define MAX_FUNC_PRINT_SIZE 32
 
-#ifndef TRACE_LEVEL
-#define TRACE_LEVEL TRACE_MAX
-#endif
+#define TRACE_LEVEL CONFIG_TRACE_LEVEL
+//#ifndef TRACE_LEVEL
+//#define TRACE_LEVEL TRACE_MAX
+//#endif
 
 /*
  * Symbols provided by the entity that uses this API.

@@ -22,6 +22,7 @@
 -include $(TOPDIR)/.config
 
 CFLAGS += -I.
+CFLAGS += -I$(TOPDIR)/include/mtower
 CFLAGS += -I./libtomcrypt/include
 CFLAGS += -I$(TOPDIR)/tee_client/public
 CFLAGS += -I$(TOPDIR)/tee_client/libteec/include/freertos

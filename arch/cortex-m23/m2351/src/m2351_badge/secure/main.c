@@ -109,8 +109,10 @@ static void SYS_Init(void)
 
   /* Init I/O Multi-function */
   /* Set multi-function pins for UART0 RXD and TXD */
-  SYS->GPB_MFPH = (SYS->GPB_MFPH & (~(UART0_RXD_PB12_Msk | UART0_TXD_PB13_Msk)))
-      | UART0_RXD_PB12 | UART0_TXD_PB13;
+  SYS->GPC_MFPH = (SYS->GPC_MFPH & (~(UART0_RXD_PC11_Msk | UART0_TXD_PC12_Msk)))
+      | UART0_RXD_PC11 | UART0_TXD_PC12;
+//  SYS->GPB_MFPH = (SYS->GPB_MFPH & (~(UART0_RXD_PB12_Msk | UART0_TXD_PB13_Msk)))
+//      | UART0_RXD_PB12 | UART0_TXD_PB13;
 
   /* Init for nonsecure code */
   CLK->APBCLK0 |= CLK_APBCLK0_UART1CKEN_Msk;
@@ -213,7 +215,11 @@ int32_t Secure_LED_On(uint32_t num)
   (void) num;
 
   printf("Secure LED On call by Non-secure\n");
-  PA10 = 0;
+  PA11 = 0;
+  PD11 = 0;
+  PD10 = 0;
+
+//  PA10 = 0;
   PB0 = 0;
 
   return 0;
@@ -232,7 +238,10 @@ int32_t Secure_LED_Off(uint32_t num)
   (void) num;
 
   printf("Secure LED Off call by Non-secure\n");
-  PA10 = 1;
+  PA11 = 1;
+  PD11 = 1;
+  PD10 = 1;
+//  PA10 = 1;
   PB0 = 1;
 
   return 1;
@@ -576,6 +585,9 @@ int main(void)
 
   /* Init GPIO Port A for secure LED control */
   GPIO_SetMode(PA, BIT11 | BIT10, GPIO_MODE_OUTPUT);
+
+  /* Init GPIO Port D for secure LED control */
+  GPIO_SetMode(PD, BIT11 | BIT10, GPIO_MODE_OUTPUT);
 
   /* Init GPIO Port B for secure LED control */
   GPIO_SetMode(PB, BIT1 | BIT0, GPIO_MODE_OUTPUT);

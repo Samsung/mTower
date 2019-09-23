@@ -360,7 +360,7 @@ TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
   arg = buf_data->buf_ptr;
   params = (struct tee_ioctl_param *)(arg + 1);
 
-  uuid_print(arg->uuid);
+  //uuid_print(arg->uuid);
 
   tee_uuid_from_octets(&uuid, arg->uuid);
 //  tee_ta_context_register(arg->uuid);
