@@ -502,6 +502,16 @@ int fputc(int ch, FILE *stream)
 int _write (int fd, char *ptr, int len)
 {
     int i = len;
+#ifdef DEBUG_OUT_PREFIX
+    char fnt_clr[] = {'\e','[','3','1','m'};
+    char *ptr1 = fnt_clr;
+    int cnt = 5;
+    fnt_clr[3] = '0' + DEBUG_OUT_PREFIX;
+    while(cnt--) {
+      while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
+      DEBUG_PORT->DAT = *ptr1++;
+    }
+#endif
 
     while(i--) {
         while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);

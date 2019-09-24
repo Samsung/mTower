@@ -79,6 +79,44 @@ config NONSECURE_DEBUG_UART
 	default "UART5_NS"            if NONSECURE_DEBUG_UART5
 
 choice
+	prompt "Non-secure debug font color configuration"
+	default NONSECURE_DEBUG_RED
+
+config NONSECURE_FONT_RED
+	bool "RED"
+	---help---
+		Red is non-secure debug color.
+
+config NONSECURE_FONT_GREEN
+	bool "GREEN"
+	---help---
+		Green is non-secure debug color.
+
+config NONSECURE_FONT_YELLOW
+	bool "YELLOW"
+	---help---
+		Yellow is non-secure debug color.
+
+config NONSECURE_FONT_BLUE
+	bool "BLUE"
+	---help---
+		Blue is non-secure debug color.
+
+config NONSECURE_FONT_GRAY
+	bool "GRAY"
+	---help---
+		Gray is non-secure debug color.
+endchoice
+
+config NONSECURE_FONT_COLOR
+	int
+	default 1            if NONSECURE_FONT_RED
+	default 2            if NONSECURE_FONT_GREEN
+	default 3            if NONSECURE_FONT_YELLOW
+	default 4            if NONSECURE_FONT_BLUE
+	default 7            if NONSECURE_FONT_GRAY
+
+choice
 	prompt "Secure debug UART configuration"
 	default SECURE_DEBUG_UART0
 
@@ -127,6 +165,44 @@ config SECURE_DEBUG_UART
 	default "UART3_NS"         if SECURE_DEBUG_UART3 && NONSECURE_DEBUG_UART3
 	default "UART4_NS"         if SECURE_DEBUG_UART4 && NONSECURE_DEBUG_UART4
 	default "UART5_NS"         if SECURE_DEBUG_UART5 && NONSECURE_DEBUG_UART5
+
+choice
+	prompt "Secure debug font color configuration"
+	default SECURE_DEBUG_RED
+
+config SECURE_FONT_RED
+	bool "RED"
+	---help---
+		Red is secure debug color.
+
+config SECURE_FONT_GREEN
+	bool "GREEN"
+	---help---
+		Green is secure debug color.
+
+config SECURE_FONT_YELLOW
+	bool "YELLOW"
+	---help---
+		Yellow is secure debug color.
+
+config SECURE_FONT_BLUE
+	bool "BLUE"
+	---help---
+		Blue is secure debug color.
+
+config SECURE_FONT_GRAY
+	bool "GRAY"
+	---help---
+		Gray is secure debug color.
+endchoice
+
+config SECURE_FONT_COLOR
+	int
+	default 1            if SECURE_FONT_RED
+	default 2            if SECURE_FONT_GREEN
+	default 3            if SECURE_FONT_YELLOW
+	default 4            if SECURE_FONT_BLUE
+	default 7            if NONSECURE_FONT_GRAY
 
 menu "Secure Attribution Configuration"
 
@@ -1947,21 +2023,6 @@ config EINT7_INTERRUPT_SECURE
 	bool "EINT7 interrupt secure"
 	---help---
 		EINT7 interrupt is secure.
-endchoice
-
-choice
-	prompt "USBH Interrupt target secure configuration"
-	default USBH_INTERRUPT_SECURE
-
-config USBH_INTERRUPT_NONSECURE
-	bool "USBH interrupt non-secure"
-	---help---
-		USBH interrupt is non-secure.
-
-config USBH_INTERRUPT_SECURE
-	bool "USBH interrupt secure"
-	---help---
-		USBH interrupt is secure.
 endchoice
 
 choice

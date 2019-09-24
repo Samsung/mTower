@@ -41,17 +41,15 @@ ifeq ($(WORLD), secure)
 SRCS += clk.c
 endif
 
-ifeq ($(CONFIG_SECURE_DEBUG_UART0),y)
-CFLAGS += -I$(TOPDIR)/apps/aes
-endif
-
 ifneq ($(WORLD), secure)
 CFLAGS += -DDEBUG_PORT=$(subst ",,$(CONFIG_NONSECURE_DEBUG_UART))
+CFLAGS += -DDEBUG_OUT_PREFIX=$(CONFIG_NONSECURE_FONT_COLOR)
 OBJDIR = $(TOPDIR)/build/nonsecure$(subst $(TOPDIR),,$(shell pwd))
 endif
 
 ifeq ($(WORLD), secure)
 CFLAGS += -DDEBUG_PORT=$(subst ",,$(CONFIG_SECURE_DEBUG_UART))
+CFLAGS += -DDEBUG_OUT_PREFIX=$(CONFIG_SECURE_FONT_COLOR)
 OBJDIR = $(TOPDIR)/build/secure$(subst $(TOPDIR),,$(shell pwd))
 endif
 

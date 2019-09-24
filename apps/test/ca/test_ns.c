@@ -60,7 +60,7 @@ struct test_ctx {
 static int total_test = 0;
 static int success = 0;
 
-void prepare_tee_session(struct test_ctx *ctx)
+static void prepare_tee_session(struct test_ctx *ctx)
 {
 	TEEC_UUID uuid = TA_TEST_UUID;
 	uint32_t origin;
@@ -79,13 +79,13 @@ void prepare_tee_session(struct test_ctx *ctx)
 			res, origin);
 }
 
-void terminate_tee_session(struct test_ctx *ctx)
+static void terminate_tee_session(struct test_ctx *ctx)
 {
 	TEEC_CloseSession(&ctx->sess);
 	TEEC_FinalizeContext(&ctx->ctx);
 }
 
-void prepare_aes(struct test_ctx *ctx, int encode)
+static void prepare_aes(struct test_ctx *ctx, int encode)
 {
 	TEEC_Operation op;
 	uint32_t origin;
@@ -126,7 +126,7 @@ void prepare_aes(struct test_ctx *ctx, int encode)
 	}
 }
 
-void set_key(struct test_ctx *ctx, char *key, size_t key_sz)
+static void set_key(struct test_ctx *ctx, char *key, size_t key_sz)
 {
 	TEEC_Operation op;
 	uint32_t origin;
@@ -156,7 +156,7 @@ void set_key(struct test_ctx *ctx, char *key, size_t key_sz)
 
 }
 
-void set_iv(struct test_ctx *ctx, char *iv, size_t iv_sz)
+static void set_iv(struct test_ctx *ctx, char *iv, size_t iv_sz)
 {
 	TEEC_Operation op;
 	uint32_t origin;
@@ -183,7 +183,7 @@ void set_iv(struct test_ctx *ctx, char *iv, size_t iv_sz)
 
 }
 
-void cipher_buffer(struct test_ctx *ctx, char *in, char *out, size_t sz)
+static void cipher_buffer(struct test_ctx *ctx, char *in, char *out, size_t sz)
 {
 	TEEC_Operation op;
 	uint32_t origin;

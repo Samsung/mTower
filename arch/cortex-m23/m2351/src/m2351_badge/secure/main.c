@@ -28,15 +28,15 @@
 #include "version.h"
 
 /* Pre-processor Definitions. */
-#define NORMAL  "\033[0m"
-#define BLACK   "\033[0;30m1"
-#define RED     "\033[0;31m"
-#define GREEN   "\033[0;32m"
-#define YELLOW  "\033[0;33m"
-#define BLUE    "\033[0;34m"
-#define MAGENTA "\033[0;35m"
-#define CYAN    "\033[0;36m"
-#define GRAY    "\033[0;37m"
+#define NORMAL  "\e[0m"
+#define BLACK   "\e[0;30m1"
+#define RED     "\e[0;31m"
+#define GREEN   "\e[0;32m"
+#define YELLOW  "\e[0;33m"
+#define BLUE    "\e[0;34m"
+#define MAGENTA "\e[0;35m"
+#define CYAN    "\e[0;36m"
+#define GRAY    "\e[0;37m"
 
 /** Start address for non-secure boot image */
 #define NEXT_BOOT_BASE  0x10040000
@@ -197,7 +197,10 @@ static void DEBUG_PORT_Init(void)
 __NONSECURE_ENTRY
 int32_t Secure_func(void)
 {
-  printf("Secure NSC func\n");
+//  printf("Secure NSC func\n");
+#ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
+  menu_security_exception_example();
+#endif
 
   return 1;
 }
@@ -214,7 +217,7 @@ int32_t Secure_LED_On(uint32_t num)
 {
   (void) num;
 
-  printf("Secure LED On call by Non-secure\n");
+//  printf("Secure LED On call by Non-secure\n");
   PA11 = 0;
   PD11 = 0;
   PD10 = 0;
@@ -237,7 +240,7 @@ int32_t Secure_LED_Off(uint32_t num)
 {
   (void) num;
 
-  printf("Secure LED Off call by Non-secure\n");
+//  printf("Secure LED Off call by Non-secure\n");
   PA11 = 1;
   PD11 = 1;
   PD10 = 1;
@@ -310,8 +313,6 @@ int32_t LED_Off(void)
 #ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
 void hw_security_exception_init(void)
 {
-  /* Set GPIO Port C to non-secure for LED control */
-  //  SCU_SET_IONSSET(SCU_IONSSET_PC_Msk); // Should be set before by setting up configuration
   /* Init PC for Nonsecure LED control */
   GPIO_SetMode(PC_NS, BIT1, GPIO_MODE_OUTPUT);
 
@@ -353,10 +354,10 @@ void menu_security_exception_example(void)
   printf("|     | Read SRAM non-secure address 0x20017000  | RAZWI              |\n");
   printf("| [2] | Read SRAM secure address 0x%08X      | Access successful  |\n",&temp);
   printf("|     | Read SRAM secure address 0x%08X      | RAZWI              |\n",(0x10000000 + (unsigned int)&temp));
-  printf("| [3] | Read FLASH non-secure address 0x00000000 | Access successful  |\n");
-  printf("|     | Read FLASH non-secure address 0x10000000 | RAZWI              |\n");
-  printf("| [4] | Read FLASH secure address 0x10040000     | Access successful  |\n");
-  printf("|     | Read FLASH secure address 0x00040000     | RAZWI              |\n");
+  printf("| [3] | Read FLASH secure address 0x00000000     | Access successful  |\n");
+  printf("|     | Read FLASH secure address 0x10000000     | RAZWI              |\n");
+  printf("| [4] | Read FLASH non-secure address 0x10040000 | Access successful  |\n");
+  printf("|     | Read FLASH non-secure address 0x00040000 | RAZWI              |\n");
   printf("| [5] | Read GPIO non-secure port PC1_NS         | Access successful  |\n");
   printf("|     | Write 0 GPIO non-secure port by PC1_NS   | Access successful  |\n");
   printf("|     | Write 1 GPIO non-secure port by PC1      | RAZWI              |\n");
@@ -429,97 +430,97 @@ void SCU_IRQHandler(void)
   if((SCU->SVINTSTS & SCU_SVIOIEN_APB0IEN_Msk) == SCU_SVIOIEN_APB0IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_APB0IEN_Msk;
     printf("APB0 ");
-}
+  }
 #endif
 #ifdef CONFIG_APB1IEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_APB1IEN_Msk) == SCU_SVIOIEN_APB1IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_APB1IEN_Msk;
     printf("APB1 ");
-}
+  }
 #endif
 #ifdef CONFIG_GPIOIEN_SECURE_VIOLATION_INTERRUPT
-  if((SCU->SVINTSTS & SCU_SVIOIEN_GPIOIEN_Msk) == SCU_SVIOIEN_GPIOIEN_Msk) {
+  if ((SCU->SVINTSTS & SCU_SVIOIEN_GPIOIEN_Msk) == SCU_SVIOIEN_GPIOIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_GPIOIEN_Msk;
     printf("GPIO ");
-}
+  }
 #endif
 #ifdef CONFIG_EBIIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_EBIIEN_Msk) == SCU_SVIOIEN_EBIIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_EBIIEN_Msk;
     printf("EBI ");
-}
+  }
 #endif
 #ifdef CONFIG_USBHIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_USBHIEN_Msk) == SCU_SVIOIEN_USBHIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_USBHIEN_Msk;
     printf("USBH ");
-}
+  }
 #endif
 #ifdef CONFIG_CRCIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_CRCIEN_Msk) == SCU_SVIOIEN_CRCIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_CRCIEN_Msk;
     printf("CRC ");
-}
+  }
 #endif
 #ifdef CONFIG_SDH0IEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_SDH0IEN_Msk) == SCU_SVIOIEN_SDH0IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_SDH0IEN_Msk;
     printf("SDH0 ");
-}
+  }
 #endif
 #ifdef CONFIG_PDMA0IEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_PDMA0IEN_Msk) == SCU_SVIOIEN_PDMA0IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_PDMA0IEN_Msk;
     printf("PDMA0 ");
-}
+  }
 #endif
 #ifdef CONFIG_PDMA1IEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_PDMA1IEN_Msk) == SCU_SVIOIEN_PDMA1IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_PDMA1IEN_Msk;
     printf("PDMA1 ");
-}
+  }
 #endif
 #ifdef CONFIG_SRAM0IEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_SRAM0IEN_Msk) == SCU_SVIOIEN_SRAM0IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_SRAM0IEN_Msk;
     printf("SRAM0 ");
-}
+  }
 #endif
 #ifdef CONFIG_SRAM1IEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_SRAM1IEN_Msk) == SCU_SVIOIEN_SRAM1IEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_SRAM1IEN_Msk;
     printf("SRAM1 ");
-}
+  }
 #endif
 #ifdef CONFIG_FMCIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_FMCIEN_Msk) == SCU_SVIOIEN_FMCIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_FMCIEN_Msk;
     printf("FMC ");
-}
+  }
 #endif
 #ifdef CONFIG_FLASHIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_FLASHIEN_Msk) == SCU_SVIOIEN_FLASHIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_FLASHIEN_Msk;
     printf("FLASH ");
-}
+  }
 #endif
 #ifdef CONFIG_SCUIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_SCUIEN_Msk) == SCU_SVIOIEN_SCUIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_SCUIEN_Msk;
     printf("SCU ");
-}
+  }
 #endif
 #ifdef CONFIG_SYSIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_SYSIEN_Msk) == SCU_SVIOIEN_SYSIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_SYSIEN_Msk;
     printf("SYS ");
-}
+  }
 #endif
 #ifdef CONFIG_CRPTIEN_SECURE_VIOLATION_INTERRUPT
   if((SCU->SVINTSTS & SCU_SVIOIEN_CRPTIEN_Msk) == SCU_SVIOIEN_CRPTIEN_Msk) {
     SCU->SVINTSTS |= SCU_SVIOIEN_CRPTIEN_Msk;
     printf("CRPT ");
-}
+  }
 #endif
   printf("violation interrupt event\n"NORMAL);
 }
@@ -597,7 +598,7 @@ int main(void)
 
 #ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
   hw_security_exception_init();
-  menu_security_exception_example();
+//  menu_security_exception_example();
 #endif
 
   tee_cryp_init();

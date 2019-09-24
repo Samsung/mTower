@@ -36,15 +36,17 @@
 
 /* Pre-processor Definitions. */
 /* All C pre-processor macros are defined here. */
-#define NORMAL  "\033[0m"
-#define BLACK   "\033[0;30m1"
-#define RED     "\033[0;31m"
-#define GREEN   "\033[0;32m"
-#define YELLOW  "\033[0;33m"
-#define BLUE    "\033[0;34m"
-#define MAGENTA "\033[0;35m"
-#define CYAN    "\033[0;36m"
-#define GRAY    "\033[0;37m"
+#define NORMAL  "\e[0m"
+#define BLACK   "\e[0;30m1"
+#define RED     "\e[0;31m"
+#define GREEN   "\e[0;32m"
+#define YELLOW  "\e[0;33m"
+#define BLUE    "\e[0;34m"
+#define MAGENTA "\e[0;35m"
+#define CYAN    "\e[0;36m"
+#define GRAY    "\e[0;37m"
+
+#define BUFFER_SIZE 700
 
 /* Private Types. */
 /* Any types, enums, structures or unions used by the file are defined here. */
@@ -64,13 +66,16 @@ static int32_t NonSecure_LED_Off(uint32_t num);
 static void LED_On(uint32_t us);
 static void LED_Off(uint32_t us);
 
-static void testTask1( void *pvParameters );
+static void teeLedBlinkTask( void *pvParameters );
 static void testTask2( void *pvParameters );
-static void testTask3( void *pvParameters );
+static void clnSrvTask( void *pvParameters );
+static void menuTask( void *pvParameters );
 
-static void teeTest( void *pvParameters );
-static void teeTest3( void *pvParameters );
-static void teeTest4( void *pvParameters );
+static void teeHelloWorldTask( void *pvParameters );
+static void teeAESTask( void *pvParameters );
+static void teeHotpTask( void *pvParameters );
+static void teeTestSuiteTask( void *pvParameters );
+
 
 /* Private Data. */
 /* All static data definitions appear here. */
@@ -225,20 +230,130 @@ static void App_Init(uint32_t u32BootBase)
 }
 
 /**
+ * @brief         menuTask1 - .
+ *
+ * @param         None
+ *
+ * @returns       None
+ */
+static void menuTask(void *pvParameters)
+{
+  const TickType_t xDelay = 500 / portTICK_PERIOD_MS;
+
+  /* Define a buffer that is large enough to hold the generated table.  In most
+   * cases the buffer will be too large to allocate on the stack, hence in this
+   * example it is declared static. */
+
+  static char cBuffer[BUFFER_SIZE];
+
+  (void) pvParameters;
+
+  char ch;
+  do {
+    printf("\n+- Menu ----------------------------------------------------+\n");
+#ifdef CONFIG_APPS_HELLO_WORLD
+    printf("| [1] - Run Hello World (Ported from OP-TEE, pseudo TA)     |\n");
+#endif
+#ifdef CONFIG_APPS_AES
+    printf("| [2] - Run AES (Ported from OP-TEE, user TA)               |\n");
+#endif
+#ifdef CONFIG_APPS_HOTP
+    printf("| [3] - Run HOTP (Ported from OP-TEE, user TA)              |\n");
+#endif
+    printf("| [4] - Get FreeRTOS Task List                              |\n");
+#ifdef CONFIG_APPS_TEST
+    printf("| [5] - Run Test Suite for GP TEE Client & Internal API     |\n");
+#endif
+#ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
+    printf("| [6] - Run H/W Security exception example (from non-secure)|\n");
+    printf("| [7] - Run H/W Security exception example (from secure)    |\n");
+#endif
+    printf("+-----------------------------------------------------------+\n");
+
+    printf("\n[%c]\n", ch = getchar());
+
+    switch (ch) {
+#ifdef CONFIG_APPS_HELLO_WORLD
+      case '1':
+        xTaskCreate(teeHelloWorldTask,  /* The function that implements the task. */
+        "tHelloWorld",           /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+        256,                  /* The size of the stack to allocate to the task. */
+        (void *) NULL,        /* The parameter passed to the task - just to check the functionality. */
+        tskIDLE_PRIORITY + 2, /* The priority assigned to the task. */
+        NULL);
+        break;
+#endif
+#ifdef CONFIG_APPS_AES
+      case '2':
+        xTaskCreate(teeAESTask, /* The function that implements the task. */
+        "tAES",          /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+        256,                  /* The size of the stack to allocate to the task. */
+        (void *) NULL,        /* The parameter passed to the task - just to check the functionality. */
+        tskIDLE_PRIORITY + 2, /* The priority assigned to the task. */
+        NULL);
+        break;
+#endif
+#ifdef CONFIG_APPS_HOTP
+      case '3':
+        xTaskCreate(teeHotpTask, /* The function that implements the task. */
+        "tHOTP",          /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+        256,                  /* The size of the stack to allocate to the task. */
+        (void *) NULL,        /* The parameter passed to the task - just to check the functionality. */
+        tskIDLE_PRIORITY + 2, /* The priority assigned to the task. */
+        NULL);
+        break;
+#endif
+      case '4':
+        /* Obtain the current tick count. */
+        printf("\nAuto-reload timer callback executing = %d\n", xTaskGetTickCount());
+
+        /* Pass the buffer into vTaskList() to generate the table of information. */
+        vTaskList(cBuffer);
+        portDISABLE_INTERRUPTS();
+        printf("%s\n", cBuffer);
+        portENABLE_INTERRUPTS();
+        break;
+#ifdef CONFIG_APPS_TEST
+        case '5':
+        xTaskCreate( teeTestSuiteTask,  /* The function that implements the task. */
+            "tTestSuite",               /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+            256,                        /* The size of the stack to allocate to the task. */
+            ( void * ) NULL,            /* The parameter passed to the task - just to check the functionality. */
+            tskIDLE_PRIORITY + 2,       /* The priority assigned to the task. */
+            NULL );
+        break;
+#endif
+#ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
+      case '6':
+        menu_security_exception_example_ns();
+        break;
+      case '7':
+        portDISABLE_INTERRUPTS();
+        Secure_func();
+        portENABLE_INTERRUPTS();
+        break;
+#endif
+      default:
+        break;
+    }
+    taskYIELD();
+  } while (1);
+}
+
+/**
  * @brief         testTask1 - .
  *
  * @param         None
  *
  * @returns       None
  */
-static void testTask1( void *pvParameters )
+static void teeLedBlinkTask( void *pvParameters )
 {
   const TickType_t xDelay = 500 / portTICK_PERIOD_MS;
 
   (void)pvParameters;
 
   do {
-    printf(CYAN "Thread 1 test\n" NORMAL);
     portDISABLE_INTERRUPTS();
     Secure_LED_On(6u);
     portENABLE_INTERRUPTS();
@@ -264,7 +379,9 @@ static void testTask2( void *pvParameters )
   (void)pvParameters;
 
   do {
+    portDISABLE_INTERRUPTS();
     printf(YELLOW "Thread 2 test\n" NORMAL);
+    portENABLE_INTERRUPTS();
     LED_On(7u);
     vTaskDelay( xDelay );
     LED_Off(7u);
@@ -272,63 +389,49 @@ static void testTask2( void *pvParameters )
   } while (1);
 }
 
-#define BUFFER_SIZE 700
-
 /**
- * @brief         testTask3 - .
+ * @brief         clnSrvTask - cleaning service.
  *
  * @param         None
  *
  * @returns       None
  */
-static void testTask3( void *pvParameters )
+static void clnSrvTask( void *pvParameters )
 {
-  const TickType_t xDelay = 10000 / portTICK_PERIOD_MS;
-
-  TickType_t xTimeNow;
-  /* Define a buffer that is large enough to hold the generated table.  In most
-   * cases the buffer will be too large to allocate on the stack, hence in this
-   * example it is declared static. */
-
-  static char cBuffer[BUFFER_SIZE];
+  const TickType_t xDelay = 1000 / portTICK_PERIOD_MS;
 
   (void)pvParameters;
 
   do {
-    printf("Thread 3 test\n");
-    /* Obtain the current tick count. */
-    xTimeNow = xTaskGetTickCount();
-    printf("\nAuto-reload timer callback executing = %d\n", xTimeNow );
-    /* Pass the buffer into vTaskList() to generate the table of information. */
-    vTaskList(cBuffer);
-    portDISABLE_INTERRUPTS();
-    printf(GREEN "%s\n" NORMAL, cBuffer);
-    portENABLE_INTERRUPTS();
+    vTaskPrioritySet( xTaskGetIdleTaskHandle(), uxTaskPriorityGet(xTaskGetCurrentTaskHandle()));
+//    taskYIELD();
+    vTaskDelay( xDelay );
+    vTaskPrioritySet( xTaskGetIdleTaskHandle(), tskIDLE_PRIORITY);
     vTaskDelay( xDelay );
   } while (1);
 }
 
 #ifdef CONFIG_APPS_HELLO_WORLD
 /**
- * @brief         teeTest - .
+ * @brief         teeHelloWorldTask - .
  *
  * @param         None
  *
  * @returns       None
  */
-static void teeTest( void *pvParameters )
+static void teeHelloWorldTask( void *pvParameters )
 {
-  const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
+//  const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
 
   (void)pvParameters;
 
   do {
-    printf(RED "TEE test: Hello_world\n");
     portDISABLE_INTERRUPTS();
+    printf("TEE test: Hello_world\n");
     tee_hello_world();
-    printf(NORMAL);
     portENABLE_INTERRUPTS();
-    vTaskDelay( xDelay );
+//    vTaskDelay( xDelay );
+    vTaskDelete(NULL);
   } while (1);
 }
 #endif
@@ -341,19 +444,19 @@ static void teeTest( void *pvParameters )
  *
  * @returns       None
  */
-static void teeTest3( void *pvParameters )
+static void teeAESTask( void *pvParameters )
 {
-  const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
+//  const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
 
   (void)pvParameters;
 
   do {
-    printf(RED "TEE test: AES\n");
     portDISABLE_INTERRUPTS();
+    printf("TEE test: AES\n");
     tee_aes();
-    printf(NORMAL);
     portENABLE_INTERRUPTS();
-    vTaskDelay( xDelay );
+    vTaskDelete(NULL);
+//    vTaskDelay( xDelay );
   } while (1);
 }
 #endif
@@ -366,19 +469,19 @@ static void teeTest3( void *pvParameters )
  *
  * @returns       None
  */
-static void teeTest4( void *pvParameters )
+static void teeHotpTask( void *pvParameters )
 {
-  const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
+//  const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
 
   (void)pvParameters;
 
   do {
-    printf(RED "TEE test: HOTP\n");
     portDISABLE_INTERRUPTS();
+    printf("TEE test: HOTP\n");
     tee_hotp();
-    printf(NORMAL);
     portENABLE_INTERRUPTS();
-    vTaskDelay( xDelay );
+    vTaskDelete(NULL);
+//    vTaskDelay( xDelay );
   } while (1);
 }
 #endif // CONFIG_APPS_HOTP
@@ -391,19 +494,19 @@ static void teeTest4( void *pvParameters )
  *
  * @returns       None
  */
-static void teeTest5( void *pvParameters )
+static void teeTestSuiteTask( void *pvParameters )
 {
-  const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
+//  const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
 
   (void)pvParameters;
 
   do {
-    printf(/*RED */"\nTEE test: test suite\n");
     portDISABLE_INTERRUPTS();
+    printf("\nTEE test: test suite\n");
     tee_tests();
-//    printf(NORMAL);
     portENABLE_INTERRUPTS();
-    vTaskDelay( xDelay );
+    vTaskDelete(NULL);
+//    vTaskDelay( xDelay );
   } while (1);
 }
 #endif // CONFIG_APPS_TEST
@@ -520,10 +623,10 @@ void menu_security_exception_example_ns(void)
   printf("| [2] | Read SRAM secure address 0x20000000      | Hard fault         |\n");
   printf("| [3] | Read SRAM non-secure address 0x%08X  | Access successful  |\n",&temp);
   printf("|     | Read SRAM non-secure address 0x%08X  | Hard fault         |\n",(~0x10000000 & (unsigned int)&temp));
-  printf("| [4] | Read FLASH non-secure address 0x00000000 | Hard fault         |\n");
-  printf("| [5] | Read FLASH non-secure address 0x10000000 | Hard fault         |\n");
-  printf("| [6] | Read FLASH secure address 0x10040000     | Access successful  |\n");
-  printf("|     | Read FLASH secure address 0x00040000     | Hard fault         |\n");
+  printf("| [4] | Read FLASH secure address 0x00000000     | Hard fault         |\n");
+  printf("| [5] | Read FLASH secure address 0x10000000     | Hard fault         |\n");
+  printf("| [6] | Read FLASH non-secure address 0x10040000 | Access successful  |\n");
+  printf("|     | Read FLASH non-secure address 0x00040000 | Hard fault         |\n");
   printf("| [7] | Read GPIO non-secure port PC1_NS         | Access successful  |\n");
   printf("|     | Write 0 GPIO non-secure port by PC1_NS   | Access successful  |\n");
   printf("|     | Write 1 GPIO non-secure port by PC1      | Hard fault         |\n");
@@ -611,73 +714,39 @@ int main( void )
   /* Init PC for Nonsecure LED control */
   GPIO_SetMode(PC_NS, BIT1 | BIT0, GPIO_MODE_OUTPUT);
 
-#ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
-  menu_security_exception_example_ns();
-#endif
-
-  Secure_func();
+//  Secure_func();
 
   /* register NonSecure callbacks in Secure application */
   Secure_LED_On_callback(&NonSecure_LED_On);
   Secure_LED_Off_callback(&NonSecure_LED_Off);
 
-#ifndef CONFIG_APPS_TEST
-  xTaskCreate( testTask1,     /* The function that implements the task. */
-      "test1",                /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+  xTaskCreate( menuTask,     /* The function that implements the task. */
+        "menu",                /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+        256,                    /* The size of the stack to allocate to the task. */
+        ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
+        tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
+        NULL );
+
+  xTaskCreate( teeLedBlinkTask,     /* The function that implements the task. */
+      "tLedBlink",                /* The text name assigned to the task - for debug only as it is not used by the kernel. */
       256,                    /* The size of the stack to allocate to the task. */
       ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
       tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
       NULL );
 
-  xTaskCreate( testTask2,     /* The function that implements the task. */
-      "test2",                /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-      256,                    /* The size of the stack to allocate to the task. */
-      ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
-      tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
+//  xTaskCreate( testTask2,     /* The function that implements the task. */
+//      "test2",                /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+//      256,                    /* The size of the stack to allocate to the task. */
+//      ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
+//      tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
+//      NULL );
+//
+  xTaskCreate( clnSrvTask,    /* The function that implements the task. */
+      "clnSrv",               /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+      256,                     /* The size of the stack to allocate to the task. */
+      ( void * ) NULL,         /* The parameter passed to the task - just to check the functionality. */
+      tskIDLE_PRIORITY + 2,    /* The priority assigned to the task. */
       NULL );
-
-  xTaskCreate( testTask3,     /* The function that implements the task. */
-      "test3",                /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-      256,                    /* The size of the stack to allocate to the task. */
-      ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
-      tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
-      NULL );
-#endif
-#ifdef CONFIG_APPS_HELLO_WORLD
-  xTaskCreate( teeTest,       /* The function that implements the task. */
-      "tee_test",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-      256,                    /* The size of the stack to allocate to the task. */
-      ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
-      tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
-      NULL );
-#endif
-
-#ifdef CONFIG_APPS_AES
-  xTaskCreate( teeTest3,       /* The function that implements the task. */
-      "tee_test3",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-      256,                    /* The size of the stack to allocate to the task. */
-      ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
-      tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
-      NULL );
-#endif
-
-#ifdef CONFIG_APPS_HOTP
-  xTaskCreate( teeTest4,       /* The function that implements the task. */
-      "tee_test4",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-      256,                    /* The size of the stack to allocate to the task. */
-      ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
-      tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
-      NULL );
-#endif
-
-#ifdef CONFIG_APPS_TEST
-  xTaskCreate( teeTest5,       /* The function that implements the task. */
-      "tee_test5",             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-      256,                    /* The size of the stack to allocate to the task. */
-      ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
-      tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
-      NULL );
-#endif
 
   vTaskStartScheduler();
 
