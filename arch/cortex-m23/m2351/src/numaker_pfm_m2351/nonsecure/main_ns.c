@@ -37,7 +37,7 @@
 /* Pre-processor Definitions. */
 /* All C pre-processor macros are defined here. */
 #define NORMAL  "\e[0m"
-#define BLACK   "\e[0;30m1"
+#define BLACK   "\e[0;30m"
 #define RED     "\e[0;31m"
 #define GREEN   "\e[0;32m"
 #define YELLOW  "\e[0;33m"
@@ -45,6 +45,15 @@
 #define MAGENTA "\e[0;35m"
 #define CYAN    "\e[0;36m"
 #define GRAY    "\e[0;37m"
+
+#define BBLACK   "\e[40m"
+#define BRED     "\e[41m"
+#define BGREEN   "\e[42m"
+#define BYELLOW  "\e[43m"
+#define BBLUE    "\e[44m"
+#define BMAGENTA "\e[45m"
+#define BCYAN    "\e[46m"
+#define BGRAY    "\e[30;47m"
 
 #define BUFFER_SIZE 700
 
@@ -70,6 +79,7 @@ static void teeLedBlinkTask( void *pvParameters );
 static void testTask2( void *pvParameters );
 static void clnSrvTask( void *pvParameters );
 static void menuTask( void *pvParameters );
+static void spyAppTask( void /**pvParameters*/ );
 
 static void teeHelloWorldTask( void *pvParameters );
 static void teeAESTask( void *pvParameters );
@@ -268,6 +278,9 @@ static void menuTask(void *pvParameters)
     printf("| [6] - Run H/W Security exception example (from non-secure)|\n");
     printf("| [7] - Run H/W Security exception example (from secure)    |\n");
 #endif
+//#ifdef CONFIG_APPS_SPY
+    printf("| [8] - Run spy app that trying to get protected data       |\n");
+//#ifend
     printf("+-----------------------------------------------------------+\n");
 
     printf("\n[%c]\n", ch = getchar());
@@ -333,12 +346,121 @@ static void menuTask(void *pvParameters)
         portENABLE_INTERRUPTS();
         break;
 #endif
+//#ifdef CONFIG_APPS_SPY
+        case '8':
+//        xTaskCreate( spyAppTask,  /* The function that implements the task. */
+//            "spyAppTask",               /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+//            256,                        /* The size of the stack to allocate to the task. */
+//            ( void * ) NULL,            /* The parameter passed to the task - just to check the functionality. */
+//            tskIDLE_PRIORITY + 2,       /* The priority assigned to the task. */
+//            NULL );
+
+//        taskYIELD();
+        spyAppTask();
+        break;
+//#endif
       default:
         break;
     }
     taskYIELD();
   } while (1);
 }
+
+const char app_protected[] =
+    "\n ########################################"
+    "\n ## Data protected by TrustZone        ##"
+    "\n ########################################"
+    "\n ## Non-secure      |  "GREEN"Secure          "NORMAL"##"
+    "\n ## ##############  |  "GREEN"############### "NORMAL"##"
+    "\n ## # Spy App    #"RED"--X->"GREEN"# Protected   # "NORMAL"##"
+    "\n ## ##############  |  "GREEN"# data ######## "NORMAL"##"
+    "\n ##                 |         "GREEN"|        "NORMAL"##"
+    "\n ## ##############  |  "GREEN"############### "NORMAL"##"
+    "\n ## # App        #  |  "GREEN"# Trusted App # "NORMAL"##"
+    "\n ## ##############  |  "GREEN"######### "YELLOW"#########"
+    "\n ##        "GREEN"|        "NORMAL"|         "GREEN"| "YELLOW"##       ##"
+    "\n ## ##############  |  "GREEN"####### "YELLOW"## "GREEN"####    "YELLOW"##"
+    "\n ## # TEE CL API #"GREEN"----># TEE IN"YELLOW"##"GREEN"API #    "YELLOW"##"
+    "\n ## ##############  |  "GREEN"####### "YELLOW"## "GREEN"####    "YELLOW"##"
+    "\n ##                 |         "YELLOW"###############"
+    "\n ## ##############  |  "GREEN"###### "YELLOW"######   ######"
+    "\n ## # FreeRTOS   #  |  "GREEN"# Reso "YELLOW"####### #######"
+    "\n ## ##############  |  "GREEN"###### "YELLOW"####### #######"
+    "\n ############################ "YELLOW"###############\n";
+
+const char app_description[] =
+    "ARM TrustZone technology protects data in secure memory\n"
+    "from unauthorized access from Non-Secure app.\n"
+    "Spy app cannot access data in secure memory.\n"
+    "\nHowever, application can use special GP TEE API calls\n"
+    "to perform operations with data in secure memory.\n"
+    "\nFor example, data can be sent into secure memory,\n"
+    "encrypted there and returned to non-secure memory,\n"
+    "with encryption keys never leaving secure memory.\n";
+
+const char spy_description[] =
+    "Demonstration of unauthorized access to data in secure\n"
+    "memory. When such access is detected,\n"
+    "system generates a security hard fault and enters\n"
+    "endless loop, requiring restart to continue operation.\n";
+
+const char spy[] =
+"\n                      MMMMMMMMMMMM-"
+"\n                  .hMMMMMMMMMMMMMMMmo`"
+"\n                `oMMMMMMMMMMMMMMMMMMMm+"
+"\n               `MMh- `.MMMMMMMMMMM/-`/MM"
+"\n               sMs`                   oM+"
+"\n              .NN MMMMMMMm    mMMMMMMm Mm"
+"\n              -MMMMP     qMMMMMp     qMMMM`"
+"\n              .MMMMc     dMMMMMc     dMMMM`"
+"\n               yM MMMMMMMp    qdMMMMMMh Mo"
+"\n               `dN/`                 +Ny`"
+"\n           ./oyhmMNs-    ======    :hMMmhyo/."
+"\n         :hNMMMMMMMMNh+-         odNMMMMMMMMmy-"
+"\n       `sNMMMMMMMMMMMMMNmddhhdmmMMMMMMMMMMMMMMNo`"
+"\n      .dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMy`"
+"\n     -mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh`"
+"\n   .mMMMMmo                                 sNMMMMh`"
+"\n   `dMMMMM/ "YELLOW"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"NORMAL" oMMMMMy`"
+"\n   yMMMMMM/ "YELLOW"MM----------------------------MM"NORMAL"  sMMMMMMo"
+"\n  /MMMMMMMs "YELLOW"oM- "GREEN"101010101011101010010100"YELLOW" -MM/"NORMAL"  hMMMMMMN-"
+"\n `mMMMMMMMd "YELLOW"/M- "GREEN"001010101010101000010101"YELLOW" -M."NORMAL"  NMMMMMMMd"
+"\n +MMMMMMMMN`"YELLOW".M- "GREEN"101010101010101000010101"YELLOW" -M`"NORMAL" .MMMMMMMMM:"
+"\n dMMMMMMMMM."YELLOW"`N- "GREEN"101011101000100011010100"YELLOW" -N"NORMAL"  /MMMMMMMMMs"
+"\n yMMMMMMMMM/ "YELLOW"hM "GREEN"110101010111010101011011"YELLOW" Mh"NORMAL"  oMMMMMMMMMo"
+"\n `oNMMMMMMMs "YELLOW"sM "GREEN"111101000101011010101111"YELLOW" Mh"NORMAL" hMMMMMMMm+"
+"\n   `+hNMMMMd "YELLOW"/MM-----------------------MMM"NORMAL" -MMMMNy/`"
+"\n      `:sdNm`"YELLOW".MMMMMMMMMMMMMMMMMMMMMMMMMMMN`"NORMAL".NNho:`"
+"\n          `-` "YELLOW"MMMMMMMMMMMMMMMMMMMMMMMMMMMM "NORMAL"`-`"
+"\n "
+"\n              MMMMMMMMMMMMMMMMMMMMMMMMMMM/\n";
+/**
+ * @brief         spyAppTask - .
+ *
+ * @param         None
+ *
+ * @returns       None
+ */
+static void spyAppTask( void /**pvParameters*/ )
+{
+//  (void)pvParameters;
+  printf("%s\n", app_protected);
+  vTaskDelay( (TickType_t)1000 / portTICK_PERIOD_MS);
+  printf("%s\n", app_description);
+  vTaskDelay( (TickType_t)9000 / portTICK_PERIOD_MS);
+
+//  printf("\e[2J");
+//  UART_WAIT_TX_EMPTY((UART_T *)DEBUG_PORT);
+  printf("%s\n", spy);
+  vTaskDelay( (TickType_t)2000 / portTICK_PERIOD_MS);
+  printf("\n%s\n", spy_description);
+  vTaskDelay( (TickType_t)9000 / portTICK_PERIOD_MS);
+  M32(0x20000000);
+
+  do {
+  } while (1);
+}
+
 
 /**
  * @brief         testTask1 - .
@@ -708,7 +830,7 @@ int main( void )
   printf("\n\n\t-=mTower v" VERSION "=-  " __DATE__ "  " __TIME__"\n\n");
 
   printf("+---------------------------------------------+\n");
-  printf("|     Nonsecure FreeRTOS is running ...       |\n");
+  printf("|  Nonsecure FreeRTOS (BL33) is running ...   |\n");
   printf("+---------------------------------------------+\n");
 
   /* Init PC for Nonsecure LED control */
@@ -722,7 +844,7 @@ int main( void )
 
   xTaskCreate( menuTask,     /* The function that implements the task. */
         "menu",                /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-        256,                    /* The size of the stack to allocate to the task. */
+        768,                    /* The size of the stack to allocate to the task. */
         ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
         tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
         NULL );
