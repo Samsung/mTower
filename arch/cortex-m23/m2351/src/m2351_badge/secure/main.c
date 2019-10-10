@@ -150,7 +150,7 @@ static void Boot_Init(uint32_t u32BootBase)
 
   /* Check if the Reset_Handler address is in Non-secure space */
   if (cmse_is_nsfptr(fp) && (((uint32_t) fp & 0xf0000000) == 0x10000000)) {
-    printf("Execute non-secure code ...\n");
+    printf("Jump to execute Non-secure FreeRTOS (BL33) ...\n");
     fp(0); /* Non-secure function call */
   } else {
     /* Something went wrong */
@@ -416,10 +416,43 @@ void menu_security_exception_example(void)
   }
 }
 
+
+const char mal_detected[] = ""
+"\n               MMMM      MMMM      MMMM.                 "
+"\n               MMMM      MMMM      MMMM.                 "
+"\n               MMMM      MMMM      MMMM                  "
+"\n          -ohMMMMMMMMMMMMMMMMMMMMMMMMMMMMho-             "
+"\n        /dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd/           "
+"\n      `hMMMM/`                          `/MMMMy`         "
+"\n      hMMN/        "RED"MALWARE DETECTED!!!"GREEN"     /MMMh         "
+"\n      MMM+                                  oMMM:        "
+"\n MMMMMMMM          .odNMMMMMMMMMNms-         MMMMMMMM    "
+"\n MMMMMMMM        `omMMMMMMMMMMMMMMMNs`       MMMMMMMM    "
+"\n      MMM       `yMMMMMMMMMMMMMMMMMMMh.      MMM         "
+"\n      MMM       +MMMMNddmMMMMMmddNMMMMs      MMM         "
+"\n      MMM       hMMMd-``./MMMo.``-yMMMm`     MMM         "
+"\n MMMMMMMM       hMMMs    `MMM-    +MMMm`     MMMMMMMM    "
+"\n MMMMMMMM       +MMMNy==+MMMMMo==sNMMMy      MMMMMMMM    "
+"\n      MMM       `hMMMMMMMMh  MMMMMMMMd.      MMM         "
+"\n      MMM        `sNMMMMMMb  dMMMMMNy.       MMM         "
+"\n      MMM          -yMMMMMMMMMMMMMd:`        MMM         "
+"\n MMMMMMMM           :MMM  MMM  MMM+          MMMMMMMM    "
+"\n MMMMMMMM           `:MM  MMM  MM:`          MMMMMMMM    "
+"\n      MMM+                                   MMM:        "
+"\n      hMMM/        "RED"MALWARE DETECTED!!!"GREEN"     /MMMh         "
+"\n      `hMMMh/`                          `/hMMMy`         "
+"\n        /dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd:           "
+"\n          -ohMMMMMMMMMMMMMMMMMMMMMMMMMMMMho-             "
+"\n               MMMM      MMMM      MMMM                  "
+"\n               MMMM      MMMM      MMMM                  "
+"\n               MMMM      MMMM      MMMM                  \n"
+"\n\t\t "RED"PLEASE RESTART BOARD!!!\n";
+
 void HardFault_Handler(void)
 {
   printf(RED "Secure Hard Fault Handler: invalid memory access or malware activity detected\n" NORMAL);
 
+  printf("%s\n", mal_detected);
   while(1);
 }
 
@@ -581,7 +614,7 @@ int main(void)
   printf(NORMAL "\n\n\t-=mTower v" VERSION "=-  " __DATE__ "  " __TIME__"\n\n");
 
   printf("+---------------------------------------------+\n");
-  printf("|              Secure is running ...          |\n");
+  printf("|     Secure handler (BL32) is running ...    |\n");
   printf("+---------------------------------------------+\n");
 
   /* Init GPIO Port A for secure LED control */
