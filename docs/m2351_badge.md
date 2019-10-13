@@ -1,6 +1,6 @@
 # mTower on M2351-Badge
 
-[![M2351-Badge](images/platforms/no_image.jpg)]()
+[![M2351-Badge](images/platforms/m2351_badge/m2351_badge.png)]()
 
 # Contents
 1. [Introduction](#1-introduction)
@@ -9,7 +9,7 @@
 4. [Flash mTower on the device and run](#4-flash-mtower-on-the-device-and-run)
 
 ## 1. Introduction
-The instructions here will tell how to run mTower on the [NuMaker-PFM-M2351] board.
+The instructions here will tell how to run mTower on the [M2351-Badge] board.
 
 ## 2. Regular build
 Start out by following the "Get and build the solution" in the [build.md] file.
@@ -36,13 +36,11 @@ Once you download the installer and start it, follow the instructions shown in i
 
 ![Select image files and program start](images/platforms/numaker_pfm_m2351/numicro_icp_open_prg.png)
 
-4. We use 2 consoles for debugging: one will connect via USB ICE (for Secure input/output), and one will connect via UART (for Nonsecure input/output).
+4. We use console for debugging: one will connect via UART for Secure/Non-Secure input/output.
 
-![NuMaker-PFM-M2351 pins](images/platforms/numaker_pfm_m2351/numicro_pin.png)
-
-5. Open 2 console/terminal windows (e.g., Putty) using 115200 speed setting with 8 bits with no parity check. Press **"Reset"** button on M2351 board, and you should see output in terminal windows, like one shown below. Note that test tasks are running in infinite loop, so the output shall not stop.
+5. Open console/terminal window (e.g., Putty) using 115200 speed setting with 8 bits with no parity check. Press **"Reset"** button on M2351-Badge board, and you should see output in terminal window, like one shown below. Note that menu task is running in infinite loop, so the output shall not stop.
 
 ![Start mTower](images/platforms/numaker_pfm_m2351/putty_outputs.png)
 
 [build.md]: build.md
-[NuMaker-PFM-M2351]: http://www.nuvoton.com/resource-files/UM_NuMaker-PFM-M2351_EN_Rev1.00.pdf
+[M2351-Badge]: schemes/m2351_badge

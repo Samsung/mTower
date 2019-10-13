@@ -29,7 +29,7 @@ the beginnings of corresponding files; also, all licenses are listed in
 
 | **NuMaker-PFM-M2351** | **M2351-Badge** | **How to add a platform**             |           |
 |-----------------------|---------------------------|-------------|-----------|
-|[![](docs/images/platforms/numaker_pfm_m2351/numaker_pfm_m2351.png)](docs/numaker_pfm_m2351.md)|[![](docs/images/platforms/no_image.jpg)](docs/m2351_badge.md) |[![](docs/images/platforms/add_new_board.jpg)](docs/port-new-platform.md)||
+|[![](docs/images/platforms/numaker_pfm_m2351/numaker_pfm_m2351.png)](docs/numaker_pfm_m2351.md)|[![](docs/images/platforms/m2351_badge/m2351_badge.png)](docs/m2351_badge.md) |[![](docs/images/platforms/add_new_board.jpg)](docs/port-new-platform.md)||
 
 
 Several platforms are supported. In order to manage slight differences
@@ -90,3 +90,5 @@ TBD
 [source code structure]: docs/source-code-structure.md
 [doxygen]: http://www.doxygen.nl
 [NuMaker-PFM-M2351]: http://www.nuvoton.com.cn/hq/products/iot-solution/iot-platform/numaker-maker-platform/numaker-pfm-m2351?__locale=en
+[M2351-Badge]: docs/schemes/m2351_badge
+
