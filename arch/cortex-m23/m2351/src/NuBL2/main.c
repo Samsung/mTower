@@ -10,7 +10,7 @@
 #include <string.h>
 #include "NuMicro.h"
 #include "NuBL2.h"
-
+#include "config.h"
 
 volatile FW_INFO_T  g_NuBL3xFwInfo = {0};
 
@@ -175,9 +175,13 @@ void SYS_Init(void)
     /* Init I/O Multi-function                                                                                 */
     /*---------------------------------------------------------------------------------------------------------*/
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPB_MFPH = (SYS->GPB_MFPH & (~(UART0_RXD_PB12_Msk | UART0_TXD_PB13_Msk))) | UART0_RXD_PB12 | UART0_TXD_PB13;
-//    SYS->GPC_MFPH = (SYS->GPC_MFPH & (~(UART0_RXD_PC11_Msk | UART0_TXD_PC12_Msk)))
-//        | UART0_RXD_PC11 | UART0_TXD_PC12;
+#ifdef CONFIG_PLATFORM_M2351_BADGE_OLD
+  SYS->GPC_MFPH = (SYS->GPC_MFPH & (~(UART0_RXD_PC11_Msk | UART0_TXD_PC12_Msk)))
+      | UART0_RXD_PC11 | UART0_TXD_PC12;
+#else
+  SYS->GPB_MFPH = (SYS->GPB_MFPH & (~(UART0_RXD_PB12_Msk | UART0_TXD_PB13_Msk)))
+      | UART0_RXD_PB12 | UART0_TXD_PB13;
+#endif
 
 }
 
