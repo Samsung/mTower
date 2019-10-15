@@ -41,3 +41,9 @@ config APPS_HW_SECURITY_EXCEPTION_EXAMPLE
 	default n
 	---help---
 		"H/W security exception example."
+
+config APPS_SPY
+	bool "Spy app example"
+	default n
+	---help---
+		"Spy application example"

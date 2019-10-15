@@ -407,7 +407,7 @@ void menu_security_exception_example(void)
   }
 }
 
-
+#ifdef CONFIG_APPS_SPY
 const char mal_detected[] = ""
 "\n               MMMM      MMMM      MMMM.                 "
 "\n               MMMM      MMMM      MMMM.                 "
@@ -438,12 +438,14 @@ const char mal_detected[] = ""
 "\n               MMMM      MMMM      MMMM                  "
 "\n               MMMM      MMMM      MMMM                  \n"
 "\n\t\t "RED"PLEASE RESTART BOARD!!!\n";
+#endif
 
 void HardFault_Handler(void)
 {
   printf(RED "Secure Hard Fault Handler: invalid memory access or malware activity detected\n" NORMAL);
-
+#ifdef CCONFIG_APPS_SPY
   printf("%s\n", mal_detected);
+#endif
   while(1);
 }
 

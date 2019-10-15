@@ -79,8 +79,9 @@ static void teeLedBlinkTask( void *pvParameters );
 static void testTask2( void *pvParameters );
 static void clnSrvTask( void *pvParameters );
 static void menuTask( void *pvParameters );
+#ifdef CONFIG_APPS_SPY
 static void spyAppTask( void /**pvParameters*/ );
-
+#endif
 static void teeHelloWorldTask( void *pvParameters );
 static void teeAESTask( void *pvParameters );
 static void teeHotpTask( void *pvParameters );
@@ -346,7 +347,7 @@ static void menuTask(void *pvParameters)
         portENABLE_INTERRUPTS();
         break;
 #endif
-//#ifdef CONFIG_APPS_SPY
+#ifdef CONFIG_APPS_SPY
         case '8':
 //        xTaskCreate( spyAppTask,  /* The function that implements the task. */
 //            "spyAppTask",               /* The text name assigned to the task - for debug only as it is not used by the kernel. */
@@ -358,7 +359,7 @@ static void menuTask(void *pvParameters)
 //        taskYIELD();
         spyAppTask();
         break;
-//#endif
+#endif
       default:
         break;
     }
@@ -366,6 +367,7 @@ static void menuTask(void *pvParameters)
   } while (1);
 }
 
+#ifdef CONFIG_APPS_SPY
 const char app_protected[] =
     "\n ########################################"
     "\n ## Data protected by TrustZone        ##"
@@ -413,17 +415,17 @@ const char spy[] =
 "\n              .NN MMMMMMMm    mMMMMMMm Mm"
 "\n              -MMMMP     qMMMMMp     qMMMM`"
 "\n              .MMMMc     dMMMMMc     dMMMM`"
-"\n               yM MMMMMMMp    qdMMMMMMh Mo"
-"\n               `dN/`                 +Ny`"
-"\n           ./oyhmMNs-    ======    :hMMmhyo/."
-"\n         :hNMMMMMMMMNh+-         odNMMMMMMMMmy-"
-"\n       `sNMMMMMMMMMMMMMNmddhhdmmMMMMMMMMMMMMMMNo`"
-"\n      .dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMy`"
-"\n     -mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh`"
-"\n   .mMMMMmo                                 sNMMMMh`"
-"\n   `dMMMMM/ "YELLOW"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"NORMAL" oMMMMMy`"
+"\n               mM MMMMMMMp    qdMMMMMMh Mn`"
+"\n                dMM`                 +MMp"
+"\n           .dMMMMMMs-    ======    :hMMMMMMm."
+"\n          hNMMMMMMMMMh+-         odMMMMMMMMMmy"
+"\n        mMMMMMMMMMMMMMMMmddhhdmmMMMMMMMMMMMMMMMh "
+"\n       mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh "
+"\n     -mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh "
+"\n   `mMMMMMo                                 sMMMMMh "
+"\n   `dMMMMM/ "YELLOW"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"NORMAL" oMMMMMy "
 "\n   yMMMMMM/ "YELLOW"MM----------------------------MM"NORMAL"  sMMMMMMo"
-"\n  /MMMMMMMs "YELLOW"oM- "GREEN"101010101011101010010100"YELLOW" -MM/"NORMAL"  hMMMMMMN-"
+"\n  /MMMMMMMs "YELLOW"oM- "GREEN"101010101011101010010100"YELLOW" -MM"NORMAL"  hMMMMMMN-"
 "\n `mMMMMMMMd "YELLOW"/M- "GREEN"001010101010101000010101"YELLOW" -M."NORMAL"  NMMMMMMMd"
 "\n +MMMMMMMMN`"YELLOW".M- "GREEN"101010101010101000010101"YELLOW" -M`"NORMAL" .MMMMMMMMM:"
 "\n dMMMMMMMMM."YELLOW"`N- "GREEN"101011101000100011010100"YELLOW" -N"NORMAL"  /MMMMMMMMMs"
@@ -460,7 +462,7 @@ static void spyAppTask( void /**pvParameters*/ )
   do {
   } while (1);
 }
-
+#endif
 
 /**
  * @brief         testTask1 - .
