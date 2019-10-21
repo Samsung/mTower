@@ -25,23 +25,27 @@ described in detail below:
 │       └── <arch-family-name>
 │           ├── include
 │           └── src
-│               └── <platform-name>
-│                   ├── Kconfig
-│                   ├── Makefile
-│                   ├── nonsecure
-│                   │   ├── FreeRTOSConfig.h
-│                   │   ├── main_ns.c
-│                   │   ├── Make.defs
-│                   │   ├── Makefile
-│                   │   ├── nonsecure.ld
-│                   │   └── warn_err.c
-│                   ├── partition_M2351.h
-│                   └── secure
-│                       ├── Makefile
-│                       ├── ...
-│                       ├── main.c
-│                       ├── ...
-│                       └── secure.ld
+│               ├── <platform-name>
+│               │    ├── Kconfig
+│               │    ├── Makefile
+│               │    ├── nonsecure
+│               │    │   ├── FreeRTOSConfig.h
+│               │    │   ├── main_ns.c
+│               │    │   ├── Make.defs
+│               │    │   ├── Makefile
+│               │    │   ├── nonsecure.ld
+│               │    │   └── warn_err.c
+│               │    ├── partition_M2351.h
+│               │    └── secure
+│               │        ├── Makefile
+│               │        ├── ...
+│               │        ├── main.c
+│               │        ├── ...
+│               │        └── secure.ld
+│               ├──CMSIS
+│               ├──Device
+│               ├──NuBL2
+│               └──StdDriver
 ├── configs (platform configuration-specific files)
 │   ├── <platform-name>
 │   │   ├── defconfig
