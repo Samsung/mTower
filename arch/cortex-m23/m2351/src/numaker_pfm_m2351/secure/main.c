@@ -443,7 +443,7 @@ const char mal_detected[] = ""
 void HardFault_Handler(void)
 {
   printf(RED "Secure Hard Fault Handler: invalid memory access or malware activity detected\n" NORMAL);
-#ifdef CCONFIG_APPS_SPY
+#ifdef CONFIG_APPS_SPY
   printf("%s\n", mal_detected);
 #endif
   while(1);
