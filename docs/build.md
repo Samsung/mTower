@@ -6,7 +6,8 @@ differences between platforms, a `PLATFORM` flag has been introduced.
 
 | Platform            | Composite PLATFORM flag     | Maintained |  Quick start guide doc |
 |---------------------|-----------------------------|------------|------------------------| 
-| [NuMaker-PFM-M2351] |`PLATFORM=numaker_pfm_m2351` | v0.1       | [numaker_pfm_m2351.md] |
+| [NuMaker-PFM-M2351] |`PLATFORM=numaker_pfm_m2351` | v0.2       | [numaker_pfm_m2351.md] |
+| [M2351-Badge]       |`PLATFORM=m2351_badge`       | v0.2       | [m2351_badge.md]       |
 
 
 ---
@@ -24,10 +25,7 @@ to start with. Therefore install the following packages regardless of what
 target you will use in the end.
 
 ```sh
-$ sudo apt-get install git gcc make gperf flex \
-					bison libncurses5-dev texinfo g++ curl pkg-config \ 
-					autoconf libtool libtool-bin libc6:i386 \
-					libc6-dev:i386 gcc-multilib doxygen doxygen-gui
+$ sudo apt-get install git gcc make gperf flex bison libncurses5-dev texinfo g++ curl pkg-config 	autoconf libtool libtool-bin libc6:i386 libc6-dev:i386 gcc-multilib doxygen doxygen-gui
 ```
 
 ### 2.2 Building kconfig-frontends in Linux (optional)
@@ -45,6 +43,14 @@ $ curl -O http://ymorin.is-a-geek.org/download/kconfig-frontends/kconfig-fronten
 $ tar -xf kconfig-frontends-3.12.0.0.tar.xz
 $ cd kconfig-frontends-3.12.0.0
 ```
+> Sometimes the http://ymorin.is-a-geek.org site does not work, in this case
+you can download it [here](https://autobuilder.yocto.io/pub/sources/) or find
+it yourself
+
+```sh
+curl -O https://autobuilder.yocto.io/pub/sources/kconfig-frontends-3.12.0.0.tar.xz
+```
+
 #### 2.2.2 Patch
 
 If your system has gperf 3.0.4 or earlier, you may safely skip this chapter.
@@ -131,3 +137,4 @@ Please see instructions for specific devices (e.g., for NuMaker-PFM-M2351, see d
 [docs]: ./
 [NuMaker-PFM-M2351]: http://www.nuvoton.com/resource-files/UM_NuMaker-PFM-M2351_EN_Rev1.00.pdf
 [numaker_pfm_m2351.md]: ./numaker_pfm_m2351.md
+[m2351_badge.md]: ./m2351_badge.md
