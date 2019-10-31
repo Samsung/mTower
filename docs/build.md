@@ -137,4 +137,5 @@ Please see instructions for specific devices (e.g., for NuMaker-PFM-M2351, see d
 [docs]: ./
 [NuMaker-PFM-M2351]: http://www.nuvoton.com/resource-files/UM_NuMaker-PFM-M2351_EN_Rev1.00.pdf
 [numaker_pfm_m2351.md]: ./numaker_pfm_m2351.md
+[M2351-Badge]: ./m2351_badge.md
 [m2351_badge.md]: ./m2351_badge.md
