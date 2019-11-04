@@ -279,9 +279,9 @@ static void menuTask(void *pvParameters)
     printf("| [6] - Run H/W Security exception example (from non-secure)|\n");
     printf("| [7] - Run H/W Security exception example (from secure)    |\n");
 #endif
-//#ifdef CONFIG_APPS_SPY
+#ifdef CONFIG_APPS_SPY
     printf("| [8] - Run spy app that trying to get protected data       |\n");
-//#ifend
+#endif
     printf("+-----------------------------------------------------------+\n");
 
     printf("\n[%c]\n", ch = getchar());
