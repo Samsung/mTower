@@ -79,6 +79,9 @@ static void teeLedBlinkTask( void *pvParameters );
 static void testTask2( void *pvParameters );
 static void clnSrvTask( void *pvParameters );
 static void menuTask( void *pvParameters );
+#ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
+void menu_security_exception_example_ns(void);
+#endif
 #ifdef CONFIG_APPS_SPY
 static void spyAppTask( void /**pvParameters*/ );
 #endif
@@ -249,8 +252,6 @@ static void App_Init(uint32_t u32BootBase)
  */
 static void menuTask(void *pvParameters)
 {
-  const TickType_t xDelay = 500 / portTICK_PERIOD_MS;
-
   /* Define a buffer that is large enough to hold the generated table.  In most
    * cases the buffer will be too large to allocate on the stack, hence in this
    * example it is declared static. */
