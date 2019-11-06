@@ -71,8 +71,8 @@ LDFLAGS = $(ARCHOPTIMIZATION)
 ASMEXT = .S
 OBJEXT = .o
 LIBEXT = .a
-JCLEXT = .class
 EXEEXT = .elf
+HEXEXT = .hex
 
 ECHO = `which echo`
 

@@ -80,32 +80,33 @@ $(COBJS_S): $(OBJDIR)/%$(OBJEXT): %.c
 
 FwInfo$(EXEEXT):
 	@echo "CC: FwInfo$(EXEEXT)"
-	$(CC) -c $(CFLAGS) FwInfo.c
+	$(CC) -c $(CFLAGS) FwInfo.c -o $(OBJDIR)/FwInfo.o
 	#$(CC) $(CFLAGS) -nostartfiles -Tfwinfo.ld FwInfo.c -o FwInfo.elf
 	#$(LD) --section-start=.text=0x38000  FwInfo.o
 	# -Ttest.ld -o new_hello hello embed.o
 
-mtower_s$(EXEEXT): $(OBJS_S) FwInfo$(EXEEXT) 
+mtower_s$(EXEEXT): $(OBJS_S) FwInfo$(EXEEXT)
+	$(Q) $(MAKE) -C ../../NuBL2 TOPDIR="$(TOPDIR)" NuBL2$(EXEEXT)
 	$(Q) $(MAKE) -C ../../StdDriver/src/ TOPDIR="$(TOPDIR)" WORLD=secure libm2351_StdDriver_s.a
 	$(Q) $(MAKE) -C $(TOPDIR)/crypto/ TOPDIR="$(TOPDIR)" WORLD=secure libcrypt_s.a
 
 	@echo "CC: mTower_s$(EXEEXT)"
-	$(Q) $(CC) $(CFLAGS) -mcmse -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(MTOWER_S)
+#	$(Q) $(CC) $(CFLAGS) -mcmse -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(MTOWER_S)
+	$(Q) $(CC) $(CFLAGS) -mcmse -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl32.elf
 #	-$(Q) $(CC) -Wl,--section-start=.gnu.sgstubs=0x3f000 -Wl,--out-implib=libnsc$(LIBEXT) -Wl,--cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
-	-$(Q) $(LD) --section-start=.gnu.sgstubs=0x3f000 --out-implib=libnsc$(LIBEXT) --cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
+	-$(Q) $(LD) --section-start=.gnu.sgstubs=0x3f000 --out-implib=$(OBJDIR)/libnsc$(LIBEXT) --cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
+	$(Q) $(OBJCOPY) -O ihex $(OBJDIR)/bl32.elf $(OBJDIR)/bl32.hex
+	@cp -f $(OBJDIR)/libnsc$(LIBEXT) $(TOPDIR)/lib/
+	#$(Q) $(OBJCOPY) -O ihex $(MTOWER_S) $(TOPDIR)/mtower_s.hex
+	#$(Q) $(OBJCOPY) -O binary $(MTOWER_S) $(TOPDIR)/mtower_s.bin
+	$(Q) head -n -1 $(OBJDIR)/../../NuBL2/NuBL2.hex > $(TOPDIR)/mtower_s.hex ; cat $(OBJDIR)/bl32.hex >> $(TOPDIR)/mtower_s.hex
+#	$(Q) head -n -1 $(TOPDIR)/NuBL2.hex > $(TOPDIR)/combined.hex; cat $(TOPDIR)/mtower_s.hex >> $(TOPDIR)/combined.hex
 
-	$(Q) $(CC) $(CFLAGS) -mcmse -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(MTOWER_S)
-
-	@cp -f libnsc$(LIBEXT) $(TOPDIR)/lib/
-	$(Q) $(OBJCOPY) -O ihex $(MTOWER_S) $(TOPDIR)/mtower_s.hex
-	$(Q) $(OBJCOPY) -O binary $(MTOWER_S) $(TOPDIR)/mtower_s.bin
-	$(Q) head -n -1 $(TOPDIR)/NuBL2.hex > $(TOPDIR)/combined.hex; cat $(TOPDIR)/mtower_s.hex >> $(TOPDIR)/combined.hex
-
-	#$(Q) $(OBJCOPY) -I ihex $(TOPDIR)/combined.hex -O $(TOPDIR)/combined.elf
-	#$(Q) $(OBJCOPY) -O ihex $(TOPDIR)/combined.elf $(TOPDIR)/combined_s.hex
+#	$(Q) $(OBJCOPY)  -I ihex -O binary $(TOPDIR)/combined.hex $(TOPDIR)/combined.bin
 
 clean:
-	$(Q) rm -f *$(OBJEXT) *$(LIBEXT)
+	$(Q) $(MAKE) -C ../../NuBL2 TOPDIR="$(TOPDIR)" clean
+	$(Q) rm -f *$(OBJEXT) *$(LIBEXT) *$(EXEEXT) *$(HEXEXT)
 	$(Q) rm -f ../../Device/Nuvoton/M2351/Source/*$(OBJEXT)
 	$(Q) rm -f ../../Device/Nuvoton/M2351/Source/GCC/*$(OBJEXT)
 	$(Q) rm -f ../../StdDriver/src/*$(OBJEXT) ../../StdDriver/src/*$(LIBEXT)

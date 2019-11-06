@@ -1,5 +1,5 @@
 ############################################################################
-# arch/cortex-m23/m2351/src/numaker_pfm_m2351/secure/Makefile
+# arch/cortex-m23/m2351/src/NuBL2/Makefile
 #
 # Copyright (c) 2019 Samsung Electronics Co., Ltd. All Rights Reserved.
 # Author: Taras Drozdovskyi t.drozdovsky@samsung.com
@@ -36,9 +36,9 @@ CFLAGS += -I$(TOPDIR)/tee/lib/libutee/include
 
 CFLAGS += -DDEBUG_PORT=$(subst ",,$(CONFIG_SECURE_DEBUG_UART))
 
-OBJDIR = $(TOPDIR)/build/NuBL2/secure$(subst $(TOPDIR),,$(shell pwd))
+OBJDIR = $(TOPDIR)/build/secure$(subst $(TOPDIR),,$(shell pwd))
 
-NuBL2 = $(TOPDIR)/NuBL2$(EXEEXT)
+NuBL2 = NuBL2$(EXEEXT)
 
 ASRCS_S = $(CHIP_ASRCS_S) $(CMN_ASRCS)
 AOBJS_S = $(addprefix $(OBJDIR)/, $(ASRCS_S:.S=$(OBJEXT)))
@@ -67,15 +67,14 @@ NuBL2$(EXEEXT): $(OBJS_S)
 #	$(Q) $(MAKE) -C $(TOPDIR)/crypto/ TOPDIR="$(TOPDIR)" WORLD=secure libcrypt_s.a
 	
 	@echo "CC: NuBL2$(EXEEXT)"
-	$(Q) $(CC) $(CFLAGS) -mcmse -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(NuBL2)
-#	-$(Q) $(CC) -Wl,--section-start=.gnu.sgstubs=0x3f000 -Wl,--out-implib=libnsc$(LIBEXT) -Wl,--cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
+	$(Q) $(CC) $(CFLAGS) -mcmse -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/$(NuBL2)
 #	-$(Q) $(LD) --section-start=.gnu.sgstubs=0x3f000 --out-implib=libnsc$(LIBEXT) --cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
 #	@cp -f libnsc$(LIBEXT) $(TOPDIR)/lib/
-	$(Q) $(OBJCOPY) -O ihex $(NuBL2) $(TOPDIR)/NuBL2.hex
-	$(Q) $(OBJCOPY) -O binary $(NuBL2) $(TOPDIR)/NuBL2.bin
+	$(Q) $(OBJCOPY) -O ihex $(OBJDIR)/$(NuBL2) $(OBJDIR)/NuBL2.hex
+	$(Q) $(OBJCOPY) -O binary $(OBJDIR)/$(NuBL2) $(OBJDIR)/NuBL2.bin
 
 clean:
-	$(Q) rm -f *$(OBJEXT) *$(LIBEXT)
+	$(Q) rm -f *$(OBJEXT) *$(LIBEXT) *.hex
 	$(Q) rm -f ../Device/Nuvoton/M2351/Source/*$(OBJEXT)
 	$(Q) rm -f ../Device/Nuvoton/M2351/Source/GCC/*$(OBJEXT)
 	$(Q) rm -f ../StdDriver/src/*$(OBJEXT) ../StdDriver/src/*$(LIBEXT)

@@ -1,5 +1,5 @@
 ############################################################################
-# arch/cortex-m23/m2351/src/numaker_pfm_m2351/secure/Make.defs
+# arch/cortex-m23/m2351/src/NuBL2/Make.defs
 #
 # Copyright (c) 2018-2019 Samsung Electronics Co., Ltd. All Rights Reserved.
 # Author: Taras Drozdovskyi t.drozdovsky@samsung.com
@@ -27,22 +27,7 @@ HEAD_ASRC =
 
 CMN_ASRCS = 
 
-#CMN_CSRCS =    $(TOPDIR)/tee/lib/libutee/tee_api_operations.c \
-#               $(TOPDIR)/tee/lib/libutee/tee_api.c \
-#               $(TOPDIR)/tee/lib/libutee/tee_api_panic.c \
-#               $(TOPDIR)/tee/lib/libutee/tee_user_mem.c \
-#               $(TOPDIR)/tee/lib/libutee/tee_api_objects.c \
-#               $(TOPDIR)/tee/lib/libutils/ext/trace.c \
-#               $(TOPDIR)/tee/tee/tee_svc_cryp.c \
-#               $(TOPDIR)/tee/tee/tee_cryp_utl.c \
-#               $(TOPDIR)/tee/tee/tee_svc.c \
-#               $(TOPDIR)/tee/tee/tee_obj.c \
-#               $(TOPDIR)/tee/tee/tee_pobj.c \
-#               $(TOPDIR)/tee/tee/uuid.c \
-#               $(TOPDIR)/tee/kernel/entry_std.c \
-#               $(TOPDIR)/tee/kernel/pseudo_ta.c \
-#               $(TOPDIR)/tee/kernel/user_ta.c \
-#               $(TOPDIR)/tee/kernel/tee_ta_manager.c
+CMN_CSRCS =
 
 # Required CHIP files
 

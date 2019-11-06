@@ -13,12 +13,12 @@
 /mtower
 /mtower.*
 /mtower-*
-/*.map
-/*.elf
+*.map
+*.elf
 /*.srec
-/*.bin
+*.bin
 /*.ihx
-/*.hex
+*.hex
 /.cproject
 /.project
 /pcode

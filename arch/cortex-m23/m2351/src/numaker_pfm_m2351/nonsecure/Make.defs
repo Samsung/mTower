@@ -34,21 +34,21 @@ CHIP_CSRCS_NS = ../../Device/Nuvoton/M2351/Source/system_M2351.c \
                 ../../Device/Nuvoton/M2351/Source/GCC/_syscalls.c \
                 main_ns.c \
                 warn_err.c \
-                $(TOPDIR)/tee_client/libteec/src/tee_client_api.c
+                ../../../../../../tee_client/libteec/src/tee_client_api.c
 
 ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
-CHIP_CSRCS_NS += $(TOPDIR)/apps/hello_world/ca/hello_world_ns.c
+CHIP_CSRCS_NS += ../../../../../../apps/hello_world/ca/hello_world_ns.c
 endif
 
 ifeq ($(CONFIG_APPS_AES),y)
-CHIP_CSRCS_NS += $(TOPDIR)/apps/aes/ca/aes_ns.c
+CHIP_CSRCS_NS += ../../../../../../apps/aes/ca/aes_ns.c
 endif
 
 ifeq ($(CONFIG_APPS_HOTP),y)
-CHIP_CSRCS_NS += $(TOPDIR)/apps/hotp/ca/hotp_ns.c
+CHIP_CSRCS_NS += ../../../../../../apps/hotp/ca/hotp_ns.c
 endif
 
 ifeq ($(CONFIG_APPS_TEST),y)
-CHIP_CSRCS_NS += $(TOPDIR)/apps/test/ca/test_ns.c
+CHIP_CSRCS_NS += ../../../../../../apps/test/ca/test_ns.c
 endif
 

@@ -26,12 +26,10 @@ MTOWER_S = $(TOPDIR)/mtower_s$(EXEEXT)
 MTOWER_NS = $(TOPDIR)/mtower_ns$(EXEEXT)
 
 mtower$(EXEEXT):
-	$(Q) $(MAKE) -C ../NuBL2 TOPDIR="$(TOPDIR)" NuBL2$(EXEEXT)
 	$(Q) $(MAKE) -C secure TOPDIR="$(TOPDIR)" mtower_s$(EXEEXT)
 	$(Q) $(MAKE) -C nonsecure TOPDIR="$(TOPDIR)" mtower_ns$(EXEEXT)
 
 clean:
-	$(Q) $(MAKE) -C ../NuBL2 TOPDIR="$(TOPDIR)" clean
 	$(Q) $(MAKE) -C secure TOPDIR="$(TOPDIR)" clean
 	$(Q) $(MAKE) -C nonsecure TOPDIR="$(TOPDIR)" clean
 	$(Q) rm -rf $(TOPDIR)/build
@@ -39,10 +37,6 @@ clean:
 	$(Q) rm -f $(TOPDIR)/mtower_s.hex
 	$(Q) rm -f $(TOPDIR)/mtower_ns.bin
 	$(Q) rm -f $(TOPDIR)/mtower_ns.hex
-	$(Q) rm -f $(TOPDIR)/NuBL2.bin
-	$(Q) rm -f $(TOPDIR)/NuBL2.hex
-	$(Q) rm -f $(TOPDIR)/NuBL2.elf
-	$(Q) rm -f $(TOPDIR)/combined.hex
 
 distclean: clean
 
