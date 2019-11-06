@@ -96,13 +96,26 @@ mtower_s$(EXEEXT): $(OBJS_S) FwInfo$(EXEEXT)
 #	-$(Q) $(CC) -Wl,--section-start=.gnu.sgstubs=0x3f000 -Wl,--out-implib=libnsc$(LIBEXT) -Wl,--cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
 	-$(Q) $(LD) --section-start=.gnu.sgstubs=0x3f000 --out-implib=$(OBJDIR)/libnsc$(LIBEXT) --cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
 	$(Q) $(OBJCOPY) -O ihex $(OBJDIR)/bl32.elf $(OBJDIR)/bl32.hex
-	@cp -f $(OBJDIR)/libnsc$(LIBEXT) $(TOPDIR)/lib/
+	$(Q) cp -f $(OBJDIR)/libnsc$(LIBEXT) $(TOPDIR)/lib/
 	#$(Q) $(OBJCOPY) -O ihex $(MTOWER_S) $(TOPDIR)/mtower_s.hex
 	#$(Q) $(OBJCOPY) -O binary $(MTOWER_S) $(TOPDIR)/mtower_s.bin
-	$(Q) head -n -1 $(OBJDIR)/../../NuBL2/NuBL2.hex > $(TOPDIR)/mtower_s.hex ; cat $(OBJDIR)/bl32.hex >> $(TOPDIR)/mtower_s.hex
 #	$(Q) head -n -1 $(TOPDIR)/NuBL2.hex > $(TOPDIR)/combined.hex; cat $(TOPDIR)/mtower_s.hex >> $(TOPDIR)/combined.hex
+ifeq ($(CONFIG_OUTPUT_FILE_FORMAT_HEX),y)
+	$(Q) head -n -1 $(OBJDIR)/../../NuBL2/NuBL2.hex > $(TOPDIR)/mtower_s.hex ; cat $(OBJDIR)/bl32.hex >> $(TOPDIR)/mtower_s.hex
+endif
+ifeq ($(CONFIG_OUTPUT_FILE_FORMAT_ELF),y)
+	$(ECHO) -e "$(BLUE)ELF image for secure part (mtower_s.elf) isn't supported yet$(NORMAL)"
+endif
+ifeq ($(CONFIG_OUTPUT_FILE_FORMAT_BIN),y)
+ifneq ($(CONFIG_OUTPUT_FILE_FORMAT_HEX),y)
+	$(Q) head -n -1 $(OBJDIR)/../../NuBL2/NuBL2.hex > $(TOPDIR)/mtower_s.hex ; cat $(OBJDIR)/bl32.hex >> $(TOPDIR)/mtower_s.hex
+endif
+	$(Q) $(OBJCOPY) -I ihex -O binary $(TOPDIR)/mtower_s.hex $(TOPDIR)/mtower_s.bin
+ifneq ($(CONFIG_OUTPUT_FILE_FORMAT_HEX),y)
+	$(Q) rm -f $(TOPDIR)/mtower_s.hex
+endif
+endif
 
-#	$(Q) $(OBJCOPY)  -I ihex -O binary $(TOPDIR)/combined.hex $(TOPDIR)/combined.bin
 
 clean:
 	$(Q) $(MAKE) -C ../../NuBL2 TOPDIR="$(TOPDIR)" clean
