@@ -83,39 +83,49 @@ FwInfo$(EXEEXT):
 	$(CC) -c $(CFLAGS) FwInfo.c -o $(OBJDIR)/FwInfo.o
 	#$(CC) $(CFLAGS) -nostartfiles -Tfwinfo.ld FwInfo.c -o FwInfo.elf
 	#$(LD) --section-start=.text=0x38000  FwInfo.o
-	# -Ttest.ld -o new_hello hello embed.o
 
-mtower_s$(EXEEXT): $(OBJS_S) FwInfo$(EXEEXT)
+mtower_s$(EXEEXT): $(OBJS_S)
+ifeq ($(CONFIG_BOOTLOADER2),y)
 	$(Q) $(MAKE) -C ../../NuBL2 TOPDIR="$(TOPDIR)" NuBL2$(EXEEXT)
+endif
 	$(Q) $(MAKE) -C ../../StdDriver/src/ TOPDIR="$(TOPDIR)" WORLD=secure libm2351_StdDriver_s.a
 	$(Q) $(MAKE) -C $(TOPDIR)/crypto/ TOPDIR="$(TOPDIR)" WORLD=secure libcrypt_s.a
 
 	@echo "CC: mTower_s$(EXEEXT)"
 #	$(Q) $(CC) $(CFLAGS) -mcmse -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(MTOWER_S)
-	$(Q) $(CC) $(CFLAGS) -mcmse -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl32.elf
-#	-$(Q) $(CC) -Wl,--section-start=.gnu.sgstubs=0x3f000 -Wl,--out-implib=libnsc$(LIBEXT) -Wl,--cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
+	$(Q) $(CC) $(CFLAGS) -mcmse -Wl,--section-start=.text=$(CONFIG_START_ADDRESS_BL32) -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl32.elf
+	#-$(Q) $(CC) -Wl,--section-start=.gnu.sgstubs=0x3f000 -Wl,--out-implib=$(OBJDIR)/libnsc$(LIBEXT) -Wl,--cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
 	-$(Q) $(LD) --section-start=.gnu.sgstubs=0x3f000 --out-implib=$(OBJDIR)/libnsc$(LIBEXT) --cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
 	$(Q) $(OBJCOPY) -O ihex $(OBJDIR)/bl32.elf $(OBJDIR)/bl32.hex
 	$(Q) cp -f $(OBJDIR)/libnsc$(LIBEXT) $(TOPDIR)/lib/
-	#$(Q) $(OBJCOPY) -O ihex $(MTOWER_S) $(TOPDIR)/mtower_s.hex
-	#$(Q) $(OBJCOPY) -O binary $(MTOWER_S) $(TOPDIR)/mtower_s.bin
-#	$(Q) head -n -1 $(TOPDIR)/NuBL2.hex > $(TOPDIR)/combined.hex; cat $(TOPDIR)/mtower_s.hex >> $(TOPDIR)/combined.hex
+
 ifeq ($(CONFIG_OUTPUT_FILE_FORMAT_HEX),y)
+ifeq ($(CONFIG_BOOTLOADER2),y)
 	$(Q) head -n -1 $(OBJDIR)/../../NuBL2/NuBL2.hex > $(TOPDIR)/mtower_s.hex ; cat $(OBJDIR)/bl32.hex >> $(TOPDIR)/mtower_s.hex
+else
+	$(Q) cp -f $(OBJDIR)/bl32.hex $(TOPDIR)/mtower_s.hex
+endif
 endif
 ifeq ($(CONFIG_OUTPUT_FILE_FORMAT_ELF),y)
+ifeq ($(CONFIG_BOOTLOADER2),y)
 	$(ECHO) -e "$(BLUE)ELF image for secure part (mtower_s.elf) isn't supported yet$(NORMAL)"
+else
+	$(Q) cp -f $(OBJDIR)/bl32.hex $(TOPDIR)/mtower_s.hex
+endif
 endif
 ifeq ($(CONFIG_OUTPUT_FILE_FORMAT_BIN),y)
 ifneq ($(CONFIG_OUTPUT_FILE_FORMAT_HEX),y)
+ifeq ($(CONFIG_BOOTLOADER2),y)
 	$(Q) head -n -1 $(OBJDIR)/../../NuBL2/NuBL2.hex > $(TOPDIR)/mtower_s.hex ; cat $(OBJDIR)/bl32.hex >> $(TOPDIR)/mtower_s.hex
+else
+	$(Q) cp -f $(OBJDIR)/bl32.hex $(TOPDIR)/mtower_s.hex
+endif
 endif
 	$(Q) $(OBJCOPY) -I ihex -O binary $(TOPDIR)/mtower_s.hex $(TOPDIR)/mtower_s.bin
 ifneq ($(CONFIG_OUTPUT_FILE_FORMAT_HEX),y)
 	$(Q) rm -f $(TOPDIR)/mtower_s.hex
 endif
 endif
-
 
 clean:
 	$(Q) $(MAKE) -C ../../NuBL2 TOPDIR="$(TOPDIR)" clean

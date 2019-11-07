@@ -26,8 +26,15 @@ MTOWER_S = $(TOPDIR)/mtower_s$(EXEEXT)
 MTOWER_NS = $(TOPDIR)/mtower_ns$(EXEEXT)
 
 mtower$(EXEEXT):
+#ifeq ($(CONFIG_BOOTLOADER2),y)
+#	$(Q) $(MAKE) -C ../NuBL2 TOPDIR="$(TOPDIR)" NuBL2$(EXEEXT)
+#endif
+#ifeq ($(CONFIG_BOOTLOADER32),y)
 	$(Q) $(MAKE) -C secure TOPDIR="$(TOPDIR)" mtower_s$(EXEEXT)
+#endif
+#ifeq ($(CONFIG_BOOTLOADER33),y)
 	$(Q) $(MAKE) -C nonsecure TOPDIR="$(TOPDIR)" mtower_ns$(EXEEXT)
+#endif
 
 clean:
 	$(Q) $(MAKE) -C secure TOPDIR="$(TOPDIR)" clean

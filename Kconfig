@@ -230,6 +230,40 @@ endmenu
 
 endmenu # Build Setup
 
+menu "Trusted boot"
+
+config BOOTLOADER1
+	bool "Enable BL1 (not supported yet)"
+	default n
+	---help---
+		"Boot Loader1 is enabled"
+
+config BOOTLOADER2
+	bool "Enable BL2"
+	default y
+	---help---
+		"BootLoader2 is enabled"
+
+config BOOTLOADER32
+	bool "Enable BL32 (Secure handler)"
+	default y
+	---help---
+		"BootLoader32 is enabled (Secure handler)"
+
+config BOOTLOADER33
+	bool "Enable BL33 (FreeRTOS)"
+	depends on BOOTLOADER32
+	default y
+	---help---
+		"BootLoader33 is enabled (FreeRTOS)"
+
+config START_ADDRESS_BL32
+	hex
+	default 0x00000000 if !BOOTLOADER2
+	default 0x00010000 if BOOTLOADER2
+
+endmenu
+
 menu "System Type"
 source "arch/Kconfig"
 endmenu
