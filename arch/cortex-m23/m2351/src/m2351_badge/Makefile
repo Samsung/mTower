@@ -32,9 +32,9 @@ mtower$(EXEEXT):
 #ifeq ($(CONFIG_BOOTLOADER32),y)
 	$(Q) $(MAKE) -C secure TOPDIR="$(TOPDIR)" mtower_s$(EXEEXT)
 #endif
-#ifeq ($(CONFIG_BOOTLOADER33),y)
+ifeq ($(CONFIG_BOOTLOADER33),y)
 	$(Q) $(MAKE) -C nonsecure TOPDIR="$(TOPDIR)" mtower_ns$(EXEEXT)
-#endif
+endif
 
 clean:
 	$(Q) $(MAKE) -C secure TOPDIR="$(TOPDIR)" clean
