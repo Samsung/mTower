@@ -259,6 +259,7 @@ uint32_t ulSetInterruptMaskFromISR(void)
 
 void vClearInterruptMaskFromISR(uint32_t ulMask)
 {
+  (void) ulMask;
   __asm volatile(
       " msr PRIMASK, r0 \n"
       " bx lr           \n"

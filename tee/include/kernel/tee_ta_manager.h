@@ -169,9 +169,9 @@ extern struct tee_ta_ctx_head tee_ctxes;
 //
 //TEE_Result tee_ta_get_current_session(struct tee_ta_session **sess);
 //
-//void tee_ta_push_current_session(struct tee_ta_session *sess);
-//struct tee_ta_session *tee_ta_pop_current_session(void);
-//
+void tee_ta_push_current_session(struct tee_ta_session *sess);
+struct tee_ta_session *tee_ta_pop_current_session(void);
+
 //struct tee_ta_session *tee_ta_get_calling_session(void);
 //
 //TEE_Result tee_ta_get_client_id(TEE_Identity *id);

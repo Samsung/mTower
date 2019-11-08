@@ -73,7 +73,7 @@ typedef union {
 	struct {
 		void *buffer;
 		uint32_t size;
-		uint32_t // ????
+		uint32_t dummy; // ????
 	} memref;
 	struct {
 		uint32_t a;

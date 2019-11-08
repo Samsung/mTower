@@ -3,6 +3,7 @@
  * Copyright (c) 2016, Linaro Limited
  */
 
+#include <stdio.h>
 #include <string.h>
 #include <tee/uuid.h>
 #include <util.h>

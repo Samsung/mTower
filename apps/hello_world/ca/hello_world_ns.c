@@ -33,7 +33,7 @@
 /* To the the UUID (found the the TA's h-file(s)) */
 #include <hello_world_ta.h>
 
-int tee_hello_world()
+int tee_hello_world(void)
 {
 	TEEC_Result res;
 	TEEC_Context ctx;

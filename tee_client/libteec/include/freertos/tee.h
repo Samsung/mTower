@@ -328,7 +328,7 @@ struct tee_ioctl_open_session_arg {
  * tee_ioctl_param
  */
 //#define TEE_IOC_OPEN_SESSION	_IOR(TEE_IOC_MAGIC, TEE_IOC_BASE + 2, \
-//				     struct tee_ioctl_buf_data)
+				     struct tee_ioctl_buf_data)
 
 /**
  * struct tee_ioctl_invoke_func_arg - Invokes a function in a Trusted
@@ -366,7 +366,7 @@ struct tee_ioctl_invoke_arg {
  * tee_invoke_func_arg followed by any array of struct tee_param
  */
 //#define TEE_IOC_INVOKE		_IOR(TEE_IOC_MAGIC, TEE_IOC_BASE + 3, \
-//				     struct tee_ioctl_buf_data)
+				     struct tee_ioctl_buf_data)
 
 /**
  * struct tee_ioctl_cancel_arg - Cancels an open session or invoke ioctl
@@ -396,7 +396,7 @@ struct tee_ioctl_close_session_arg {
  * TEE_IOC_CLOSE_SESSION - Closes a session
  */
 //#define TEE_IOC_CLOSE_SESSION	_IOR(TEE_IOC_MAGIC, TEE_IOC_BASE + 5, \
-//				     struct tee_ioctl_close_session_arg)
+				     struct tee_ioctl_close_session_arg)
 
 /**
  * struct tee_iocl_supp_recv_arg - Receive a request for a supplicant function

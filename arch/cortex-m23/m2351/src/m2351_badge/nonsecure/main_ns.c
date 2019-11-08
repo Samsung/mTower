@@ -746,7 +746,7 @@ void menu_security_exception_example_ns(void)
   printf("+---------------------------------------------------------------------+\n");
   printf("| [1] | Read SRAM secure address 0x30000000      | Hard fault         |\n");
   printf("| [2] | Read SRAM secure address 0x20000000      | Hard fault         |\n");
-  printf("| [3] | Read SRAM non-secure address 0x%08X  | Access successful  |\n",&temp);
+  printf("| [3] | Read SRAM non-secure address 0x%08X  | Access successful  |\n",(unsigned int)&temp);
   printf("|     | Read SRAM non-secure address 0x%08X  | Hard fault         |\n",(~0x10000000 & (unsigned int)&temp));
   printf("| [4] | Read FLASH secure address 0x00000000     | Hard fault         |\n");
   printf("| [5] | Read FLASH secure address 0x10000000     | Hard fault         |\n");
@@ -774,7 +774,7 @@ void menu_security_exception_example_ns(void)
       M32(0x20000000);
       break;
     case '3':
-      printf("Read SRAM non-secure address 0x%08X = %08x\n", &temp, M32(&temp));
+      printf("Read SRAM non-secure address 0x%08X = %08x\n", (unsigned int)&temp, M32(&temp));
       printf("    Read SRAM non-secure address 0x%08X: Hard fault occurs in secure\n", (~0x10000000 & (unsigned int)&temp));
       M32((~0x10000000 & (unsigned int)&temp));
       break;

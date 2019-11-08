@@ -66,6 +66,9 @@ NonSecure_funcptr pfNonSecure_LED_Off = (NonSecure_funcptr) NULL;
 
 
 /* Public Function Prototypes */
+#ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
+void menu_security_exception_example(void);
+#endif
 
 
 /* Private Functions. */
@@ -354,7 +357,7 @@ void menu_security_exception_example(void)
   printf("+---------------------------------------------------------------------+\n");
   printf("| [1] | Read SRAM non-secure address 0x30017000  | Access successful  |\n");
   printf("|     | Read SRAM non-secure address 0x20017000  | RAZWI              |\n");
-  printf("| [2] | Read SRAM secure address 0x%08X      | Access successful  |\n",&temp);
+  printf("| [2] | Read SRAM secure address 0x%08X      | Access successful  |\n",(unsigned int)&temp);
   printf("|     | Read SRAM secure address 0x%08X      | RAZWI              |\n",(0x10000000 + (unsigned int)&temp));
   printf("| [3] | Read FLASH secure address 0x00000000     | Access successful  |\n");
   printf("|     | Read FLASH secure address 0x10000000     | RAZWI              |\n");
@@ -379,7 +382,7 @@ void menu_security_exception_example(void)
       printf("    Read SRAM non-secure address 0x20017000 = %08x\n", M32(0x20017000));
       break;
     case '2':
-      printf("Read SRAM secure address 0x%08X = %08x\n", &temp, M32(&temp));
+      printf("Read SRAM secure address 0x%08X = %08x\n", (unsigned int)&temp, M32(&temp));
       printf("    Read SRAM secure address 0x%08X = %08x\n",(0x10000000 + (unsigned int)&temp), M32(0x10000000 + (unsigned int)&temp));
       break;
     case '3':

@@ -488,7 +488,6 @@ int check_TEEC_AllocateSharedMemory(struct test_ctx *ctx)
 
 int check_TEEC_CloseSession(TEEC_Session *session)
 {
-  TEEC_Result res;
   TEEC_Session tmp_session;
   int result = 0;
 
@@ -526,7 +525,6 @@ int check_TEEC_CloseSession(TEEC_Session *session)
 
 int check_TEEC_FinalizeContext(struct test_ctx *ctx)
 {
-  TEEC_Result res;
   int result = 0;
 
   total_test++;
@@ -561,7 +559,6 @@ void tee_tests(void)
 	char iv[AES_TEST_KEY_SIZE];
 	char clear[AES_TEST_BUFFER_SIZE];
 	char ciph[AES_TEST_BUFFER_SIZE];
-	char temp[AES_TEST_BUFFER_SIZE];
 
 	success += check_TEEC_InitializeContext(&ctx);
 	success += check_TEEC_OpenSession(&ctx);

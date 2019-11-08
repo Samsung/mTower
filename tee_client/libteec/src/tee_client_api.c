@@ -30,7 +30,7 @@
 //#include <limits.h>
 //#include <pthread.h>
 #include <stdio.h>
-//#include <stdlib.h>
+#include <stdlib.h>
 #include <string.h>
 //#include <sys/ioctl.h>
 //#include <sys/mman.h>
@@ -135,16 +135,16 @@ extern int32_t ioctl(uint32_t cmd, struct tee_ioctl_buf_data *buf_data);
 
 TEEC_Result TEEC_InitializeContext(const char *name, TEEC_Context *ctx)
 {
-	char devname[PATH_MAX];
+//	char devname[PATH_MAX];
 	int fd;
 	size_t n;
 
+	(void)name;
 	if (!ctx)
 		return TEEC_ERROR_BAD_PARAMETERS;
 
 	for (n = 0; n < TEEC_MAX_DEV_SEQ; n++) {
-		uint32_t gen_caps;
-
+//		uint32_t gen_caps;
 		//    snprintf(devname, sizeof(devname), "/dev/tee%zu", n);
 		//    fd = teec_open_dev(devname, name, &gen_caps);
     fd = 1;
@@ -724,7 +724,7 @@ out:
 
 TEEC_Result TEEC_AllocateSharedMemory(TEEC_Context *ctx, TEEC_SharedMemory *shm)
 {
-	int fd;
+//	int fd;
 	size_t s;
 
 	if (!ctx || !shm)

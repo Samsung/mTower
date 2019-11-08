@@ -64,6 +64,7 @@ void errx(int eval, const char *fmt, ...)
 {
   va_list va;
 
+  (void)eval;
   va_start(va, fmt);
   vfprintf(stdout, fmt, va);
   fflush(stdout);

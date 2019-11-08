@@ -31,6 +31,7 @@
 /* Included Files. */
 #include <arm_cmse.h>
 #include <stdio.h>
+#include <string.h>
 #include "M2351.h"
 #include "partition_M2351.h"
 

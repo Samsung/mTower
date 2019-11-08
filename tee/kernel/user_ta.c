@@ -417,7 +417,7 @@ static TEE_Result user_ta_enter(TEE_ErrorOrigin *err,
 	struct utee_params *usr_params;
 //	uaddr_t usr_stack;
 	struct user_ta_ctx *utc = to_user_ta_ctx(session->ctx);
-	TEE_ErrorOrigin serr = TEE_ORIGIN_TEE;
+//	TEE_ErrorOrigin serr = TEE_ORIGIN_TEE;
 	struct tee_ta_session *s __maybe_unused;
 	void *param_va[TEE_NUM_PARAMS] = { NULL };
 
@@ -485,12 +485,12 @@ static TEE_Result user_ta_enter_open_session(struct tee_ta_session *s,
 			struct tee_ta_param *param, TEE_ErrorOrigin *eo)
 {
   TEE_Result res;
-  struct utee_params *usr_params;
+//  struct utee_params *usr_params;
 //  uaddr_t usr_stack;
   struct user_ta_ctx *utc = to_user_ta_ctx(s->ctx);
-  TEE_ErrorOrigin serr = TEE_ORIGIN_TEE;
+//  TEE_ErrorOrigin serr = TEE_ORIGIN_TEE;
 //  struct tee_ta_session *s __maybe_unused;
-  void *param_va[TEE_NUM_PARAMS] = { NULL };
+//  void *param_va[TEE_NUM_PARAMS] = { NULL };
 //
 //  if (!(utc->ctx.flags & TA_FLAG_EXEC_DDR))
 //    panic("TA does not exec in DDR");
@@ -612,7 +612,7 @@ static TEE_Result user_ta_enter_invoke_cmd(struct tee_ta_session *s,
   TEE_Result res;
   struct user_ta_ctx *utc = to_user_ta_ctx(s->ctx);
 //  struct pseudo_ta_ctx *stc = to_pseudo_ta_ctx(s->ctx);
-  TEE_Param tee_param[TEE_NUM_PARAMS];
+//  TEE_Param tee_param[TEE_NUM_PARAMS];
 //  bool did_map[TEE_NUM_PARAMS] = { false };
 
   tee_ta_push_current_session(s);
@@ -652,6 +652,7 @@ static void user_ta_enter_close_session(struct tee_ta_session *s)
 
 static void user_ta_dump_state(struct tee_ta_ctx *ctx)
 {
+  (void) ctx;
 //	struct user_ta_ctx *utc __maybe_unused = to_user_ta_ctx(ctx);
 //	char flags[7] = { '\0', };
 //	size_t n;
