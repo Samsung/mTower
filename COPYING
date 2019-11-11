@@ -269,6 +269,9 @@ arch/cortex-m23/m2351/src/CMSIS/Include/
  * limitations under the License.
  */
 
+Please keep in mind that after downloading source code of std driver
+for M2351 Nuvoton chip the two copyright notices given below become
+valid.
 
 arch/cortex-m23/m2351/src/Device/
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -293,8 +296,7 @@ arch/cortex-m23/m2351/src/Device/
 
 
 arch/cortex-m23/m2351/src/StdDriver/
-arch/cortex-m23/m2351/src/numaker_pfm_m2351/partition_M2351.h
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
 
 

@@ -78,12 +78,6 @@ $(COBJS_S): $(OBJDIR)/%$(OBJEXT): %.c
 	@echo "CC: $<"
 	$(Q) $(CC) -c $(CFLAGS) -mcmse $< -o $@
 
-FwInfo$(EXEEXT):
-	@echo "CC: FwInfo$(EXEEXT)"
-	$(CC) -c $(CFLAGS) FwInfo.c -o $(OBJDIR)/FwInfo.o
-	#$(CC) $(CFLAGS) -nostartfiles -Tfwinfo.ld FwInfo.c -o FwInfo.elf
-	#$(LD) --section-start=.text=0x38000  FwInfo.o
-
 mtower_s$(EXEEXT): $(OBJS_S)
 ifeq ($(CONFIG_BOOTLOADER2),y)
 	$(Q) $(MAKE) -C ../../NuBL2 TOPDIR="$(TOPDIR)" NuBL2$(EXEEXT)

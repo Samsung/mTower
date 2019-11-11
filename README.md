@@ -9,7 +9,6 @@
 6. [Coding standards](#6-coding-standards)
 7. [Documentation](#7-documentation)
 8. [Contributing](#8-contributing)
-9. [Other Remarks](#9-other-remarks)
 
 ## 1. Introduction
 The `mTower` is a new Trusted Execution Environment (TEE) specially designed
@@ -79,8 +78,6 @@ coding on Github, new technologies and and their ecosystems. [How to contribute
 you can find here](.github/CONTRIBUTING.md).
 
 ---
-## 9. Other remarks
-TBD
 
 [docs]: ./docs
 [COPYING]: COPYING

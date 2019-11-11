@@ -25,7 +25,7 @@ to start with. Therefore install the following packages regardless of what
 target you will use in the end.
 
 ```sh
-$ sudo apt-get install git gcc make gperf flex bison libncurses5-dev texinfo g++ curl pkg-config 	autoconf libtool libtool-bin libc6:i386 libc6-dev:i386 gcc-multilib doxygen doxygen-gui
+$ sudo apt-get install git gcc svn make gperf flex bison libncurses5-dev texinfo g++ curl pkg-config 	autoconf libtool libtool-bin libc6:i386 libc6-dev:i386 gcc-multilib doxygen doxygen-gui
 ```
 
 ### 2.2 Building kconfig-frontends in Linux (optional)
@@ -111,6 +111,20 @@ options.
 $ cd mTower/
 $ make PLATFORM=numaker_pfm_m2351 create_context
 ```
+
+To use M2351 Nuvoton chips, you need to download STD driver sources and startup
+files and apply a patch to them. This can be done by executing following shell
+commands:
+
+```sh
+$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/Library/StdDriver ./arch/cortex-m23/m2351/src/StdDriver
+$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/Library/Device ./arch/cortex-m23/m2351/src/Device
+$ git apply tools/m2351_stddriver_device.patch
+```
+
+> Please note that files from these downloads contain the following copyright
+notice, but do not have licensing terms specified: `Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.`
+
 ### 2.4 Get the toolchains
 In mTower different toolchains are used for different targets (depends on
 architecture 32-bit solutions). In any case start by downloading the
@@ -129,10 +143,10 @@ $ make
 ```
 
 ### 2.6 Flash the device
-Please see instructions for specific devices (e.g., for NuMaker-PFM-M2351, see docs/numaker_pfm_m2351.md).
+Please see instructions for specific devices (e.g., for NuMaker-PFM-M2351, see [numaker_pfm_m2351.md]).
 
 ### 2.7 Boot up the device
-Please see instructions for specific devices (e.g., for NuMaker-PFM-M2351, see docs/numaker_pfm_m2351.md).
+Please see instructions for specific devices (e.g., for NuMaker-PFM-M2351, see [numaker_pfm_m2351.md]).
 
 [docs]: ./
 [NuMaker-PFM-M2351]: http://www.nuvoton.com/resource-files/UM_NuMaker-PFM-M2351_EN_Rev1.00.pdf

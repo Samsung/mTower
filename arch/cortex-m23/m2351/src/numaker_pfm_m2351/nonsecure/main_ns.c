@@ -129,8 +129,6 @@ extern int32_t Secure_LED_Off(uint32_t num);
 static void prvSetupHardware( void )
 {
   DEBUG_PORT_Init();
-
-  SystemCoreClockUpdate();
 }
 
 /**

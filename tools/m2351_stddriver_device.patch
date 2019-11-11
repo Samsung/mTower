@@ -1,0 +1,69 @@
+diff --git a/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Include/M2351.h b/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Include/M2351.h
+index b5c936a..c8c94c8 100644
+--- a/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Include/M2351.h
++++ b/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Include/M2351.h
+@@ -268,7 +268,7 @@ typedef enum IRQn
+ 
+ #include "core_armv8mbl.h"                  /* Processor and core peripherals */
+ #include "system_M2351.h"                   /* System Header */
+-#include "partition_M2351.h"
++//#include "partition_M2351.h"
+ 
+ /**
+  * Initialize the system clock
+diff --git a/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/startup_M2351.S b/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/startup_M2351.S
+index 08ecc55..96458e9 100644
+--- a/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/startup_M2351.S
++++ b/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/startup_M2351.S
+@@ -14,7 +14,7 @@
+     .section .stack
+     .align  3
+ #ifndef Stack_Size
+-    .equ    Stack_Size, 0x00000800
++    .equ    Stack_Size, 0x00000B00
+ #endif
+     .global __StackTop
+     .global __StackLimit
+@@ -27,7 +27,7 @@ __StackTop:
+     .section .heap
+     .align  3
+ #ifndef Heap_Size
+-    .equ    Heap_Size, 0x00000100
++    .equ    Heap_Size, 0x00000700
+ #endif
+     
+     .global __HeapBase
+diff --git a/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/system_M2351.c b/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/system_M2351.c
+index 1af53c4..7c1a232 100644
+--- a/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/system_M2351.c
++++ b/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/system_M2351.c
+@@ -332,7 +332,7 @@ void TZ_SAU_Setup(void)
+     /* repeat this for all possible ITNS elements */
+ 
+     /* Initial Nonsecure callable region */
+-    NSC_Init();
++//    NSC_Init();
+ 
+ 
+ }
+diff --git a/arch/cortex-m23/m2351/src/StdDriver/src/retarget.c b/arch/cortex-m23/m2351/src/StdDriver/src/retarget.c
+index 164ba5e..bfd179c 100644
+--- a/arch/cortex-m23/m2351/src/StdDriver/src/retarget.c
++++ b/arch/cortex-m23/m2351/src/StdDriver/src/retarget.c
+@@ -751,6 +751,16 @@ int _write (int fd, char *ptr, int len)
+ {
+     int i = len;
+ 
++#ifdef DEBUG_OUT_PREFIX
++    char fnt_clr[] = {'\e','[','3','1','m'};
++    char *ptr1 = fnt_clr;
++    int cnt = 5;
++    fnt_clr[3] = '0' + DEBUG_OUT_PREFIX;
++    while(cnt--) {
++      while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
++      DEBUG_PORT->DAT = *ptr1++;
++    }
++#endif
+     while(i--) {
+         while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
+ 
