@@ -43,6 +43,16 @@ mTower 0.2.0
 * Fixed bug related to incorrect parameter passing between Normal and Secure
   Worlds
 
+mTower 0.3.0
+
+* Added Peripheral Secure Attribution Configuration
+* Added support for M2351-Badge by Samsung R&D Institute Ukraine (SRK)
+* Added secure/non-secure debug UART configuration
+* Added configuration menu option to enable/disable Spy app
+* Added configuration mechanism for selecting output file format
+* Shifted NSC area to main code (NSC area address is dynamically calculated)
+* Added Trusted boot configuration options
+
 Work in progress
 ----------------
 
