@@ -86,7 +86,8 @@ endif
 	$(Q) $(MAKE) -C $(TOPDIR)/crypto/ TOPDIR="$(TOPDIR)" WORLD=secure libcrypt_s.a
 	@echo "CC: mTower_s$(EXEEXT)"
 	$(Q) $(CC) $(CFLAGS) -mcmse -Wl,--section-start=.text=$(CONFIG_START_ADDRESS_BL32) -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl32.elf
-	$(Q) $(CC) $(CFLAGS) -Wl,--unresolved-symbols=ignore-all -Wl,--section-start=.gnu.sgstubs=0x3f000 -Wl,--out-implib=$(OBJDIR)/libnsc$(LIBEXT) -Wl,--cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
+#	$(Q) $(CC) $(CFLAGS) -Wl,--unresolved-symbols=ignore-all -Wl,--section-start=.gnu.sgstubs=0x3f000 -Wl,--out-implib=$(OBJDIR)/libnsc$(LIBEXT) -Wl,--cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
+	$(Q) $(CC) $(CFLAGS) -Wl,--unresolved-symbols=ignore-all -Wl,--out-implib=$(OBJDIR)/libnsc$(LIBEXT) -Wl,--cmse-implib -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS)
 	$(Q) rm -f a.out
 	$(Q) $(OBJCOPY) -O ihex $(OBJDIR)/bl32.elf $(OBJDIR)/bl32.hex
 	$(Q) cp -f $(OBJDIR)/libnsc$(LIBEXT) $(TOPDIR)/lib/

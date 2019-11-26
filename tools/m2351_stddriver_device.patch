@@ -33,23 +33,19 @@ index 08ecc55..96458e9 100644
  #endif
      
      .global __HeapBase
-diff --git a/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/system_M2351.c b/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/system_M2351.c
-index 1af53c4..7c1a232 100644
---- a/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/system_M2351.c
-+++ b/arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/system_M2351.c
-@@ -332,7 +332,7 @@ void TZ_SAU_Setup(void)
-     /* repeat this for all possible ITNS elements */
- 
-     /* Initial Nonsecure callable region */
--    NSC_Init();
-+//    NSC_Init();
- 
- 
- }
 diff --git a/arch/cortex-m23/m2351/src/StdDriver/src/retarget.c b/arch/cortex-m23/m2351/src/StdDriver/src/retarget.c
-index 164ba5e..bfd179c 100644
+index df164b2..345811e 100644
 --- a/arch/cortex-m23/m2351/src/StdDriver/src/retarget.c
 +++ b/arch/cortex-m23/m2351/src/StdDriver/src/retarget.c
+@@ -151,7 +151,7 @@ char GetChar(void);
+ void SendChar_ToUART(int ch);
+ void SendChar(int ch);
+ 
+-#if (defined(DEBUG_ENABLE_SEMIHOST) || defined(__GNUC__))
++#if (defined(DEBUG_ENABLE_SEMIHOST))
+ #if (defined(__ARMCC_VERSION) || defined(__ICCARM__) || defined(OS_USE_SEMIHOSTING))
+ /* The static buffer is used to speed up the semihost */
+ static char g_buf[16];
 @@ -751,6 +751,16 @@ int _write (int fd, char *ptr, int len)
  {
      int i = len;

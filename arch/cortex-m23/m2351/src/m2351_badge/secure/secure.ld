@@ -143,14 +143,16 @@ SECTIONS
 	} > FLASH
 	*/
 
+	.gnu.sgstubs : ALIGN(2048)
+	{
+		__start_NSC = .;
+		. = ALIGN(4);
+		_ssgstubs = .;
+	} > FLASH
+	. = ALIGN(2048);
+	__end_NSC = .;
 	__etext = .;
 
-	. = ALIGN(4);
-	.gnu.sgstubs :
-	{
-		_ssgstubs = .;
-	} > FLASH_NCS
-		
 	.data : AT (__etext)
 	{
 		__data_start__ = .;
