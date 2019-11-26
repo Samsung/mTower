@@ -19,12 +19,6 @@ config PLATFORM_M2351_BADGE
 
 endchoice
 
-config PLATFORM_M2351_BADGE_OLD
-	depends on PLATFORM_M2351_BADGE
-	bool "M2351-Badge board (old)"
-	---help---
-		Samsung M2351-Badge board (old version) temporary support.
-
 config PLATFORM
 	string
 	default "numaker_pfm_m2351"  if PLATFORM_NUMAKER_PFM_M2351
