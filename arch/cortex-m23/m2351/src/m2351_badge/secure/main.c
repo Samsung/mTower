@@ -114,6 +114,7 @@ static void SYS_Init(void)
   /* Set multi-function pins for UART0 RXD and TXD */
   SYS->GPB_MFPH = (SYS->GPB_MFPH & (~(UART0_RXD_PB12_Msk | UART0_TXD_PB13_Msk)))
       | UART0_RXD_PB12 | UART0_TXD_PB13;
+
   /* Init for nonsecure code */
   CLK->APBCLK0 |= CLK_APBCLK0_UART1CKEN_Msk;
   CLK->CLKSEL1 = (CLK->CLKSEL1 & (~CLK_CLKSEL1_UART1SEL_Msk))
@@ -418,34 +419,34 @@ void menu_security_exception_example(void)
 
 #ifdef CONFIG_APPS_SPY
 const char mal_detected[] = ""
-"\n               MMMM      MMMM      MMMM.                 "
-"\n               MMMM      MMMM      MMMM.                 "
-"\n               MMMM      MMMM      MMMM                  "
-"\n          -ohMMMMMMMMMMMMMMMMMMMMMMMMMMMMho-             "
-"\n        /dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd/           "
-"\n      `hMMMM/`                          `/MMMMy`         "
-"\n      hMMN/        "RED"MALWARE DETECTED!!!"GREEN"     /MMMh         "
-"\n      MMM+                                  oMMM:        "
-"\n MMMMMMMM          .odNMMMMMMMMMNms-         MMMMMMMM    "
-"\n MMMMMMMM        `omMMMMMMMMMMMMMMMNs`       MMMMMMMM    "
-"\n      MMM       `yMMMMMMMMMMMMMMMMMMMh.      MMM         "
-"\n      MMM       +MMMMNddmMMMMMmddNMMMMs      MMM         "
-"\n      MMM       hMMMd-``./MMMo.``-yMMMm`     MMM         "
-"\n MMMMMMMM       hMMMs    `MMM-    +MMMm`     MMMMMMMM    "
-"\n MMMMMMMM       +MMMNy==+MMMMMo==sNMMMy      MMMMMMMM    "
-"\n      MMM       `hMMMMMMMMh  MMMMMMMMd.      MMM         "
-"\n      MMM        `sNMMMMMMb  dMMMMMNy.       MMM         "
-"\n      MMM          -yMMMMMMMMMMMMMd:`        MMM         "
-"\n MMMMMMMM           :MMM  MMM  MMM+          MMMMMMMM    "
-"\n MMMMMMMM           `:MM  MMM  MM:`          MMMMMMMM    "
-"\n      MMM+                                   MMM:        "
-"\n      hMMM/        "RED"MALWARE DETECTED!!!"GREEN"     /MMMh         "
-"\n      `hMMMh/`                          `/hMMMy`         "
-"\n        /dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd:           "
-"\n          -ohMMMMMMMMMMMMMMMMMMMMMMMMMMMMho-             "
-"\n               MMMM      MMMM      MMMM                  "
-"\n               MMMM      MMMM      MMMM                  "
-"\n               MMMM      MMMM      MMMM                  \n"
+"\n               MMMM      MMMM      MMMM"
+"\n               MMMM      MMMM      MMMM"
+"\n               MMMM      MMMM      MMMM"
+"\n          -ohMMMMMMMMMMMMMMMMMMMMMMMMMMMMho-"
+"\n        /dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd/"
+"\n      `hMMMM/`                          `/MMMMy`"
+"\n      hMMN/        "RED"MALWARE DETECTED!!!"GREEN"     /MMMh"
+"\n      MMM+                                  oMMM"
+"\n MMMMMMMM          .odNMMMMMMMMMNms-         MMMMMMMM"
+"\n MMMMMMMM        `omMMMMMMMMMMMMMMMNs`       MMMMMMMM"
+"\n      MMM       `yMMMMMMMMMMMMMMMMMMMh.      MMM"
+"\n      MMM       +MMMMNddmMMMMMmddNMMMMs      MMM"
+"\n      MMM       hMMMd-``./MMMo.``-yMMMm`     MMM"
+"\n MMMMMMMM       hMMMs    `MMM-    +MMMm`     MMMMMMMM"
+"\n MMMMMMMM       +MMMNy==+MMMMMo==sNMMMy      MMMMMMMM"
+"\n      MMM       `hMMMMMMMMh  MMMMMMMMd.      MMM"
+"\n      MMM        `sNMMMMMMb  dMMMMMNy.       MMM"
+"\n      MMM          -yMMMMMMMMMMMMMd:`        MMM"
+"\n MMMMMMMM           :MMM  MMM  MMM+          MMMMMMMM"
+"\n MMMMMMMM           `:MM  MMM  MM:`          MMMMMMMM"
+"\n      MMM+                                   MMM"
+"\n      hMMM/        "RED"MALWARE DETECTED!!!"GREEN"     /MMMh"
+"\n      `hMMMh/`                          `/hMMMy`"
+"\n        /dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd:"
+"\n          -ohMMMMMMMMMMMMMMMMMMMMMMMMMMMMho-"
+"\n               MMMM      MMMM      MMMM"
+"\n               MMMM      MMMM      MMMM"
+"\n               MMMM      MMMM      MMMM\n"
 "\n\t\t "RED"PLEASE RESTART BOARD!!!\n";
 #endif
 
