@@ -81,15 +81,8 @@ mtower_ns$(EXEEXT): $(OBJS_NS)
 	$(Q) $(MAKE) -C ../../StdDriver/src/ TOPDIR="$(TOPDIR)" libm2351_StdDriver_ns.a
 	@echo "LD: mTower_ns$(EXEEXT)"
 	$(Q) $(CC) $(CFLAGS) -Tnonsecure.ld $(OBJS_NS) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl33.elf
-ifeq ($(CONFIG_OUTPUT_FILE_FORMAT_ELF),y)
-	$(Q) cp -f $(OBJDIR)/bl33.elf $(MTOWER_NS)
-endif
-ifeq ($(CONFIG_OUTPUT_FILE_FORMAT_HEX),y)
-	$(Q) $(OBJCOPY) -O ihex $(OBJDIR)/bl33.elf $(TOPDIR)/mtower_ns.hex
-endif
-ifeq ($(CONFIG_OUTPUT_FILE_FORMAT_BIN),y)
-	$(Q) $(OBJCOPY) -O binary $(OBJDIR)/bl33.elf $(TOPDIR)/mtower_ns.bin
-endif
+	$(Q) $(OBJCOPY) -S -O binary $(OBJDIR)/bl33.elf $(OBJDIR)/bl33.bin
+	$(Q) cp -f $(OBJDIR)/bl33.bin $(TOPDIR)/mtower_ns.bin
 
 clean:
 	$(Q) rm -f *$(OBJEXT) *$(LIBEXT)

@@ -206,28 +206,6 @@ config DEBUGLEVEL
 
 endmenu # Debug Options
 
-menu "Output file format"
-
-config OUTPUT_FILE_FORMAT_HEX
-	bool "Enable output hex file"
-	default y
-	---help---
-		"Intel HEX file format"
-
-config OUTPUT_FILE_FORMAT_BIN
-	bool "Enable output bin file"
-	default n
-	---help---
-		"Binary file format"
-
-config OUTPUT_FILE_FORMAT_ELF
-	bool "Enable output elf file (not supported yet)"
-	default n
-	---help---
-		"Executable and Linkable Format (ELF) file"
-
-endmenu
-
 endmenu # Build Setup
 
 menu "Trusted boot"
