@@ -48,10 +48,10 @@ clean:
 	$(Q) rm -rf $(TOPDIR)/build
 	$(Q) rm -f $(TOPDIR)/mtower_s.bin
 	$(Q) rm -f $(TOPDIR)/mtower_s.hex
-	$(Q) rf -f $(TOPDIR)/mtower_s.txt
+	$(Q) rm -f $(TOPDIR)/mtower_s.txt
 	$(Q) rm -f $(TOPDIR)/mtower_ns.bin
 	$(Q) rm -f $(TOPDIR)/mtower_ns.hex
-	$(Q) rf -f $(TOPDIR)/mtower_ns.txt
+	$(Q) rm -f $(TOPDIR)/mtower_ns.txt
 
 distclean: clean
 
