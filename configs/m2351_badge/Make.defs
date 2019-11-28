@@ -58,7 +58,7 @@ ARCHCPUFLAGS += -mcpu=cortex-m23 -march=armv8-m.base
 
 ARCHINCLUDES  = -I$(TOPDIR)/include
 
-ARCHDEFINES = -D__ARM_FEATURE_DSP=0
+ARCHDEFINES = -D__ARM_FEATURE_DSP=0 -U__UINT32_TYPE__ -D__UINT32_TYPE__="unsigned int"
 
 CFLAGS  = -std=gnu99 -pipe -Wl,--gc-sections
 
