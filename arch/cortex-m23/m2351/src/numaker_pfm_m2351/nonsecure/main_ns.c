@@ -65,7 +65,6 @@ typedef int32_t (*funcptr)(uint32_t);
 /* Prototypes of all static functions in the file are provided here. */
 static void prvSetupHardware( void );
 
-static void App_Init(uint32_t u32BootBase);
 static void DEBUG_PORT_Init(void);
 
 /* NonSecure functions used for callbacks */
@@ -207,38 +206,6 @@ static void LED_Off(uint32_t us)
 
   printf("Nonsecure LED Off\n");
   PC1_NS = 1;
-}
-
-/**
- * @brief         App_Init.
- *
- * @param         None
- *
- * @returns       None
- */
-static void App_Init(uint32_t u32BootBase)
-{
-  funcptr fp;
-  uint32_t u32StackBase;
-
-  /* 2nd entry contains the address of the Reset_Handler (CMSIS-CORE) function */
-  fp = ((funcptr) (*(((uint32_t *) SCB->VTOR) + 1)));
-
-  /* Check if the stack is in secure SRAM space */
-  u32StackBase = M32(u32BootBase);
-  if ((u32StackBase >= 0x30000000UL) && (u32StackBase < 0x40000000UL)) {
-    printf("Execute non-secure code ...\n");
-    /* SCB.VTOR points to the target Secure vector table base address. */
-    SCB->VTOR = u32BootBase;
-
-    fp(0); /* Non-secure function call */
-  } else {
-    /* Something went wrong */
-    printf("No code in non-secure region!\n");
-
-    while (1)
-      ;
-  }
 }
 
 /**
