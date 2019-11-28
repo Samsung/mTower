@@ -35,6 +35,12 @@ mtower$(EXEEXT):
 ifeq ($(CONFIG_BOOTLOADER33),y)
 	$(Q) $(MAKE) -C nonsecure TOPDIR="$(TOPDIR)" mtower_ns$(EXEEXT)
 endif
+#ifeq ($(CONFIG_BOOTLOADER32),y)
+	$(Q) cat $(TOPDIR)/mtower_s.txt
+#endif
+ifeq ($(CONFIG_BOOTLOADER33),y)
+	$(Q) cat $(TOPDIR)/mtower_ns.txt
+endif
 
 clean:
 	$(Q) $(MAKE) -C secure TOPDIR="$(TOPDIR)" clean
@@ -42,8 +48,10 @@ clean:
 	$(Q) rm -rf $(TOPDIR)/build
 	$(Q) rm -f $(TOPDIR)/mtower_s.bin
 	$(Q) rm -f $(TOPDIR)/mtower_s.hex
+	$(Q) rf -f $(TOPDIR)/mtower_s.txt
 	$(Q) rm -f $(TOPDIR)/mtower_ns.bin
 	$(Q) rm -f $(TOPDIR)/mtower_ns.hex
+	$(Q) rf -f $(TOPDIR)/mtower_ns.txt
 
 distclean: clean
 
