@@ -83,16 +83,6 @@ mtower_ns$(EXEEXT): $(OBJS_NS)
 	$(Q) $(CC) $(CFLAGS) -Tnonsecure.ld $(OBJS_NS) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl33.elf
 	$(Q) $(OBJCOPY) -S -O binary $(OBJDIR)/bl33.elf $(OBJDIR)/bl33.bin
 	$(Q) cp -f $(OBJDIR)/bl33.bin $(TOPDIR)/mtower_ns.bin
-	$(eval bl33_sz = `stat -c%s $(OBJDIR)/bl33.bin`)
-	$(eval bl33_start = 0x10040000)
-	$(eval bl33_end = $(shell echo $$(( $(bl33_start) + $(bl33_sz) )) ))
-	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n" > $(TOPDIR)/mtower_ns.txt
-	$(Q) printf "$(GREEN)| mtower_ns.bin                                                      |$(NORMAL)\n" >> $(TOPDIR)/mtower_ns.txt
-	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n" >> $(TOPDIR)/mtower_ns.txt
-	$(Q) printf "$(GREEN)| Name            | Start addr | End addr   | Size      | File name  |$(NORMAL)\n" >> $(TOPDIR)/mtower_ns.txt
-	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n" >> $(TOPDIR)/mtower_ns.txt
-	$(Q) printf "$(GREEN)| FreeRTOS        | 0x%08x | 0x%08x | %d\t| bl33.bin   |$(NORMAL)\n" $(bl33_start) $(bl33_end) $(bl33_sz) >> $(TOPDIR)/mtower_ns.txt
-	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n" >> $(TOPDIR)/mtower_ns.txt
 
 clean:
 	$(Q) rm -f *$(OBJEXT) *$(LIBEXT)

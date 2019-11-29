@@ -29,17 +29,37 @@ mtower$(EXEEXT):
 #ifeq ($(CONFIG_BOOTLOADER2),y)
 #	$(Q) $(MAKE) -C ../NuBL2 TOPDIR="$(TOPDIR)" NuBL2$(EXEEXT)
 #endif
-#ifeq ($(CONFIG_BOOTLOADER32),y)
+ifeq ($(CONFIG_BOOTLOADER32),y)
 	$(Q) $(MAKE) -C secure TOPDIR="$(TOPDIR)" mtower_s$(EXEEXT)
-#endif
+endif
 ifeq ($(CONFIG_BOOTLOADER33),y)
 	$(Q) $(MAKE) -C nonsecure TOPDIR="$(TOPDIR)" mtower_ns$(EXEEXT)
 endif
-#ifeq ($(CONFIG_BOOTLOADER32),y)
-	$(Q) cat $(TOPDIR)/mtower_s.txt
-#endif
+
+ifeq ($(CONFIG_BOOTLOADER32),y)
+	$(eval bl32_sz = `stat -c%s $(TOPDIR)/build/secure$(subst $(TOPDIR),,$(shell pwd))/secure/bl32.bin`)
+	$(eval bl32_start = $(CONFIG_START_ADDRESS_BL32))
+
+	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n"
+	$(Q) printf "$(GREEN)| mtower_s.bin                                                       |$(NORMAL)\n"
+	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n"
+	$(Q) printf "$(GREEN)| Name            | Start addr | End addr   | Size      | File name  |$(NORMAL)\n"
+	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n"
+	$(Q) printf "$(GREEN)| Secure handler  | 0x%08x | 0x%08x | %u\t| bl32.bin   |$(NORMAL)\n" $(bl32_start) $$(( $(bl32_start) + $(bl32_sz) )) $(bl32_sz)
+	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n"
+endif
+
 ifeq ($(CONFIG_BOOTLOADER33),y)
-	$(Q) cat $(TOPDIR)/mtower_ns.txt
+	$(eval bl33_sz = `stat -c%s $(TOPDIR)/build/nonsecure$(subst $(TOPDIR),,$(shell pwd))/nonsecure/bl33.bin`)
+	$(eval bl33_start = 0x10040000)
+
+	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n"
+	$(Q) printf "$(GREEN)| mtower_ns.bin                                                      |$(NORMAL)\n"
+	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n"
+	$(Q) printf "$(GREEN)| Name            | Start addr | End addr   | Size      | File name  |$(NORMAL)\n"
+	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n"
+	$(Q) printf "$(GREEN)| FreeRTOS        | 0x%08x | 0x%08x | %u\t| bl33.bin   |$(NORMAL)\n" $(bl33_start) $$(( $(bl33_start) + $(bl33_sz) )) $(bl33_sz)
+	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n"
 endif
 
 clean:
@@ -47,11 +67,7 @@ clean:
 	$(Q) $(MAKE) -C nonsecure TOPDIR="$(TOPDIR)" clean
 	$(Q) rm -rf $(TOPDIR)/build
 	$(Q) rm -f $(TOPDIR)/mtower_s.bin
-	$(Q) rm -f $(TOPDIR)/mtower_s.hex
-	$(Q) rm -f $(TOPDIR)/mtower_s.txt
 	$(Q) rm -f $(TOPDIR)/mtower_ns.bin
-	$(Q) rm -f $(TOPDIR)/mtower_ns.hex
-	$(Q) rm -f $(TOPDIR)/mtower_ns.txt
 
 distclean: clean
 

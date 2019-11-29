@@ -92,16 +92,6 @@ endif
 	$(Q) $(OBJCOPY) -S -O binary $(OBJDIR)/bl32.elf $(OBJDIR)/bl32.bin
 	$(Q) cp -f $(OBJDIR)/bl32.bin $(TOPDIR)/mtower_s.bin
 	$(Q) cp -f $(OBJDIR)/libnsc$(LIBEXT) $(TOPDIR)/lib/
-	$(eval bl32_sz = `stat -c%s $(OBJDIR)/bl32.bin`)
-	$(eval bl32_start = $(CONFIG_START_ADDRESS_BL32))
-	$(eval bl32_end = $(shell echo $$(( $(bl32_start) + $(bl32_sz) )) ))
-	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n" > $(TOPDIR)/mtower_s.txt
-	$(Q) printf "$(GREEN)| mtower_s.bin                                                       |$(NORMAL)\n" >> $(TOPDIR)/mtower_s.txt
-	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n" >> $(TOPDIR)/mtower_s.txt
-	$(Q) printf "$(GREEN)| Name            | Start addr | End addr   | Size      | File name  |$(NORMAL)\n" >> $(TOPDIR)/mtower_s.txt
-	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n" >> $(TOPDIR)/mtower_s.txt
-	$(Q) printf "$(GREEN)| Secure handler  | 0x%08x | 0x%08x | %d\t| bl32.bin   |$(NORMAL)\n" $(bl32_start) $(bl32_end) $(bl32_sz) >> $(TOPDIR)/mtower_s.txt
-	$(Q) printf "$(GREEN)+--------------------------------------------------------------------+$(NORMAL)\n" >> $(TOPDIR)/mtower_s.txt
 
 clean:
 	$(Q) $(MAKE) -C ../../NuBL2 TOPDIR="$(TOPDIR)" clean
