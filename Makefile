@@ -173,6 +173,7 @@ mtower_libs:
 # Create the final mTower executable by build process.
 
 $(BIN): context mtower_libs 
+	$(Q) $(MAKE) -C tools -f Makefile.host TOPDIR="$(TOPDIR)" fwinfogen$(HOSTEXEEXT)
 	$(Q) $(MAKE) -C $(ARCH_SRC) TOPDIR="$(TOPDIR)" $(BIN)
 	$(Q) if [ -e $(TOPDIR)/mtower_ns.bin ] && [ -e $(TOPDIR)/mtower_s.bin ]; then \
 		$(ECHO) -e "$(GREEN)***********************************************$(NORMAL)" ; \
