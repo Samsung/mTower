@@ -217,7 +217,7 @@ config BOOTLOADER1
 		"Boot Loader1 is enabled"
 
 config BOOTLOADER2
-	bool "Enable BL2 (not supported yet)"
+	bool "Enable BL2"
 	default y
 	---help---
 		"BootLoader2 is enabled"

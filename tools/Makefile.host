@@ -31,12 +31,17 @@ all: mkconfig$(HOSTEXEEXT)
 
 mkconfig$(HOSTEXEEXT): mkconfig.c cfgdefine.c
 	$(Q) $(HOSTCC) $(HOSTCFLAGS) -o mkconfig$(HOSTEXEEXT) mkconfig.c cfgdefine.c
-
 ifdef HOSTEXEEXT
 mkconfig: mkconfig$(HOSTEXEEXT)
 endif
 
+fwinfogen$(HOSTEXEEXT):
+	$(Q) $(HOSTCC) $(HOSTCFLAGS) -I$(TOPDIR)/include/mtower -o fwinfogen$(HOSTEXEEXT) -lssl fwinfogen.c -lcrypto
+	$(Q) $(HOSTCC) $(HOSTCFLAGS) -o ecdsa_keygen$(HOSTEXEEXT) -lssl ecdsa_keygen.c -lcrypto
+
 clean:
 	$(Q) rm -f mkconfig$(HOSTEXEEXT)
-	$(Q) rm -f *$(OBJEXT) *$(LIBEXT)
+	$(Q) rm -f fwinfogen$(HOSTEXEEXT)
+	$(Q) rm -f ecdsa_keygen$(HOSTEXEEXT)
+	$(Q) rm -f *$(OBJEXT)
 

@@ -69,7 +69,7 @@ LIBS =  -lm -lc -lnosys -lm2351_StdDriver_ns -lnsc -lFreeRTOS_ns
 $(AOBJS_NS): $(OBJDIR)/%$(OBJEXT): %.S
 	$(Q) mkdir -p $(OBJDIR)/$(dir $<)
 	@echo "AS: $<"
-	$(Q) $(CC) -c $(AFLAGS) $< -o $@
+	$(Q) $(CC) -c $(AFLAGS) -DHeap_Size=0x00000700 -DStack_Size=0x00000B00 $< -o $@
 
 $(COBJS_NS): $(OBJDIR)/%$(OBJEXT): %.c
 	$(Q) mkdir -p $(OBJDIR)/$(dir $<)
@@ -82,13 +82,9 @@ mtower_ns$(EXEEXT): $(OBJS_NS)
 	@echo "LD: mTower_ns$(EXEEXT)"
 	$(Q) $(CC) $(CFLAGS) -Tnonsecure.ld $(OBJS_NS) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl33.elf
 	$(Q) $(OBJCOPY) -S -O binary $(OBJDIR)/bl33.elf $(OBJDIR)/bl33.bin
-	$(Q) cp -f $(OBJDIR)/bl33.bin $(TOPDIR)/mtower_ns.bin
 
 clean:
-	$(Q) rm -f *$(OBJEXT) *$(LIBEXT)
-	$(Q) rm -f ../../Device/Nuvoton/M2351/NonSource/*$(OBJEXT)
-	$(Q) rm -f ../../Device/Nuvoton/M2351/NonSource/GCC/*$(OBJEXT)
-	$(Q) rm -f ../../StdDriver/src/*$(OBJEXT) ../../StdDriver/src/*$(LIBEXT)
+	$(Q) rm -f ../../StdDriver/src/*$(OBJEXT) 
 
 distclean: clean
 

@@ -22,17 +22,12 @@
 -include $(TOPDIR)/.config
 -include Make.defs
 
-CFLAGS += -I../ -I./
+CFLAGS += -I./
+CFLAGS += -I$(TOPDIR)/arch/$(CONFIG_ARCH)/$(CONFIG_ARCH_FAMILY)/src/$(CONFIG_PLATFORM)
 CFLAGS += -I$(TOPDIR)/include/mtower
 CFLAGS += -I../CMSIS/Include
 CFLAGS += -I../StdDriver/inc
 CFLAGS += -I../Device/Nuvoton/M2351/Include
-CFLAGS += -I$(TOPDIR)/tee_client/public
-CFLAGS += -I$(TOPDIR)/tee_client/libteec/include/freertos
-CFLAGS += -I$(TOPDIR)/tee/lib/libutee/include
-
-#CFLAGS += -I$(TOPDIR)/tee/lib/libutils/ext/include
-#CFLAGS += -I$(TOPDIR)/tee/include
 
 CFLAGS += -DDEBUG_PORT=$(subst ",,$(CONFIG_SECURE_DEBUG_UART))
 
@@ -48,9 +43,9 @@ COBJS_S = $(addprefix $(OBJDIR)/, $(CSRCS_S:.c=$(OBJEXT)))
 
 OBJS_S = $(AOBJS_S) $(COBJS_S)
 
-LIBPATHS = -L. -L"$(TOPDIR)/lib"
+LIBPATHS = -L. -L"$(TOPDIR)/lib" -L"../StdDriver/src" 
 
-LIBS =  -lm -lc -lnosys -lm2351_StdDriver_s
+LIBS =  -lm -lc -lnosys -lm2351_StdDriver_s -lmkrom
 
 $(AOBJS_S): $(OBJDIR)/%$(OBJEXT): %.S
 	$(Q) mkdir -p $(OBJDIR)/$(dir $<)
@@ -62,22 +57,21 @@ $(COBJS_S): $(OBJDIR)/%$(OBJEXT): %.c
 	@echo "CC: $<"
 	$(Q) $(CC) -c $(CFLAGS) -mcmse $< -o $@
 
-NuBL2$(EXEEXT): $(OBJS_S) 
+Ecdsa_key:
+	$(Q) $(TOPDIR)/tools/ecdsa_keygen KeyInfo/
+
+NuBL2$(EXEEXT): Ecdsa_key $(OBJS_S)
 	$(Q) $(MAKE) -C ../StdDriver/src/ TOPDIR="$(TOPDIR)" WORLD=secure libm2351_StdDriver_s.a
 #	$(Q) $(MAKE) -C $(TOPDIR)/crypto/ TOPDIR="$(TOPDIR)" WORLD=secure libcrypt_s.a
 	
 	@echo "CC: NuBL2$(EXEEXT)"
-	$(Q) $(CC) $(CFLAGS) -mcmse -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/$(NuBL2)
+	$(Q) $(CC) $(CFLAGS) -mcmse -Wl,--section-start=.text=0x00000000 -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/$(NuBL2)
 #	-$(Q) $(LD) --section-start=.gnu.sgstubs=0x3f000 --out-implib=libnsc$(LIBEXT) --cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
-#	@cp -f libnsc$(LIBEXT) $(TOPDIR)/lib/
-	$(Q) $(OBJCOPY) -O ihex $(OBJDIR)/$(NuBL2) $(OBJDIR)/NuBL2.hex
-	$(Q) $(OBJCOPY) -O binary $(OBJDIR)/$(NuBL2) $(OBJDIR)/NuBL2.bin
+#	$(Q) cp -f libnsc$(LIBEXT) $(TOPDIR)/lib/
+	$(Q) $(OBJCOPY) -O binary $(OBJDIR)/$(NuBL2) $(OBJDIR)/bl2.bin
 
 clean:
-	$(Q) rm -f *$(OBJEXT) *$(LIBEXT) *.hex
-	$(Q) rm -f ../Device/Nuvoton/M2351/Source/*$(OBJEXT)
-	$(Q) rm -f ../Device/Nuvoton/M2351/Source/GCC/*$(OBJEXT)
-	$(Q) rm -f ../StdDriver/src/*$(OBJEXT) ../StdDriver/src/*$(LIBEXT)
+	$(Q) rm -f KeyInfo/*.bin
 
 distclean: clean
 

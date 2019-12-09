@@ -22,6 +22,8 @@
 -include $(TOPDIR)/.config
 
 CFLAGS += -I./include
+CFLAGS += -I$(TOPDIR)/include/mtower
+CFLAGS += -I$(TOPDIR)/arch/$(CONFIG_ARCH)/$(CONFIG_ARCH_FAMILY)/src/$(CONFIG_PLATFORM)
 CFLAGS += -I./portable/GCC/ARM_V8M
 CFLAGS += -I../arch/$(subst ",,$(CONFIG_ARCH))/$(subst ",,$(CONFIG_ARCH_FAMILY))/src/$(subst ",,$(CONFIG_PLATFORM))/nonsecure
 CFLAGS += -I../arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Include

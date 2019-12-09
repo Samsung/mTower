@@ -71,7 +71,7 @@ LIBS =  -lm -lc -lnosys -lm2351_StdDriver_s -lcrypt_s
 $(AOBJS_S): $(OBJDIR)/%$(OBJEXT): %.S
 	$(Q) mkdir -p $(OBJDIR)/$(dir $<)
 	@echo "AS: $<"
-	$(Q) $(CC) -c $(AFLAGS) -mcmse $< -o $@
+	$(Q) $(CC) -c $(AFLAGS) -mcmse -DHeap_Size=0x00000700 -DStack_Size=0x00000B00 $< -o $@
 
 $(COBJS_S): $(OBJDIR)/%$(OBJEXT): %.c
 	$(Q) mkdir -p $(OBJDIR)/$(dir $<)
@@ -79,26 +79,18 @@ $(COBJS_S): $(OBJDIR)/%$(OBJEXT): %.c
 	$(Q) $(CC) -c $(CFLAGS) -mcmse $< -o $@
 
 mtower_s$(EXEEXT): $(OBJS_S)
-ifeq ($(CONFIG_BOOTLOADER2),y)
-	$(Q) $(MAKE) -C ../../NuBL2 TOPDIR="$(TOPDIR)" NuBL2$(EXEEXT)
-endif
 	$(Q) $(MAKE) -C ../../StdDriver/src/ TOPDIR="$(TOPDIR)" WORLD=secure libm2351_StdDriver_s.a
 	$(Q) $(MAKE) -C $(TOPDIR)/crypto/ TOPDIR="$(TOPDIR)" WORLD=secure libcrypt_s.a
 	@echo "CC: mTower_s$(EXEEXT)"
 	$(Q) $(CC) $(CFLAGS) -mcmse -Wl,--section-start=.text=$(CONFIG_START_ADDRESS_BL32) -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl32.elf
 #	$(Q) $(CC) $(CFLAGS) -Wl,--unresolved-symbols=ignore-all -Wl,--section-start=.gnu.sgstubs=0x3f000 -Wl,--out-implib=$(OBJDIR)/libnsc$(LIBEXT) -Wl,--cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
-	$(Q) $(CC) $(CFLAGS) -Wl,--unresolved-symbols=ignore-all -Wl,--out-implib=$(OBJDIR)/libnsc$(LIBEXT) -Wl,--cmse-implib -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS)
+	$(Q) $(CC) $(CFLAGS) -Wl,--section-start=.text=$(CONFIG_START_ADDRESS_BL32) -Wl,--unresolved-symbols=ignore-all -Wl,--out-implib=$(OBJDIR)/libnsc$(LIBEXT) -Wl,--cmse-implib -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS)
 	$(Q) rm -f a.out
 	$(Q) $(OBJCOPY) -S -O binary $(OBJDIR)/bl32.elf $(OBJDIR)/bl32.bin
-	$(Q) cp -f $(OBJDIR)/bl32.bin $(TOPDIR)/mtower_s.bin
 	$(Q) cp -f $(OBJDIR)/libnsc$(LIBEXT) $(TOPDIR)/lib/
 
 clean:
 	$(Q) $(MAKE) -C ../../NuBL2 TOPDIR="$(TOPDIR)" clean
-	$(Q) rm -f *$(OBJEXT) *$(LIBEXT) *$(EXEEXT) *$(HEXEXT)
-	$(Q) rm -f ../../Device/Nuvoton/M2351/Source/*$(OBJEXT)
-	$(Q) rm -f ../../Device/Nuvoton/M2351/Source/GCC/*$(OBJEXT)
-	$(Q) rm -f ../../StdDriver/src/*$(OBJEXT) ../../StdDriver/src/*$(LIBEXT)
 
 distclean: clean
 

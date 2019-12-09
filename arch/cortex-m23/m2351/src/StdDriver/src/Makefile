@@ -24,6 +24,9 @@
 CFLAGS += -I../../CMSIS/Include
 CFLAGS += -I../../StdDriver/inc
 CFLAGS += -I../../Device/Nuvoton/M2351/Include
+CFLAGS += -I$(TOPDIR)/include/mtower
+CFLAGS += -I$(TOPDIR)/arch/$(CONFIG_ARCH)/$(CONFIG_ARCH_FAMILY)/src/$(CONFIG_PLATFORM)
+
 
 ifeq ($(WORLD), secure)
 CFLAGS += -mcmse
@@ -71,5 +74,5 @@ libm2351_StdDriver_ns.a: $(OBJS)
 	$(Q) cp $(OBJDIR)/$@ $(TOPDIR)/lib/$@
 
 clean:
-	rm -f $(OBJS) libm2351_StdDriver.a
+	rm -f libm2351_StdDriver.a
 

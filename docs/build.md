@@ -25,7 +25,7 @@ to start with. Therefore install the following packages regardless of what
 target you will use in the end.
 
 ```sh
-$ sudo apt-get install git gcc svn make gperf flex bison libncurses5-dev texinfo g++ curl pkg-config 	autoconf libtool libtool-bin libc6:i386 libc6-dev:i386 gcc-multilib doxygen doxygen-gui
+$ sudo apt-get install git gcc subversion make gperf flex bison libncurses5-dev texinfo g++ curl pkg-config 	autoconf libtool libtool-bin libc6:i386 libc6-dev:i386 gcc-multilib doxygen doxygen-gui
 ```
 
 ### 2.2 Building kconfig-frontends in Linux (optional)
@@ -119,11 +119,17 @@ commands:
 ```sh
 $ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/Library/StdDriver ./arch/cortex-m23/m2351/src/StdDriver
 $ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/Library/Device ./arch/cortex-m23/m2351/src/Device
-$ git apply tools/m2351_stddriver_device.patch
+$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/main.c ./arch/cortex-m23/m2351/src/NuBL2/
+$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/VerifyNuBL3x.c ./arch/cortex-m23/m2351/src/NuBL2/
+$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/NuBL2.h ./arch/cortex-m23/m2351/src/NuBL2/
+$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/FwInfo/FwInfo.c ./arch/cortex-m23/m2351/src/NuBL2
+$ rm -f ./arch/cortex-m23/m2351/src/StdDriver/inc/partition_M2351.h
+$ git apply tools/m2351.patch
 ```
 
 > Please note that files from these downloads contain the following copyright
-notice, but do not have licensing terms specified: `Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.`
+notice: `Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.`
+Licensing terms specified [here](https://github.com/OpenNuvoton/M2351BSP/blob/master/NUVOTON%20SOFTWARE%20LICENSE%20AGREEMENT.pdf)
 
 ### 2.4 Get the toolchains
 In mTower different toolchains are used for different targets (depends on
