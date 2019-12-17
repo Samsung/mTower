@@ -71,11 +71,7 @@ static void DEBUG_PORT_Init(void);
 static int32_t NonSecure_LED_On(uint32_t num);
 static int32_t NonSecure_LED_Off(uint32_t num);
 
-static void LED_On(uint32_t us);
-static void LED_Off(uint32_t us);
-
 static void teeLedBlinkTask( void *pvParameters );
-static void testTask2( void *pvParameters );
 static void clnSrvTask( void *pvParameters );
 static void menuTask( void *pvParameters );
 #ifdef CONFIG_APPS_HW_SECURITY_EXCEPTION_EXAMPLE
@@ -128,8 +124,6 @@ extern int32_t Secure_LED_Off(uint32_t num);
 static void prvSetupHardware( void )
 {
   DEBUG_PORT_Init();
-
-  SystemCoreClockUpdate();
 }
 
 /**
@@ -177,37 +171,6 @@ static int32_t NonSecure_LED_Off(uint32_t num)
   printf("Nonsecure LED Off call by Secure\n");
   PC0_NS = 1;
   return 0;
-}
-
-/* NonSecure LED control */
-/**
- * @brief         LED_On - performs LED On.
- *
- * @param         None
- *
- * @returns       None
- */
-static void LED_On(uint32_t us)
-{
-  (void) us;
-
-  printf("Nonsecure LED On\n");
-  PC1_NS = 0;
-}
-
-/**
- * @brief         LED_Off - performs LED Off.
- *
- * @param         None
- *
- * @returns       None
- */
-static void LED_Off(uint32_t us)
-{
-  (void) us;
-
-  printf("Nonsecure LED Off\n");
-  PC1_NS = 1;
 }
 
 /**
@@ -317,14 +280,6 @@ static void menuTask(void *pvParameters)
 #endif
 #ifdef CONFIG_APPS_SPY
         case '8':
-//        xTaskCreate( spyAppTask,  /* The function that implements the task. */
-//            "spyAppTask",               /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-//            256,                        /* The size of the stack to allocate to the task. */
-//            ( void * ) NULL,            /* The parameter passed to the task - just to check the functionality. */
-//            tskIDLE_PRIORITY + 2,       /* The priority assigned to the task. */
-//            NULL );
-
-//        taskYIELD();
         spyAppTask();
         break;
 #endif
@@ -453,30 +408,6 @@ static void teeLedBlinkTask( void *pvParameters )
     portDISABLE_INTERRUPTS();
     Secure_LED_Off(6u);
     portENABLE_INTERRUPTS();
-    vTaskDelay( xDelay );
-  } while (1);
-}
-
-/**
- * @brief         testTask2 - .
- *
- * @param         None
- *
- * @returns       None
- */
-static void testTask2( void *pvParameters )
-{
-  const TickType_t xDelay = 500 / portTICK_PERIOD_MS;
-
-  (void)pvParameters;
-
-  do {
-    portDISABLE_INTERRUPTS();
-    printf(YELLOW "Thread 2 test\n" NORMAL);
-    portENABLE_INTERRUPTS();
-    LED_On(7u);
-    vTaskDelay( xDelay );
-    LED_Off(7u);
     vTaskDelay( xDelay );
   } while (1);
 }
@@ -806,8 +737,6 @@ int main( void )
   /* Init PC for Nonsecure LED control */
   GPIO_SetMode(PC_NS, BIT1 | BIT0, GPIO_MODE_OUTPUT);
 
-//  Secure_func();
-
   /* register NonSecure callbacks in Secure application */
   Secure_LED_On_callback(&NonSecure_LED_On);
   Secure_LED_Off_callback(&NonSecure_LED_Off);
@@ -826,13 +755,6 @@ int main( void )
       tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
       NULL );
 
-//  xTaskCreate( testTask2,     /* The function that implements the task. */
-//      "test2",                /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-//      256,                    /* The size of the stack to allocate to the task. */
-//      ( void * ) NULL,        /* The parameter passed to the task - just to check the functionality. */
-//      tskIDLE_PRIORITY + 2,   /* The priority assigned to the task. */
-//      NULL );
-//
   xTaskCreate( clnSrvTask,    /* The function that implements the task. */
       "clnSrv",               /* The text name assigned to the task - for debug only as it is not used by the kernel. */
       256,                     /* The size of the stack to allocate to the task. */

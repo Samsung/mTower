@@ -318,7 +318,7 @@ void printFwInfo(FW_INFO_T *pFwInfo)
  */
 int main(int argc, char** argv)
 {
-  char *buf = NULL;
+  unsigned char *buf = NULL;
   int ret = -1;
   FILE* fd;
   int img_size = 0;
@@ -477,7 +477,7 @@ int main(int argc, char** argv)
     goto exit;
   }
 #endif
-
+  ret = 0;
 exit:
   free(buf);
   fclose(fd);
@@ -487,6 +487,6 @@ exit:
   printFwInfo(&pFwInfo);
 #endif
 
-  return 0;
+  return ret;
 }
 

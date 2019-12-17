@@ -207,16 +207,12 @@ int main(int argc, char * argv[])
     return -1;
   }
 
-  int set_group_status = EC_KEY_set_group(eckey, ecgroup);
-  const int set_group_success = 1;
-  if (set_group_success != set_group_status) {
+  if (EC_KEY_set_group(eckey, ecgroup) != 1 ) {
     printf("Failed to set group for EC Key\n");
     return -1;
   }
 
-  const int gen_success = 1;
-  int gen_status = EC_KEY_generate_key(eckey);
-  if (gen_success != gen_status) {
+  if (EC_KEY_generate_key(eckey) != 1) {
     printf("Failed to generate EC Key\n");
     return -1;
   }
@@ -224,6 +220,7 @@ int main(int argc, char * argv[])
   const BIGNUM* d = EC_KEY_get0_private_key(eckey);
   const EC_POINT* Q = EC_KEY_get0_public_key(eckey);
   const EC_GROUP* group = EC_KEY_get0_group(eckey);
+
   BIGNUM* x = BN_new();
   BIGNUM* y = BN_new();
 
@@ -320,7 +317,7 @@ int main(int argc, char * argv[])
     return -1;
   }
   fclose(fd);
-////////////////////
+
   message = message_init(64);
   memcpy((char *) message->body, (unsigned char *) ecc_ecdsa_key.Qx, 64);
 
@@ -373,8 +370,8 @@ int main(int argc, char * argv[])
   }
   fclose(fd);
 
-////////////////////
-  exit: BN_free(x);
+exit:
+  BN_free(x);
   BN_free(y);
   EC_GROUP_free(ecgroup);
   EC_KEY_free(eckey);
