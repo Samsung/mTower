@@ -630,35 +630,35 @@ void menu_security_exception_example_ns(void)
   char ch;
   int temp = 1;
 
-  printf("+---------------------------------------------------------------------+\n");
-  printf("| Type  | Range addresses         | Size      | Remarks               |\n");
-  printf("+---------------------------------------------------------------------+\n");
-  printf("| FLASH | 0x10040000 - 0x0007FFFF | 0x40000   | 256k                  |\n");
-  printf("| RAM   | 0x30008000 - 0x30017FFF | 0x10000   | 64k                   |\n");
-  printf("| GPIO  | PC                      |           | Port C is non-secure  |\n");
-  printf("| GPIO  | PA,PB                   |           | Port A,B are secure   |\n");
-  printf("+---------------------------------------------------------------------+\n\n");
+  printf("+----------------------------------------------------------------------+\n");
+  printf("| Type  | Range addresses         | Size       | Remarks               |\n");
+  printf("+----------------------------------------------------------------------+\n");
+  printf("| FLASH | 0x%08X - 0x1007FFFF | 0x%08X | %dk                  |\n", CONFIG_START_ADDRESS_BL33, 0x10080000 - CONFIG_START_ADDRESS_BL33, (0x10080000 - CONFIG_START_ADDRESS_BL33)/1024);
+  printf("| RAM   | 0x30008000 - 0x30017FFF | 0x10000    | 64k                   |\n");
+  printf("| GPIO  | PC                      |            | Port C is non-secure  |\n");
+  printf("| GPIO  | PA,PB                   |            | Port A,B are secure   |\n");
+  printf("+----------------------------------------------------------------------+\n\n");
 
-  printf("+---------------------------------------------------------------------+\n");
-  printf("| Key | Action                                   | Expected response  |\n");
-  printf("+---------------------------------------------------------------------+\n");
-  printf("| [1] | Read SRAM secure address 0x30000000      | Hard fault         |\n");
-  printf("| [2] | Read SRAM secure address 0x20000000      | Hard fault         |\n");
-  printf("| [3] | Read SRAM non-secure address 0x%08X  | Access successful  |\n",(unsigned int)&temp);
-  printf("|     | Read SRAM non-secure address 0x%08X  | Hard fault         |\n",(~0x10000000 & (unsigned int)&temp));
-  printf("| [4] | Read FLASH secure address 0x00000000     | Hard fault         |\n");
-  printf("| [5] | Read FLASH secure address 0x10000000     | Hard fault         |\n");
-  printf("| [6] | Read FLASH non-secure address 0x10040000 | Access successful  |\n");
-  printf("|     | Read FLASH non-secure address 0x00040000 | Hard fault         |\n");
-  printf("| [7] | Read GPIO non-secure port PC1_NS         | Access successful  |\n");
-  printf("|     | Write 0 GPIO non-secure port by PC1_NS   | Access successful  |\n");
-  printf("|     | Write 1 GPIO non-secure port by PC1      | Hard fault         |\n");
-  printf("| [8] | Read GPIO secure port PA10_NS            | RAZWI, sec. violat.|\n");
-  printf("|     | Write 0 GPIO secure port by PA10_NS      | RAZWI, sec. violat.|\n");
-  printf("|     | Write 1 GPIO secure port by PA10         | Hard fault         |\n");
-  printf("| [9] | Write 0 to address 0x0 (directly)        | Hard fault         |\n");
-  printf("| [a] | Read 0x30018000 address (nonexistent)    | Hard fault         |\n");
-  printf("+---------------------------------------------------------------------+\n");
+  printf("+----------------------------------------------------------------------+\n");
+  printf("| Key | Action                                    | Expected response  |\n");
+  printf("+----------------------------------------------------------------------+\n");
+  printf("| [1] | Read SRAM secure address 0x30000000       | Hard fault         |\n");
+  printf("| [2] | Read SRAM secure address 0x20000000       | Hard fault         |\n");
+  printf("| [3] | Read SRAM non-secure address 0x%08X   | Access successful  |\n",(unsigned int)&temp);
+  printf("|     | Read SRAM non-secure address 0x%08X   | Hard fault         |\n",(~0x10000000 & (unsigned int)&temp));
+  printf("| [4] | Read FLASH secure address 0x00000000      | Hard fault         |\n");
+  printf("| [5] | Read FLASH secure address 0x10000000      | Hard fault         |\n");
+  printf("| [6] | Read FLASH non-secure address 0x%08X  | Access successful  |\n", CONFIG_START_ADDRESS_BL33);
+  printf("|     | Read FLASH non-secure address 0x%08X  | Hard fault         |\n", (CONFIG_START_ADDRESS_BL33 - 0x10000000));
+  printf("| [7] | Read GPIO non-secure port PC1_NS          | Access successful  |\n");
+  printf("|     | Write 0 GPIO non-secure port by PC1_NS    | Access successful  |\n");
+  printf("|     | Write 1 GPIO non-secure port by PC1       | Hard fault         |\n");
+  printf("| [8] | Read GPIO secure port PA10_NS             | RAZWI, sec. violat.|\n");
+  printf("|     | Write 0 GPIO secure port by PA10_NS       | RAZWI, sec. violat.|\n");
+  printf("|     | Write 1 GPIO secure port by PA10          | Hard fault         |\n");
+  printf("| [9] | Write 0 to address 0x0 (directly)         | Hard fault         |\n");
+  printf("| [a] | Read 0x30018000 address (nonexistent)     | Hard fault         |\n");
+  printf("+----------------------------------------------------------------------+\n");
 
   printf("\n[%c] ", ch = getchar());
 
@@ -685,8 +685,8 @@ void menu_security_exception_example_ns(void)
       M32(0x10000000);
       break;
     case '6':
-      printf("Read FLASH non-secure address 0x10040000 = %08x\n", M32(0x10040000));
-      printf("    Read FLASH non-secure address 0x00040000: Hard fault occurs in secure\n");
+      printf("Read FLASH non-secure address 0x%08X = %08x\n", CONFIG_START_ADDRESS_BL33, M32(CONFIG_START_ADDRESS_BL33));
+      printf("    Read FLASH non-secure address 0x%08X: Hard fault occurs in secure\n", (CONFIG_START_ADDRESS_BL33 - 0x10000000));
       M32(0x00040000);
       break;
     case '7':
