@@ -84,7 +84,7 @@ endif
 
 ifeq ($(CONFIG_BOOTLOADER33),y)
 	$(eval bl33_sz = `stat -c%s $(TOPDIR)/build/nonsecure$(subst $(TOPDIR),,$(shell pwd))/nonsecure/bl33.bin`)
-	$(eval bl33_start = 0x10040000)
+	$(eval bl33_start = $(CONFIG_START_ADDRESS_BL33))
 
 	$(Q) printf "$(GREEN)+-----------------------------------------------------------------------+$(NORMAL)\n"
 	$(Q) printf "$(GREEN)| Non-Secure image                                                      |$(NORMAL)\n"
@@ -94,7 +94,7 @@ ifeq ($(CONFIG_BOOTLOADER33),y)
 	$(Q) printf "$(GREEN)| FreeRTOS        | 0x%08x | 0x%08x | %u\t| bl33.bin      |$(NORMAL)\n" $(bl33_start) $$(( $(bl33_start) + $(bl33_sz) )) $(bl33_sz)
 	$(Q) printf "$(GREEN)+-----------------------------------------------------------------------+$(NORMAL)\n"
 	$(eval mtower_ns_sz = `stat -c%s $(TOPDIR)/mtower_ns.bin`)
-	$(eval mtower_ns_start = 0x10040000)
+	$(eval mtower_ns_start = $(CONFIG_START_ADDRESS_BL33))
 	$(Q) printf "$(GREEN)| mtower_ns       | 0x%08x | 0x%08x | %u\t| mtower_ns.bin |$(NORMAL)\n" $(mtower_ns_start) $$(( $(mtower_ns_start) + $(mtower_ns_sz) )) $(mtower_ns_sz)
 	$(Q) printf "$(GREEN)+-----------------------------------------------------------------------+$(NORMAL)\n"
 	

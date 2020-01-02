@@ -74,8 +74,9 @@
     | (((unsigned int)(((__DATE__[4] >= '0') ? (__DATE__[4]) : '0') - '0')) << 4) \
     | (((unsigned int)__DATE__[5] - '0')))
 
-/** Start address for non-secure boot image */
-#define NEXT_BOOT_BASE  0x10040000
+#define BL33_METADATA_ADDRESS (0x10080000 - CONFIG_START_ADDRESS_BL33 - 0x8000)
+
+
 /** Instruction Code of "B ."  */
 
 /* Private Types. */
@@ -455,16 +456,17 @@ int main(int argc, char** argv)
     goto exit;
   }
   fclose(fd);
+
   img_size = size_bl33;
 
 #ifdef CONFIG_BOOTLOADER2
   sha256(buf, size_bl33, (unsigned char *) &pFwInfo.au32FwHash);
-  pFwInfo.mData.au32FwRegion[0].u32Start = 0x10040000;
+  pFwInfo.mData.au32FwRegion[0].u32Start = CONFIG_START_ADDRESS_BL33;
   pFwInfo.mData.au32FwRegion[0].u32Size = size_bl33;
 
   sign_pFwInfo(&pFwInfo, &ecdsa_key);
-  memcpy(buf + 0x00038000, (unsigned char *) &pFwInfo, sizeof(FW_INFO_T));
-  img_size = 0x00038000 + sizeof(FW_INFO_T);
+  memcpy(buf + BL33_METADATA_ADDRESS, (unsigned char *) &pFwInfo, sizeof(FW_INFO_T));
+  img_size = BL33_METADATA_ADDRESS + sizeof(FW_INFO_T);
 #endif
 
   fd = fopen(argv[6], "wb");
