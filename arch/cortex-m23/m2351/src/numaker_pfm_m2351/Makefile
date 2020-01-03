@@ -75,6 +75,10 @@ ifeq ($(CONFIG_BOOTLOADER32),y)
 	$(eval bl32_start = $(CONFIG_START_ADDRESS_BL32))
 
 	$(Q) printf "$(GREEN)| Secure handler  | 0x%08x | 0x%08x | %u\t| bl32.bin      |$(NORMAL)\n" $(bl32_start) $$(( $(bl32_start) + $(bl32_sz) )) $(bl32_sz)
+ifeq ($(CONFIG_BOOTLOADER2),y)
+	$(Q) printf "$(GREEN)| FW info of BL32 | 0x%08x | 0x%08x | %u\t| *auto gen*    |$(NORMAL)\n" 0x00038000 0x000380c0 192
+endif	
+	
 endif
 	$(eval mtower_s_sz = `stat -c%s $(TOPDIR)/mtower_s.bin`)
 	$(eval mtower_s_start = 0x00000000)
@@ -92,6 +96,9 @@ ifeq ($(CONFIG_BOOTLOADER33),y)
 	$(Q) printf "$(GREEN)| Name            | Start addr | End addr   | Size      | File name     |$(NORMAL)\n"
 	$(Q) printf "$(GREEN)+-----------------------------------------------------------------------+$(NORMAL)\n"
 	$(Q) printf "$(GREEN)| FreeRTOS        | 0x%08x | 0x%08x | %u\t| bl33.bin      |$(NORMAL)\n" $(bl33_start) $$(( $(bl33_start) + $(bl33_sz) )) $(bl33_sz)
+ifeq ($(CONFIG_BOOTLOADER2),y)
+	$(Q) printf "$(GREEN)| FW info of BL33 | 0x%08x | 0x%08x | %u\t| *auto gen*    |$(NORMAL)\n" 0x00078000 0x000780c0 192
+endif	
 	$(Q) printf "$(GREEN)+-----------------------------------------------------------------------+$(NORMAL)\n"
 	$(eval mtower_ns_sz = `stat -c%s $(TOPDIR)/mtower_ns.bin`)
 	$(eval mtower_ns_start = $(CONFIG_START_ADDRESS_BL33))
