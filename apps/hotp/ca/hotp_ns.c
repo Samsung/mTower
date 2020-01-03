@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-//#include <err.h>
+#include <err.h>
 #include <stdio.h>
 #include <string.h>
 
