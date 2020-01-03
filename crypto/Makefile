@@ -38,7 +38,7 @@ endif
 
 SRCS  = libtomcrypt/src/tee_ltc_provider.c 
 SRCS += libtomcrypt/src/ciphers/aes.c
-SRCS += libtomcrypt/src/ciphers/aes_tab.c
+#SRCS += libtomcrypt/src/ciphers/aes_tab.c
 
 SRCS += libtomcrypt/src/misc/crypt/crypt.c
 SRCS += libtomcrypt/src/misc/crypt/crypt_cipher_descriptor.c

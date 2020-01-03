@@ -26,6 +26,7 @@
 #include "partition_M2351.h"
 #include "config.h"
 #include "version.h"
+#include "tee_api_types.h"
 
 /* Pre-processor Definitions. */
 #define NORMAL  "\e[0m"
@@ -68,6 +69,7 @@ NonSecure_funcptr pfNonSecure_LED_Off = (NonSecure_funcptr) NULL;
 void menu_security_exception_example(void);
 #endif
 
+extern TEE_Result tee_cryp_init(void);
 
 /* Private Functions. */
 

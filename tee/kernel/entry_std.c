@@ -39,6 +39,7 @@
 #include "tee_types.h"
 #include "tee_client_api.h"
 #include "tee.h"
+#include "tee/uuid.h"
 
 #include <kernel/tee_ta_manager.h>
 
@@ -69,7 +70,7 @@ typedef int32_t (*Secure_funcptr)(uint32_t);
 /* Private Functions. */
 TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data);
 TEEC_Result tee_ioctl_invoke(/*ctx,*/ struct tee_ioctl_buf_data *buf_data);
-TEEC_Result tee_ioctl_close_session(/*ctx,*/ struct tee_ioctl_close_session_arg *arg);
+TEEC_Result tee_ioctl_close_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data);
 
 /* Public Functions. */
 
@@ -242,7 +243,7 @@ static TEE_Result copy_in_params(const struct optee_msg_param *params,
          struct tee_ta_param *ta_param,
          uint32_t *saved_attr)
 {
-  TEE_Result res;
+//  TEE_Result res;
   size_t n;
   uint8_t pt[TEE_NUM_PARAMS];
 
@@ -277,8 +278,7 @@ static TEE_Result copy_in_params(const struct optee_msg_param *params,
     case OPTEE_MSG_ATTR_TYPE_TMEM_INOUT:
       pt[n] = TEE_PARAM_TYPE_MEMREF_INPUT + attr -
         OPTEE_MSG_ATTR_TYPE_TMEM_INPUT;
-//      printf("\n~~~~~TMEM params[%d].u.tmem.size = %d;\n",n,params[n].u.tmem.size);
-      ta_param->u[n].mem.buffer = params[n].u.tmem.buf_ptr;
+      ta_param->u[n].mem.buffer = (void *)params[n].u.tmem.buf_ptr;
       ta_param->u[n].mem.size = params[n].u.tmem.size;
 //      res = assign_mobj_to_param_mem(params[n].u.tmem.buf_ptr,
 //                   params[n].u.tmem.size,
@@ -293,7 +293,7 @@ static TEE_Result copy_in_params(const struct optee_msg_param *params,
     case OPTEE_MSG_ATTR_TYPE_RMEM_INOUT:
       pt[n] = TEE_PARAM_TYPE_MEMREF_INPUT + attr -
         OPTEE_MSG_ATTR_TYPE_RMEM_INPUT;
-      ta_param->u[n].mem.buffer = params[n].u.rmem.offs;
+      ta_param->u[n].mem.buffer = (void *)params[n].u.rmem.offs;
 //      printf("\n~~~~~RMEM params[n].u.rmem.offs = %p", params[n].u.rmem.offs);
       ta_param->u[n].mem.size = params[n].u.tmem.size;
       //      printf("\n~~~~~RMEM params[%d].u.tmem.size = %d;\n",n,params[n].u.tmem.size);
@@ -355,11 +355,11 @@ TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
   struct tee_ta_param *param = NULL;
 
   struct tee_ioctl_open_session_arg *arg;
-  struct tee_ioctl_param *params;
+  //struct tee_ioctl_param *params;
   TEE_UUID uuid;
 
-  arg = buf_data->buf_ptr;
-  params = (struct tee_ioctl_param *)(arg + 1);
+  arg = (struct tee_ioctl_open_session_arg *)buf_data->buf_ptr;
+  //params = (struct tee_ioctl_param *)(arg + 1);
 
   //uuid_print(arg->uuid);
 
@@ -374,7 +374,7 @@ TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
     sess = NULL;
 
   if (sess)
-    arg->session = sess;
+    arg->session = (uint32_t)sess;
   else
     arg->session = 0;
   arg->ret = res;
@@ -391,17 +391,12 @@ TEEC_Result tee_ioctl_invoke(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
 //  struct tee_ioctl_invoke_arg *arg;
   struct optee_msg_arg *arg;
   struct tee_ta_session *sess;
-//  struct tee_ta_param *param = NULL;
   struct tee_ta_param param;
-  struct tee_ioctl_param *params = NULL;
 
   uint32_t saved_attr[TEE_NUM_PARAMS];
 
-  arg = buf_data->buf_ptr;
+  arg = (struct optee_msg_arg *)buf_data->buf_ptr;
 
-//  for(int i = 0; i != 20; i++)
-//    printf("\n###### INT %d = %x", i, *((uint32_t *)(arg) + i));
-//  params = (struct tee_ta_param *)(arg + 1);
   sess = tee_ta_get_session(arg->session, true, &tee_open_sessions);
 
   res = copy_in_params(arg->params, arg->num_params, &param, saved_attr);
@@ -418,18 +413,21 @@ out:
   return res;
 }
 
-TEEC_Result tee_ioctl_close_session(/*ctx,*/ struct tee_ioctl_close_session_arg *arg)
+TEEC_Result tee_ioctl_close_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
 {
   TEE_Result res;
-  struct tee_ta_session *s;
+  struct tee_ta_session *sess;
+  struct tee_ioctl_close_session_arg *arg;
 
-  s = (struct tee_ta_session *)arg->session;
+  arg = (struct tee_ioctl_close_session_arg *)buf_data->buf_ptr;
 
-  res = tee_ta_close_session(s, &tee_open_sessions, NULL /* NSAPP_IDENTITY*/);
+  sess = (struct tee_ta_session *)arg->session;
+
+  res = tee_ta_close_session(sess, &tee_open_sessions, NULL /* NSAPP_IDENTITY*/);
 
 //  arg->ret = res;
 //  arg->ret_origin = TEE_ORIGIN_TEE;
 
-  return res; //TEEC_SUCCESS;
+  return res;
 }
 

@@ -29,9 +29,9 @@
 #include <string.h>
 
 #include <tee_api.h>
-//#include <utee_syscalls.h>
+#include <utee_syscalls.h>
 #include <user_ta_header.h>
-//#include "tee_user_mem.h"
+#include "tee_user_mem.h"
 //#include "tee_api_private.h"
 #include "utee_types.h"
 

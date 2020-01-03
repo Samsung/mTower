@@ -41,10 +41,6 @@
 /* Helpers to make the ioctl defines */
 #define TEE_IOC_MAGIC	0xa4
 #define TEE_IOC_BASE  0
-#define TEE_IOC_OPEN_SESSION TEE_IOC_BASE + 2
-#define TEE_IOC_INVOKE TEE_IOC_BASE + 3
-#define TEE_IOC_CLOSE_SESSION TEE_IOC_BASE + 5
-
 
 /* Flags relating to shared memory */
 #define TEE_IOCTL_SHM_MAPPED	0x1	/* memory mapped in normal world */
@@ -327,8 +323,7 @@ struct tee_ioctl_open_session_arg {
  * tee_ioctl_open_session_arg followed by any array of struct
  * tee_ioctl_param
  */
-//#define TEE_IOC_OPEN_SESSION	_IOR(TEE_IOC_MAGIC, TEE_IOC_BASE + 2, \
-				     struct tee_ioctl_buf_data)
+#define TEE_IOC_OPEN_SESSION	TEE_IOC_BASE + 2
 
 /**
  * struct tee_ioctl_invoke_func_arg - Invokes a function in a Trusted
@@ -365,8 +360,7 @@ struct tee_ioctl_invoke_arg {
  * Takes a struct tee_ioctl_buf_data which contains a struct
  * tee_invoke_func_arg followed by any array of struct tee_param
  */
-//#define TEE_IOC_INVOKE		_IOR(TEE_IOC_MAGIC, TEE_IOC_BASE + 3, \
-				     struct tee_ioctl_buf_data)
+#define TEE_IOC_INVOKE	TEE_IOC_BASE + 3
 
 /**
  * struct tee_ioctl_cancel_arg - Cancels an open session or invoke ioctl
@@ -395,8 +389,7 @@ struct tee_ioctl_close_session_arg {
 /**
  * TEE_IOC_CLOSE_SESSION - Closes a session
  */
-//#define TEE_IOC_CLOSE_SESSION	_IOR(TEE_IOC_MAGIC, TEE_IOC_BASE + 5, \
-				     struct tee_ioctl_close_session_arg)
+#define TEE_IOC_CLOSE_SESSION	TEE_IOC_BASE + 5
 
 /**
  * struct tee_iocl_supp_recv_arg - Receive a request for a supplicant function

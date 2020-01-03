@@ -200,7 +200,7 @@ static TEEC_Result teec_pre_process_tmpref(TEEC_Context *ctx,
 
 	param->u.memref.size = tmpref->size;
 //  param->u.memref.shm_id = shm->id;
-  param->u.memref.shm_offs = shm->buffer;
+  param->u.memref.shm_offs = (uint32_t)shm->buffer;
 //  printf("\nu.memref.shm_offs = %p\n",param->u.memref.shm_offs );
 	return TEEC_SUCCESS;
 }
@@ -551,13 +551,18 @@ out:
 
 void TEEC_CloseSession(TEEC_Session *session)
 {
+  struct tee_ioctl_buf_data buf_data;
 	struct tee_ioctl_close_session_arg arg;
 
 	if (!session)
 		return;
 
+  buf_data.buf_ptr = (uintptr_t)&arg;
+  buf_data.buf_len = sizeof(arg);
+
 	arg.session = session->session_id;
-	if (ioctl(/*session->ctx->fd,*/ TEE_IOC_CLOSE_SESSION, &arg))
+
+	if (ioctl(/*session->ctx->fd,*/ TEE_IOC_CLOSE_SESSION, &buf_data))
 		printf("Failed to close session 0x%x\n", session->session_id);
 	else {
 		printf("Session successfully closed 0x%x\n", session->session_id);

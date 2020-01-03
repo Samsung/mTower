@@ -34,7 +34,7 @@
 #include <sys/queue.h>
 #include <tee_api_types.h>
 //#include <utee_types.h>
-//#include <kernel/tee_common.h>
+#include <kernel/tee_common.h>
 //#include <kernel/mutex.h>
 //#include <tee_api_types.h>
 //#include <user_ta_header.h>
@@ -136,20 +136,21 @@ extern struct tee_ta_ctx_head tee_ctxes;
 
 //extern struct mutex tee_ta_mutex;
 
-//TEE_Result tee_ta_open_session(TEE_ErrorOrigin *err,
-//			       struct tee_ta_session **sess,
-//			       struct tee_ta_session_head *open_sessions,
-//			       const TEE_UUID *uuid,
+TEE_Result tee_ta_open_session(TEE_ErrorOrigin *err,
+			       struct tee_ta_session **sess,
+  		       struct tee_ta_session_head *open_sessions,
+			       const TEE_UUID *uuid,
 //			       const TEE_Identity *clnt_id,
 //			       uint32_t cancel_req_to,
-//			       struct tee_ta_param *param);
-//
-//TEE_Result tee_ta_invoke_command(TEE_ErrorOrigin *err,
-//				 struct tee_ta_session *sess,
+			       struct tee_ta_param *param);
+
+TEE_Result tee_ta_invoke_command(TEE_ErrorOrigin *err,
+				 struct tee_ta_session *sess,
 //				 const TEE_Identity *clnt_id,
-//				 uint32_t cancel_req_to, uint32_t cmd,
-//				 struct tee_ta_param *param);
-//
+//				 uint32_t cancel_req_to,
+         uint32_t cmd,
+				 struct tee_ta_param *param);
+
 //TEE_Result tee_ta_cancel_command(TEE_ErrorOrigin *err,
 //				 struct tee_ta_session *sess,
 //				 const TEE_Identity *clnt_id);
@@ -163,12 +164,12 @@ extern struct tee_ta_ctx_head tee_ctxes;
  * Returns:
  *        TEE_Result
  *---------------------------------------------------------------------------*/
-//TEE_Result tee_ta_close_session(struct tee_ta_session *sess,
-//				struct tee_ta_session_head *open_sessions,
-//				const TEE_Identity *clnt_id);
-//
-//TEE_Result tee_ta_get_current_session(struct tee_ta_session **sess);
-//
+TEE_Result tee_ta_close_session(struct tee_ta_session *sess,
+				struct tee_ta_session_head *open_sessions,
+				const TEE_Identity *clnt_id);
+
+TEE_Result tee_ta_get_current_session(struct tee_ta_session **sess);
+
 void tee_ta_push_current_session(struct tee_ta_session *sess);
 struct tee_ta_session *tee_ta_pop_current_session(void);
 
@@ -176,8 +177,8 @@ struct tee_ta_session *tee_ta_pop_current_session(void);
 //
 //TEE_Result tee_ta_get_client_id(TEE_Identity *id);
 //
-//struct tee_ta_session *tee_ta_get_session(uint32_t id, bool exclusive,
-//			struct tee_ta_session_head *open_sessions);
+struct tee_ta_session *tee_ta_get_session(uint32_t id, bool exclusive,
+			struct tee_ta_session_head *open_sessions);
 
 //void tee_ta_put_session(struct tee_ta_session *sess);
 //

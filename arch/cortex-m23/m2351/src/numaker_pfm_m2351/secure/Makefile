@@ -32,6 +32,7 @@ CFLAGS += -I$(TOPDIR)/tee_client/libteec/include/freertos
 CFLAGS += -I$(TOPDIR)/tee/lib/libutee/include
 
 CFLAGS += -I$(TOPDIR)/tee/lib/libutils/ext/include
+CFLAGS += -I$(TOPDIR)/tee/lib/libutils/isoc/include
 CFLAGS += -I$(TOPDIR)/tee/include
 
 ifeq ($(CONFIG_APPS_HELLO_WORLD),y)

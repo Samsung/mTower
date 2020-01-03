@@ -36,9 +36,12 @@
 //#include <util.h>
 #include "tee_user_mem.h"
 //#include "utee_misc.h"
+#include <stdlib.h>
 
 //#ifdef CFG_NO_USER_MALLOC_GARBAGE
 #ifndef CFG_NO_USER_MALLOC_GARBAGE
+
+#define CFG_TEE_CORE_USER_MEM_DEBUG 0
 
 void *tee_user_mem_alloc(size_t len, uint32_t hint)
 {

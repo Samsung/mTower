@@ -35,13 +35,13 @@
 //#include <assert.h>
 //#include <kernel/mutex.h>
 //#include <kernel/panic.h>
-//#include <kernel/pseudo_ta.h>
-//#include <kernel/tee_common.h>
+#include <kernel/pseudo_ta.h>
+#include <kernel/tee_common.h>
 //#include nkernel/tee_misc.h>
 #include <kernel/tee_ta_manager.h>
 //#include <kernel/tee_time.h>
 //#include <kernel/thread.h>
-//#include <kernel/user_ta.h>
+#include <kernel/user_ta.h>
 //#include <mm/core_mmu.h>
 //#include <mm/core_memprot.h>
 //#include <mm/mobj.h>
@@ -207,7 +207,7 @@ static struct tee_ta_session *find_session(uint32_t id,
 	struct tee_ta_session *s;
 
 	TAILQ_FOREACH(s, open_sessions, link) {
-    if (s == id) {
+    if ((uint32_t)s == id) {
 //      if ((vaddr_t)s == id)
 			return s;}
 	}
@@ -218,7 +218,7 @@ struct tee_ta_session *tee_ta_get_session(uint32_t id, bool exclusive,
 			struct tee_ta_session_head *open_sessions)
 {
 	struct tee_ta_session *s;
-
+  (void) exclusive;
 //	mutex_lock(&tee_ta_mutex);
 //
 //	while (true) {
@@ -276,20 +276,20 @@ static void tee_ta_unlink_session(struct tee_ta_session *s,
  * tee_ta_context_find - Find TA in session list based on a UUID (input)
  * Returns a pointer to the session
  */
-static struct tee_ta_ctx *tee_ta_context_find(const TEE_UUID *uuid)
-{
-  struct tee_ta_ctx *ctx;
-
-  TAILQ_FOREACH(ctx, &tee_ctxes, link)
-  {
-    if (memcmp(&ctx->uuid, uuid, sizeof(TEE_UUID)) == 0) {
+//static struct tee_ta_ctx *tee_ta_context_find(const TEE_UUID *uuid)
+//{
+//  struct tee_ta_ctx *ctx;
+//
+//  TAILQ_FOREACH(ctx, &tee_ctxes, link)
+//  {
+//    if (memcmp(&ctx->uuid, uuid, sizeof(TEE_UUID)) == 0) {
 //      printf("\nUUID is founded\n");
-      return ctx;
-    }
-  }
-
-  return NULL;
-}
+//      return ctx;
+//   }
+//  }
+//
+//  return NULL;
+//}
 
 ///* check if requester (client ID) matches session initial client */
 //static TEE_Result check_client(struct tee_ta_session *s, const TEE_Identity *id)
@@ -407,6 +407,7 @@ TEE_Result tee_ta_close_session(struct tee_ta_session *csess,
 {
 	struct tee_ta_session *sess;
 	struct tee_ta_ctx *ctx;
+  (void) clnt_id;
 //	bool keep_alive;
 
 //	DMSG("tee_ta_close_session(0x%" PRIxVA ")",  (vaddr_t)csess);
@@ -414,7 +415,7 @@ TEE_Result tee_ta_close_session(struct tee_ta_session *csess,
 	if (!csess)
 		return TEE_ERROR_ITEM_NOT_FOUND;
 
-	sess = tee_ta_get_session(csess, true, open_sessions);
+	sess = tee_ta_get_session((uint32_t)csess, true, open_sessions);
 
 	if (!sess) {
 //		EMSG("session 0x%" PRIxVA " to be removed is not found",
@@ -469,9 +470,9 @@ TEE_Result tee_ta_close_session(struct tee_ta_session *csess,
 	return TEE_SUCCESS;
 }
 
-static TEE_Result tee_ta_init_session_with_context(struct tee_ta_ctx *ctx,
-			struct tee_ta_session *s)
-{
+//static TEE_Result tee_ta_init_session_with_context(struct tee_ta_ctx *ctx,
+//			struct tee_ta_session *s)
+//{
 //	/*
 //	 * If TA isn't single instance it should be loaded as new
 //	 * instance instead of doing anything with this instance.
@@ -491,9 +492,9 @@ static TEE_Result tee_ta_init_session_with_context(struct tee_ta_ctx *ctx,
 //	DMSG("Re-open TA %pUl", (void *)&ctx->uuid);
 //
 //	ctx->ref_count++;
-	s->ctx = ctx;
-	return TEE_SUCCESS;
-}
+//	s->ctx = ctx;
+//	return TEE_SUCCESS;
+//}
 
 
 static TEE_Result tee_ta_init_session(TEE_ErrorOrigin *err,
@@ -502,7 +503,7 @@ static TEE_Result tee_ta_init_session(TEE_ErrorOrigin *err,
 				struct tee_ta_session **sess)
 {
 	TEE_Result res;
-	struct tee_ta_ctx *ctx;
+//	struct tee_ta_ctx *ctx;
 //  struct tee_ta_session *s = calloc(1, sizeof(struct tee_ta_session));
   struct tee_ta_session *s = malloc(sizeof(struct tee_ta_session));
   *err = TEE_ORIGIN_TEE;

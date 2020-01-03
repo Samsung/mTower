@@ -54,7 +54,7 @@ struct user_ta_ctx {
 
 static inline bool is_user_ta_ctx(struct tee_ta_ctx *ctx)
 {
-	return 1; //!!(ctx->flags & TA_FLAG_USER_MODE);
+	return !!(ctx->flags & TA_FLAG_USER_MODE);
 }
 
 static inline struct user_ta_ctx *to_user_ta_ctx(struct tee_ta_ctx *ctx)

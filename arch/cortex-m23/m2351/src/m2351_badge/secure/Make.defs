@@ -33,6 +33,7 @@ CMN_CSRCS =    ../../../../../../tee/lib/libutee/tee_api_operations.c \
                ../../../../../../tee/lib/libutee/tee_user_mem.c \
                ../../../../../../tee/lib/libutee/tee_api_objects.c \
                ../../../../../../tee/lib/libutils/ext/trace.c \
+               ../../../../../../tee/lib/libutils/ext/buf_compare_ct.c \
                ../../../../../../tee/tee/tee_svc_cryp.c \
                ../../../../../../tee/tee/tee_cryp_utl.c \
                ../../../../../../tee/tee/tee_svc.c \

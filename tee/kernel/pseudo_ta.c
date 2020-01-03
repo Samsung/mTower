@@ -87,8 +87,8 @@ static TEE_Result copy_in_param(struct tee_ta_session *s __maybe_unused,
 				bool did_map[TEE_NUM_PARAMS])
 {
 	size_t n;
-	void *va;
-
+//	void *va;
+  (void)did_map;
 	for (n = 0; n < TEE_NUM_PARAMS; n++) {
 		switch (TEE_PARAM_TYPE_GET(param->types, n)) {
 		case TEE_PARAM_TYPE_VALUE_INPUT:

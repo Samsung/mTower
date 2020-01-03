@@ -359,4 +359,4 @@ __weak void plat_prng_add_jitter_entropy_norpc(void)
 	return crypto_init();
 }
 
-service_init(tee_cryp_init);
+//service_init(tee_cryp_init);

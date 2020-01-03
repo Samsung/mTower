@@ -27,15 +27,15 @@
  */
 #include <stdlib.h>
 #include <string.h>
-//#include <string_ext.h>
+#include <string_ext.h>
 
 #include <tee_api.h>
 #include <tee_api_defines_extensions.h>
 #include <tee_internal_api_extensions.h>
-//#include <utee_syscalls.h>
+#include <utee_syscalls.h>
 #include <utee_defines.h>
 #include <util.h>
-//#include "tee_api_private.h"
+#include "tee_api_private.h"
 #include "utee_types.h"
 
 TEE_Result utee_cipher_update(unsigned long state, const void *src,
@@ -1367,7 +1367,7 @@ void TEE_AEUpdateAAD(TEE_OperationHandle operation, const void *AADdata,
 TEE_Result TEE_AEUpdate(TEE_OperationHandle operation, const void *srcData,
 			uint32_t srcLen, void *destData, uint32_t *destLen)
 {
-	TEE_Result res;
+	TEE_Result res = TEE_SUCCESS;
 	size_t req_dlen;
 	uint64_t dl;
 
@@ -1447,12 +1447,12 @@ TEE_Result TEE_AEEncryptFinal(TEE_OperationHandle operation,
 			      void *destData, uint32_t *destLen, void *tag,
 			      uint32_t *tagLen)
 {
-	TEE_Result res;
-	uint8_t *dst = destData;
+	TEE_Result res = TEE_SUCCESS;
+//	uint8_t *dst = destData;
 	size_t acc_dlen = 0;
 	uint64_t tmp_dlen;
 	size_t req_dlen;
-	uint64_t tl;
+//	uint64_t tl;
 
 	if (operation == TEE_HANDLE_NULL ||
 	    (srcData == NULL && srcLen != 0) ||
@@ -1495,7 +1495,7 @@ TEE_Result TEE_AEEncryptFinal(TEE_OperationHandle operation,
 		goto out;
 	}
 
-	tl = *tagLen;
+//	tl = *tagLen;
 	tmp_dlen = *destLen - acc_dlen;
 //	if (operation->block_size > 1) {
 //		res = tee_buffer_update(operation, utee_authenc_update_payload,
@@ -1541,7 +1541,7 @@ TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
 			      uint32_t tagLen)
 {
 	TEE_Result res;
-	uint8_t *dst = destData;
+	//uint8_t *dst = destData;
 	size_t acc_dlen = 0;
 	uint64_t tmp_dlen;
 	size_t req_dlen;

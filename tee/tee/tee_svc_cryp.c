@@ -1336,9 +1336,9 @@ static TEE_Result copy_in_attrs(struct user_ta_ctx *utc,
 			const struct utee_attribute *usr_attrs,
 			uint32_t attr_count, TEE_Attribute *attrs)
 {
-	TEE_Result res;
+//	TEE_Result res;
 	uint32_t n;
-
+  (void) utc;
 //	res = tee_mmu_check_access_rights(utc,
 //			TEE_MEMORY_ACCESS_READ | TEE_MEMORY_ACCESS_ANY_OWNER,
 //			(uaddr_t)usr_attrs,
@@ -1892,6 +1892,8 @@ static TEE_Result tee_svc_cryp_check_key_type(const struct tee_obj *o,
 {
 	uint32_t req_key_type;
 	uint32_t req_key_type2 = 0;
+
+  (void)mode;
 
 	switch (TEE_ALG_GET_MAIN_ALG(algo)) {
 	case TEE_MAIN_ALGO_MD5:

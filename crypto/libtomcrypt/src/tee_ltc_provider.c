@@ -128,6 +128,7 @@ static struct tee_ltc_prng *tee_ltc_get_prng(void)
 
 static TEE_Result tee_ltc_prng_init(struct tee_ltc_prng *prng)
 {
+  (void)prng;
 //	int res;
 //	int prng_index;
 //
@@ -2029,27 +2030,27 @@ void crypto_cipher_copy_state(void *dst_ctx, void *src_ctx, uint32_t algo)
 	memcpy(dst_ctx, src_ctx, ctx_size);
 }
 
-static void get_des2_key(const uint8_t *key, size_t key_len,
-			 uint8_t *key_intermediate,
-			 uint8_t **real_key, size_t *real_key_len)
-{
-	if (key_len == 16) {
-		/*
-		 * This corresponds to a 2DES key. The 2DES encryption
-		 * algorithm is similar to 3DES. Both perform and
-		 * encryption step, then a decryption step, followed
-		 * by another encryption step (EDE). However 2DES uses
-		 * the same key for both of the encryption (E) steps.
-		 */
-		memcpy(key_intermediate, key, 16);
-		memcpy(key_intermediate+16, key, 8);
-		*real_key = key_intermediate;
-		*real_key_len = 24;
-	} else {
-		*real_key = (uint8_t *)key;
-		*real_key_len = key_len;
-	}
-}
+//static void get_des2_key(const uint8_t *key, size_t key_len,
+//			 uint8_t *key_intermediate,
+//			 uint8_t **real_key, size_t *real_key_len)
+//{
+//	if (key_len == 16) {
+//		/*
+//		 * This corresponds to a 2DES key. The 2DES encryption
+//		 * algorithm is similar to 3DES. Both perform and
+//		 * encryption step, then a decryption step, followed
+//		 * by another encryption step (EDE). However 2DES uses
+//		 * the same key for both of the encryption (E) steps.
+//		 */
+//		memcpy(key_intermediate, key, 16);
+//		memcpy(key_intermediate+16, key, 8);
+//		*real_key = key_intermediate;
+//		*real_key_len = 24;
+//	} else {
+//		*real_key = (uint8_t *)key;
+//		*real_key_len = key_len;
+//	}
+//}
 
 TEE_Result crypto_cipher_init(void *ctx, uint32_t algo,
 			      TEE_OperationMode mode __maybe_unused,
@@ -2061,8 +2062,8 @@ TEE_Result crypto_cipher_init(void *ctx, uint32_t algo,
 {
 	TEE_Result res;
 	int ltc_res, ltc_cipherindex;
-	uint8_t *real_key, key_array[24];
-	size_t real_key_len;
+//	uint8_t *real_key, key_array[24];
+//	size_t real_key_len;
 #if defined(CFG_CRYPTO_CTS)
 	struct tee_symmetric_cts *cts;
 #endif
@@ -3140,5 +3141,6 @@ void crypto_aes_enc_block(const void *enc_key, unsigned int rounds,
 	memcpy(skey.rijndael.eK, enc_key, sizeof(skey.rijndael.eK));
 	skey.rijndael.Nr = rounds;
 	if (aes_ecb_encrypt(src, dst, &skey))
-		panic();
+	 //panic();
+    while(1){;}
 }

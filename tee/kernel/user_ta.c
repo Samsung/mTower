@@ -26,7 +26,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
+#include <string.h>
 #include <assert.h>
 #include <compiler.h>
 //#include <keep.h>
@@ -116,21 +116,21 @@ extern const struct user_ta_head __stop_user_ta_head_section;
 //	return TEE_SUCCESS;
 //}
 //#else /*!CFG_PAGED_USER_TA*/
-static TEE_Result config_initial_paging(struct user_ta_ctx *utc __unused)
-{
-	return TEE_SUCCESS;
-}
+//static TEE_Result config_initial_paging(struct user_ta_ctx *utc __unused)
+//{
+//	return TEE_SUCCESS;
+//}
 
-static TEE_Result config_final_paging(struct user_ta_ctx *utc)
-{
+//static TEE_Result config_final_paging(struct user_ta_ctx *utc)
+//{
 //	void *va = (void *)utc->mmu->ta_private_vmem_start;
 //	size_t vasize = utc->mmu->ta_private_vmem_end -
 //			utc->mmu->ta_private_vmem_start;
 //
 //	cache_op_inner(DCACHE_AREA_CLEAN, va, vasize);
 //	cache_op_inner(ICACHE_AREA_INVALIDATE, va, vasize);
-	return TEE_SUCCESS;
-}
+//	return TEE_SUCCESS;
+//}
 //#endif /*!CFG_PAGED_USER_TA*/
 
 //static TEE_Result load_elf_segments(struct user_ta_ctx *utc,
@@ -344,82 +344,82 @@ static TEE_Result config_final_paging(struct user_ta_ctx *utc)
 //	return res;
 //}
 
-static void init_utee_param(struct utee_params *up,
-			const struct tee_ta_param *p, void *va[TEE_NUM_PARAMS])
-{
-	size_t n;
+//static void init_utee_param(struct utee_params *up,
+//			const struct tee_ta_param *p, void *va[TEE_NUM_PARAMS])
+//{
+//	size_t n;
+//
+//	up->types = p->types;
+//	for (n = 0; n < TEE_NUM_PARAMS; n++) {
+//		uintptr_t a;
+//		uintptr_t b;
+//
+//		switch (TEE_PARAM_TYPE_GET(p->types, n)) {
+//		case TEE_PARAM_TYPE_MEMREF_INPUT:
+//		case TEE_PARAM_TYPE_MEMREF_OUTPUT:
+//		case TEE_PARAM_TYPE_MEMREF_INOUT:
+//			a = (uintptr_t)va[n];
+//			b = p->u[n].mem.size;
+//			break;
+//		case TEE_PARAM_TYPE_VALUE_INPUT:
+//		case TEE_PARAM_TYPE_VALUE_INOUT:
+//			a = p->u[n].val.a;
+//			b = p->u[n].val.b;
+//			break;
+//		default:
+//			a = 0;
+//			b = 0;
+//			break;
+//		}
+//		/* See comment for struct utee_params in utee_types.h */
+//		up->vals[n * 2] = a;
+//		up->vals[n * 2 + 1] = b;
+//	}
+//}
 
-	up->types = p->types;
-	for (n = 0; n < TEE_NUM_PARAMS; n++) {
-		uintptr_t a;
-		uintptr_t b;
+//static void update_from_utee_param(struct tee_ta_param *p,
+//			const struct utee_params *up)
+//{
+//	size_t n;
+//
+//	for (n = 0; n < TEE_NUM_PARAMS; n++) {
+//		switch (TEE_PARAM_TYPE_GET(p->types, n)) {
+//		case TEE_PARAM_TYPE_MEMREF_OUTPUT:
+//		case TEE_PARAM_TYPE_MEMREF_INOUT:
+//			/* See comment for struct utee_params in utee_types.h */
+//			p->u[n].mem.size = up->vals[n * 2 + 1];
+//			break;
+//		case TEE_PARAM_TYPE_VALUE_OUTPUT:
+//		case TEE_PARAM_TYPE_VALUE_INOUT:
+//			/* See comment for struct utee_params in utee_types.h */
+//			p->u[n].val.a = up->vals[n * 2];
+//			p->u[n].val.b = up->vals[n * 2 + 1];
+//			break;
+//		default:
+//			break;
+//		}
+//	}
+//}
 
-		switch (TEE_PARAM_TYPE_GET(p->types, n)) {
-		case TEE_PARAM_TYPE_MEMREF_INPUT:
-		case TEE_PARAM_TYPE_MEMREF_OUTPUT:
-		case TEE_PARAM_TYPE_MEMREF_INOUT:
-			a = (uintptr_t)va[n];
-			b = p->u[n].mem.size;
-			break;
-		case TEE_PARAM_TYPE_VALUE_INPUT:
-		case TEE_PARAM_TYPE_VALUE_INOUT:
-			a = p->u[n].val.a;
-			b = p->u[n].val.b;
-			break;
-		default:
-			a = 0;
-			b = 0;
-			break;
-		}
-		/* See comment for struct utee_params in utee_types.h */
-		up->vals[n * 2] = a;
-		up->vals[n * 2 + 1] = b;
-	}
-}
+//static void clear_vfp_state(struct user_ta_ctx *utc __unused)
+//{
+//#ifdef CFG_WITH_VFP
+//	thread_user_clear_vfp(&utc->vfp);
+//#endif
+//}
 
-static void update_from_utee_param(struct tee_ta_param *p,
-			const struct utee_params *up)
-{
-	size_t n;
-
-	for (n = 0; n < TEE_NUM_PARAMS; n++) {
-		switch (TEE_PARAM_TYPE_GET(p->types, n)) {
-		case TEE_PARAM_TYPE_MEMREF_OUTPUT:
-		case TEE_PARAM_TYPE_MEMREF_INOUT:
-			/* See comment for struct utee_params in utee_types.h */
-			p->u[n].mem.size = up->vals[n * 2 + 1];
-			break;
-		case TEE_PARAM_TYPE_VALUE_OUTPUT:
-		case TEE_PARAM_TYPE_VALUE_INOUT:
-			/* See comment for struct utee_params in utee_types.h */
-			p->u[n].val.a = up->vals[n * 2];
-			p->u[n].val.b = up->vals[n * 2 + 1];
-			break;
-		default:
-			break;
-		}
-	}
-}
-
-static void clear_vfp_state(struct user_ta_ctx *utc __unused)
-{
-#ifdef CFG_WITH_VFP
-	thread_user_clear_vfp(&utc->vfp);
-#endif
-}
-
-static TEE_Result user_ta_enter(TEE_ErrorOrigin *err,
-			struct tee_ta_session *session,
-			enum utee_entry_func func, uint32_t cmd,
-			struct tee_ta_param *param)
-{
-	TEE_Result res;
-	struct utee_params *usr_params;
+//static TEE_Result user_ta_enter(TEE_ErrorOrigin *err,
+//			struct tee_ta_session *session,
+//			enum utee_entry_func func, uint32_t cmd,
+//			struct tee_ta_param *param)
+//{
+//	TEE_Result res;
+//	struct utee_params *usr_params;
 //	uaddr_t usr_stack;
-	struct user_ta_ctx *utc = to_user_ta_ctx(session->ctx);
+//	struct user_ta_ctx *utc = to_user_ta_ctx(session->ctx);
 //	TEE_ErrorOrigin serr = TEE_ORIGIN_TEE;
-	struct tee_ta_session *s __maybe_unused;
-	void *param_va[TEE_NUM_PARAMS] = { NULL };
+//	struct tee_ta_session *s __maybe_unused;
+//	void *param_va[TEE_NUM_PARAMS] = { NULL };
 
 //	if (!(utc->ctx.flags & TA_FLAG_EXEC_DDR))
 //		panic("TA does not exec in DDR");
@@ -430,14 +430,14 @@ static TEE_Result user_ta_enter(TEE_ErrorOrigin *err,
 //		goto cleanup_return;
 
 	/* Switch to user ctx */
-	tee_ta_push_current_session(session);
+//	tee_ta_push_current_session(session);
 
 //	/* Make room for usr_params at top of stack */
 //	usr_stack = (uaddr_t)utc->mmu->regions[TEE_MMU_UMAP_STACK_IDX].va +
 //		utc->mobj_stack->size;
 //	usr_stack -= ROUNDUP(sizeof(struct utee_params), STACK_ALIGNMENT);
 //	usr_params = (struct utee_params *)usr_stack;
-	init_utee_param(usr_params, param, param_va);
+//	init_utee_param(usr_params, param, param_va);
 
 //	res = thread_enter_user_mode(func, tee_svc_kaddr_to_uref(session),
 //				     (vaddr_t)usr_params, cmd, usr_stack,
@@ -461,7 +461,7 @@ static TEE_Result user_ta_enter(TEE_ErrorOrigin *err,
 //	/* Copy out value results */
 //	update_from_utee_param(param, usr_params);
 //
-	s = tee_ta_pop_current_session();
+//	s = tee_ta_pop_current_session();
 //	assert(s == session);
 //cleanup_return:
 //
@@ -478,13 +478,14 @@ static TEE_Result user_ta_enter(TEE_ErrorOrigin *err,
 //	 */
 //	*err = serr;
 //
-	return res;
-}
+//	return res;
+//}
 
 static TEE_Result user_ta_enter_open_session(struct tee_ta_session *s,
 			struct tee_ta_param *param, TEE_ErrorOrigin *eo)
 {
-  TEE_Result res;
+  TEE_Result res = TEE_ERROR_GENERIC;
+  (void) eo;
 //  struct utee_params *usr_params;
 //  uaddr_t usr_stack;
   struct user_ta_ctx *utc = to_user_ta_ctx(s->ctx);
@@ -513,7 +514,7 @@ static TEE_Result user_ta_enter_open_session(struct tee_ta_session *s,
 //    }
 
     res = utc->user_ta->open_session_entry_point(param->types,
-        param->u,
+        (TEE_Param *)param->u,
         &s->user_ctx);
     /* Copy out value results */
 //    update_from_utee_param(param, usr_params);
@@ -600,7 +601,7 @@ static TEE_Result user_ta_enter_open_session(struct tee_ta_session *s,
 ////    unmap_mapped_param(param, did_map);
 //  }
 //
-out:
+//out:
   tee_ta_pop_current_session();
   return res;
 }
@@ -625,10 +626,10 @@ static TEE_Result user_ta_enter_invoke_cmd(struct tee_ta_session *s,
   *eo = TEE_ORIGIN_TRUSTED_APP;
   res = utc->user_ta->invoke_command_entry_point(s->user_ctx, cmd,
                param->types,
-               param->u);
+               (TEE_Param *)param->u);
 //  update_out_param(tee_param, param);
 //  unmap_mapped_param(param, did_map);
-out:
+//out:
   tee_ta_pop_current_session();
   return res;
 
@@ -650,9 +651,8 @@ static void user_ta_enter_close_session(struct tee_ta_session *s)
   tee_ta_pop_current_session();
 }
 
-static void user_ta_dump_state(struct tee_ta_ctx *ctx)
-{
-  (void) ctx;
+//static void user_ta_dump_state(struct tee_ta_ctx *ctx)
+//{
 //	struct user_ta_ctx *utc __maybe_unused = to_user_ta_ctx(ctx);
 //	char flags[7] = { '\0', };
 //	size_t n;
@@ -677,7 +677,7 @@ static void user_ta_dump_state(struct tee_ta_ctx *ctx)
 //			 n, utc->mmu->regions[n].va, pa,
 //			 utc->mmu->regions[n].size, flags);
 //	}
-}
+//}
 //KEEP_PAGER(user_ta_dump_state);
 
 static void user_ta_ctx_destroy(struct tee_ta_ctx *ctx)
@@ -735,11 +735,10 @@ static void user_ta_ctx_destroy(struct tee_ta_ctx *ctx)
 	free(utc);
 }
 
-static uint32_t user_ta_get_instance_id(struct tee_ta_ctx *ctx)
-{
+//static uint32_t user_ta_get_instance_id(struct tee_ta_ctx *ctx)
+//{
 //	return to_user_ta_ctx(ctx)->mmu->asid;
-  return 0;
-}
+//}
 
 static const struct tee_ta_ops user_ta_ops = {
 	.enter_open_session = user_ta_enter_open_session,
@@ -786,7 +785,7 @@ TEE_Result tee_ta_init_user_ta_session(const TEE_UUID *uuid,
 
   struct user_ta_ctx *utc = NULL;
   struct user_ta_head *ta_head;
-  struct user_ta_store_handle *ta_handle = NULL;
+//  struct user_ta_store_handle *ta_handle = NULL;
 
 //  res = ta_store->open(uuid, &ta_handle);
 //  if (res != TEE_SUCCESS)
@@ -794,7 +793,7 @@ TEE_Result tee_ta_init_user_ta_session(const TEE_UUID *uuid,
 
   DMSG("Lookup user TA %pUl", (void *)uuid);
 
-  ta_head = &__start_user_ta_head_section;
+  ta_head = (struct user_ta_head *)&__start_user_ta_head_section;
   while (true) {
     if (ta_head >= &__stop_user_ta_head_section)
       return TEE_ERROR_ITEM_NOT_FOUND;

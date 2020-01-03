@@ -53,8 +53,8 @@ void trace_set_level(int level);
 int trace_get_level(void);
 
 /* Internal functions used by the macros below */
-//void trace_printf(const char *func, int line, int level, bool level_ok,
-//		  const char *fmt, ...) __printf(5, 6);
+void trace_printf(const char *func, int line, int level, bool level_ok,
+		  const char *fmt, ...) __printf(5, 6);
 
 #define trace_printf_helper(level, level_ok, ...) \
 	trace_printf(__FUNCTION__, __LINE__, (level), (level_ok), \

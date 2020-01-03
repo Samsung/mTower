@@ -44,7 +44,7 @@ int tee_hotp(void)
 	TEEC_Session sess;
 	TEEC_UUID uuid = TA_HOTP_UUID;
 
-	int i;
+	uint32_t i;
 	uint32_t err_origin;
 	uint32_t hotp_value;
 

@@ -29,7 +29,7 @@
 #include <string.h>
 
 #include <tee_api.h>
-//#include <utee_syscalls.h>
+#include <utee_syscalls.h>
 //#include "tee_api_private.h"
 #include "utee_types.h"
 
