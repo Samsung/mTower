@@ -27,7 +27,6 @@ CFLAGS += -I../../Device/Nuvoton/M2351/Include
 CFLAGS += -I$(TOPDIR)/include/mtower
 CFLAGS += -I$(TOPDIR)/arch/$(CONFIG_ARCH)/$(CONFIG_ARCH_FAMILY)/src/$(CONFIG_PLATFORM)
 
-
 ifeq ($(WORLD), secure)
 CFLAGS += -mcmse
 endif
@@ -35,10 +34,39 @@ endif
 CFLAGS += -Wno-unused-parameter -Wno-undef -Wno-maybe-uninitialized
 CFLAGS += -Wno-unused-variable -Wno-pointer-compare
 
-SRCS = acmp.c bpwm.c can.c crc.c crypto.c dac.c eadc.c ebi.c ecap.c epwm.c \
-       fmc.c gpio.c i2c.c i2s.c pdma.c qei.c qspi.c qspi.c retarget.c rtc.c \
-       sc.c scuart.c sdh.c spi.c sys.c timer.c timer_pwm.c uart.c usbd.c \
-       usci_i2c.c usci_spi.c usci_uart.c wdt.c wwdt.c
+#SRCS += acmp.c
+#SRCS += bpwm.c
+#SRCS += can.c
+#SRCS += crc.c
+#SRCS += crypto.c
+#SRCS += dac.c
+#SRCS += eadc.c
+#SRCS += ebi.c
+#SRCS += ecap.c
+#SRCS += epwm.c
+SRCS += fmc.c
+SRCS += gpio.c
+#SRCS += i2c.c
+#SRCS += i2s.c
+#SRCS += pdma.c
+#SRCS += qei.c
+#SRCS += qspi.c
+SRCS += retarget.c
+#SRCS += rtc.c
+#SRCS += sc.c
+#SRCS += scuart.c
+#SRCS += sdh.c
+#SRCS += spi.c
+SRCS += sys.c
+#SRCS += timer.c
+#SRCS += timer_pwm.c
+SRCS += uart.c
+#SRCS += usbd.c
+#SRCS += usci_i2c.c
+#SRCS += usci_spi.c
+#SRCS += usci_uart.c
+#SRCS += wdt.c
+#SRCS += wwdt.c
 
 ifeq ($(WORLD), secure)
 SRCS += clk.c
