@@ -7,6 +7,7 @@
 2. [Regular build](#2-regular-build)
 3. [Nuvoton NuMicro ICP Programming Tool](#3-nuvoton-numicro-icp-programming-tool)
 4. [Flash mTower on the device and run](#4-flash-mtower-on-the-device-and-run)
+5. [References](#5-references)
 
 ## 1. Introduction
 The instructions here will tell how to run mTower on the [NuMaker-PFM-M2351] board.
@@ -42,6 +43,10 @@ Once you download the installer and start it, follow the instructions shown in i
 
 5. Open console/terminal window (e.g., Putty) using 115200 speed setting with 8 bits with no parity check. Press **"Reset"** button on NuMaker-PFM-M2351 board, and you should see output in terminal window, like one shown below. Note that menu task is running in infinite loop, so the output shall not stop.
 ![Start mTower](images/platforms/numaker_pfm_m2351/putty_outputs.png)
+
+## 5. References
+
+[https://www.nuvoton.com/products/microcontrollers/arm-cortex-m23-mcus/m2351-series/?tab=1](https://www.nuvoton.com/products/microcontrollers/arm-cortex-m23-mcus/m2351-series/?tab=1)
 
 [build.md]: build.md
 [NuMaker-PFM-M2351]: http://www.nuvoton.com/resource-files/UM_NuMaker-PFM-M2351_EN_Rev1.00.pdf
