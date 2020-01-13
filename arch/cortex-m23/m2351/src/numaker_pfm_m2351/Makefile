@@ -55,8 +55,8 @@ ifeq ($(CONFIG_BOOTLOADER33),y)
 	$(Q) $(MAKE) -C nonsecure TOPDIR="$(TOPDIR)" mtower_ns$(EXEEXT)
 endif
 	$(TOPDIR)/tools/fwinfogen $(BL2) $(BL32) $(MTOWER_S) $(ECDSA_KEYS) $(BL33) $(MTOWER_NS)
-	$(Q) cp -f $(TOPDIR)/mtower_ns.bin /media/sf_Shared/
-	$(Q) cp -f $(TOPDIR)/mtower_s.bin /media/sf_Shared/
+#	$(Q) cp -f $(TOPDIR)/mtower_ns.bin /media/sf_Shared/
+#	$(Q) cp -f $(TOPDIR)/mtower_s.bin /media/sf_Shared/
 
 	$(Q) printf "$(GREEN)+-----------------------------------------------------------------------+$(NORMAL)\n"
 	$(Q) printf "$(GREEN)| Secure image                                                          |$(NORMAL)\n"

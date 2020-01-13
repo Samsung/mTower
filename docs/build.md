@@ -25,7 +25,7 @@ to start with. Therefore install the following packages regardless of what
 target you will use in the end.
 
 ```sh
-$ sudo apt-get install git gcc subversion make gperf flex bison libncurses5-dev texinfo g++ curl pkg-config 	autoconf libtool libtool-bin libc6:i386 libc6-dev:i386 gcc-multilib doxygen doxygen-gui libssl-dev
+$ sudo apt-get install git gcc subversion make gperf flex bison libncurses5-dev texinfo g++ curl pkg-config 	autoconf libtool libtool-bin libc6:i386 libc6-dev:i386 gcc-multilib doxygen doxygen-gui libssl-dev libcurl4-openssl-dev wget
 ```
 
 ### 2.2 Building kconfig-frontends in Linux (optional)
