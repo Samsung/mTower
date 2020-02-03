@@ -371,7 +371,7 @@ config SCU_SECURE_SRAM_SIZE
 	default 0x8000   if SCU_SECURE_SRAM_32
 	default 0xA000   if SCU_SECURE_SRAM_40
 	default 0xC000   if SCU_SECURE_SRAM_48
-	default 0xC000   if SCU_SECURE_SRAM_56
+	default 0xE000   if SCU_SECURE_SRAM_56
 	default 0x10000   if SCU_SECURE_SRAM_64
 	default 0x12000   if SCU_SECURE_SRAM_72
 	default 0x14000   if SCU_SECURE_SRAM_80
