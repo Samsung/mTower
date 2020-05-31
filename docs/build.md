@@ -112,24 +112,24 @@ $ cd mTower/
 $ make PLATFORM=numaker_pfm_m2351 create_context
 ```
 
-To use M2351 Nuvoton chips, you need to download STD driver sources and startup
-files and apply a patch to them. This can be done by executing following shell
-commands:
+To use BootLoader2 for M2351 Nuvoton chips, you need to download NuBL2 sources and 
+syscall file. This can be done by executing following shell commands:
 
 ```sh
-$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/Library/StdDriver ./arch/cortex-m23/m2351/src/StdDriver
-$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/Library/Device ./arch/cortex-m23/m2351/src/Device
+$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/Library/Device/Nuvoton/M2351/Source/GCC/_syscalls.c ./arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/_syscalls.c
 $ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/main.c ./arch/cortex-m23/m2351/src/NuBL2/
 $ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/VerifyNuBL3x.c ./arch/cortex-m23/m2351/src/NuBL2/
 $ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/NuBL2.h ./arch/cortex-m23/m2351/src/NuBL2/
 $ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/FwInfo/FwInfo.c ./arch/cortex-m23/m2351/src/NuBL2
-$ rm -f ./arch/cortex-m23/m2351/src/StdDriver/inc/partition_M2351.h
-$ git apply tools/m2351.patch
 ```
 
 > Please note that files from these downloads contain the following copyright
 notice: `Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.`
-Licensing terms specified [here](https://github.com/OpenNuvoton/M2351BSP/blob/master/NUVOTON%20SOFTWARE%20LICENSE%20AGREEMENT.pdf)
+Licensing terms specified [here](https://github.com/OpenNuvoton/M2351BSP/blob/master/NUVOTON%20SOFTWARE%20LICENSE%20AGREEMENT.pdf).  
+`arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/_syscalls.c` under:  
+// This file is part of the uOS++ III distribution  
+// Parts of this file are from the newlib sources, issued under GPL.  
+// Copyright (c) 2014 Liviu Ionescu  
 
 ### 2.4 Get the toolchains
 In mTower different toolchains are used for different targets (depends on
