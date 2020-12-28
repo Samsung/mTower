@@ -206,8 +206,13 @@ static int sign_pFwInfo(FW_INFO_T *pFwInfo, ECC_KEY_T *ecdsa_key)
         eckey) != 1) {
       printf("Failed to verify EC Signature\n");
     } else {
-      BIGNUM* r = signature->r;
-      BIGNUM* s = signature->s;
+      BIGNUM *r, *s;
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+        ECDSA_SIG_get0(signature, &r, &s);
+#else
+        r = signature->r;
+        s = signature->s;
+#endif
 
 //      printf("d: %s\n", BN_bn2hex(d));
 //      printf("X: %s\n", BN_bn2hex(x));
