@@ -29,11 +29,8 @@
  */
 
 /* Included Files. */
-#include <arm_cmse.h>
 #include <stdio.h>
 #include <string.h>
-#include "M2351.h"
-#include "partition_M2351.h"
 
 /* GP TEE client API */
 #include "tee_types.h"
@@ -42,6 +39,7 @@
 #include "tee/uuid.h"
 
 #include <kernel/tee_ta_manager.h>
+#include <kernel/tee_cmse.h>
 
 /* Pre-processor Definitions. */
 
