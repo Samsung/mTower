@@ -3,6 +3,7 @@ on:
   - pull_request
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -15,5 +16,6 @@ jobs:
       - uses: srvaroa/labeler@v0.8
         with:
           config_path: .github/label_config.yml
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
