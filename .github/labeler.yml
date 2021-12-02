@@ -3,3 +3,6 @@ CI:
 
 doc:
 - 'README.md'
+
+repo:
+- '**'
