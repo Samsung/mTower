@@ -1,8 +1,5 @@
 CI:
-- '*'
+- '.github/**/*'
 
-doc:
-- 'README.md'
-
-repo:
-- '**'
+documentation:
+- '**/*.md'
