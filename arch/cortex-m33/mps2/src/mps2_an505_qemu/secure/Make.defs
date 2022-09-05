@@ -1,0 +1,70 @@
+############################################################################
+# arch/cortex-m33/mps2/src/mps2_an505_qemu/secure/Make.defs
+#
+# Copyright (c) 2022 Samsung Electronics Co., Ltd. All Rights Reserved.
+# Author: Taras Drozdovskyi t.drozdovsky@samsung.com
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+############################################################################
+
+-include $(TOPDIR)/Make.defs
+-include $(TOPDIR)/.config
+
+HEAD_ASRC = 
+
+# Common mps2 files
+
+CMN_ASRCS = 
+
+CMN_CSRCS =    ../../../../../../tee/lib/libutee/tee_api_operations.c \
+               ../../../../../../tee/lib/libutee/tee_api.c \
+               ../../../../../../tee/lib/libutee/tee_api_panic.c \
+               ../../../../../../tee/lib/libutee/tee_user_mem.c \
+               ../../../../../../tee/lib/libutee/tee_api_objects.c \
+               ../../../../../../tee/lib/libutils/ext/trace.c \
+               ../../../../../../tee/lib/libutils/ext/buf_compare_ct.c \
+               ../../../../../../tee/tee/tee_svc_cryp.c \
+               ../../../../../../tee/tee/tee_cryp_utl.c \
+               ../../../../../../tee/tee/tee_svc.c \
+               ../../../../../../tee/tee/tee_obj.c \
+               ../../../../../../tee/tee/tee_pobj.c \
+               ../../../../../../tee/tee/uuid.c \
+               ../../../../../../tee/kernel/entry_std.c \
+               ../../../../../../tee/kernel/pseudo_ta.c \
+               ../../../../../../tee/kernel/user_ta.c \
+               ../../../../../../tee/kernel/tee_ta_manager.c
+
+# Required CHIP files
+
+CHIP_ASRCS_S = startup_ARMCM33.S
+
+CHIP_CSRCS_S = system_ARMCM33.c \
+               ../common/printf.c \
+               main.c
+
+ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
+CHIP_CSRCS_S += ../../../../../../apps/hello_world/ta/hello_world_ta.c
+endif
+
+ifeq ($(CONFIG_APPS_AES),y)
+CHIP_CSRCS_S += ../../../../../../apps/aes/ta/aes_ta.c
+endif
+
+ifeq ($(CONFIG_APPS_HOTP),y)
+CHIP_CSRCS_S += ../../../../../../apps/hotp/ta/hotp_ta.c
+endif
+
+ifeq ($(CONFIG_APPS_TEST),y)
+CHIP_CSRCS_S += ../../../../../../apps/test/ta/test_ta.c
+endif

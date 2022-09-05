@@ -32,8 +32,8 @@
 #include <arm_cmse.h>
 #include <stdio.h>
 #include <string.h>
-#include "M2351.h"
-#include "partition_M2351.h"
+// #include "M2351.h"
+// #include "partition_M2351.h"
 
 /* GP TEE client API */
 #include "tee_types.h"
@@ -49,7 +49,7 @@
 /* Private Types. */
 /* Any types, enums, structures or unions used by the file are defined here. */
 /* typedef for NonSecure callback functions */
-typedef __NONSECURE_CALL int32_t (*NonSecure_funcptr)(uint32_t);
+typedef __attribute__((cmse_nonsecure_call)) int32_t (*NonSecure_funcptr)(uint32_t);
 typedef int32_t (*Secure_funcptr)(uint32_t);
 
 /* Private Function Prototypes. */
@@ -84,7 +84,7 @@ TEEC_Result tee_ioctl_close_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data
  *
  * @returns       None
  */
-__NONSECURE_ENTRY
+__attribute__((cmse_nonsecure_entry))
 int32_t ioctl(uint32_t cmd, struct tee_ioctl_buf_data *buf_data)
 {
 //  printf("Secure ioctl: cmd = %x\n", cmd);

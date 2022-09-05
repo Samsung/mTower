@@ -83,7 +83,7 @@ MTOWERNAME = mtower
 BIN = $(MTOWERNAME)$(EXEEXT)
 
 PHONY = context clean_context check_context subdir_clean clean subdir_distclean \
-distclean savedefconfig docs_gen docs_show toolchain
+distclean savedefconfig docs_gen docs_show toolchain debug
 
 .PHONY: $(PHONY)
 
@@ -188,6 +188,12 @@ $(BIN): context mtower_libs
 
 flash:
 	$(Q) $(MAKE) -C $(ARCH_SRC) TOPDIR="$(TOPDIR)" flash
+
+run:
+	 $(Q) $(MAKE) -C $(ARCH_SRC) TOPDIR="$(TOPDIR)" run
+
+debug:
+	 $(Q) $(MAKE) -C $(ARCH_SRC) TOPDIR="$(TOPDIR)" debug
 
 # Configuration targets
 #

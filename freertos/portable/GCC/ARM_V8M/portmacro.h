@@ -55,7 +55,8 @@ extern "C" {
 #define __dsb(x)   __asm volatile("  dsb\n")
 #define __isb(x)   __asm volatile("  isb\n")
 
-#include "M2351.h"
+// #include "M2351.h"
+#include "cmsis_gcc.h"
 
 /* The settings in this file configure FreeRTOS correctly for the given
  * hardware and compiler. These settings should not be altered.

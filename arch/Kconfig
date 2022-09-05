@@ -12,13 +12,69 @@ config ARCH_CORTEX_M23
 	---help---
 		The ARM architecture
 
+config ARCH_CORTEX_M33
+	bool "cortex-m33"
+	---help---
+		The ARM architecture
+
 endchoice
 
 config ARCH
 	string
 	default "cortex-m23"    if ARCH_CORTEX_M23
+	default "cortex-m33"    if ARCH_CORTEX_M33
 
 if ARCH_CORTEX_M23
 source arch/cortex-m23/Kconfig
 endif
+
+if ARCH_CORTEX_M33
+source arch/cortex-m33/Kconfig
+endif
+
+comment "Toolchain Configuration Options"
+choice
+	prompt "Toolchain Selection"
+	default	GCC_VERSION_6_1_2017Q1
+
+config GCC_VERSION_6_1_2017Q1
+	# depends on ARCH_FAMILY_MPS2
+	bool "GCC compiler Version: 6.1 q1"
+
+config GCC_VERSION_6_1_2017Q2
+	# depends on ARCH_FAMILY_MPS2
+	bool "GCC compiler Version: 6.1 q2"
+
+config GCC_VERSION_8_2018Q4
+	# depends on ARCH_FAMILY_MPS2
+	bool "GCC compiler Version: 8 q4"
+
+# config GCC_VERSION_8_2019Q3
+# 	depends on ARCH_FAMILY_MPS2
+# 	bool "GCC compiler Version: 8 2019 q3"
+
+endchoice
+
+config GCC_VERSION
+	string
+	default arm-none-eabi-6-2017-q1-update-linux   if GCC_VERSION_6_1_2017Q1
+	default arm-none-eabi-6-2017-q2-update-linux   if GCC_VERSION_6_1_2017Q2
+	default arm-none-eabi-8-2018-q4-major-linux    if GCC_VERSION_8_2018Q4
+	# default gcc-arm-none-eabi-8-2019-q3-update-linux   if GCC_VERSION_8_2019Q3
+
+config GCC_SITE
+	string
+	default "https://developer.arm.com/-/media/Files/downloads/gnu-rm/6_1-2017q1"   if GCC_VERSION_6_1_2017Q1
+	default "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/6-2017q2"   if GCC_VERSION_6_1_2017Q2
+	default "https://developer.arm.com/-/media/Files/downloads/gnu-rm/8-2018q4" if GCC_VERSION_8_2018Q4
+	# default "https://developer.arm.com/-/media/Files/downloads/gnu-rm/8-2019q3" if GCC_VERSION_8_2019Q3
+	# default "https://developer.arm.com/-/media/Files/downloads/gnu-rm/8-2019q3/RC1.1" if GCC_VERSION_8_2019Q3
+	# https://developer.arm.com/-/media/Files/downloads/gnu-rm/8-2019q3/RC1.1/gcc-arm-none-eabi-8-2019-q3-update-linux.tar.bz2?revision=c34d758a-be0c-476e-a2de-af8c6e16a8a2?product=GNU%20Arm%20Embedded%20Toolchain%20Downloads,64-bit,,Linux,8-2019-q3-update
+
+config GCC_FOLDER
+	string
+	default "gcc-arm-none-eabi-6-2017-q1-update"   if GCC_VERSION_6_1_2017Q1
+	default "gcc-arm-none-eabi-6-2017-q2-update"   if GCC_VERSION_6_1_2017Q2
+	default "gcc-arm-none-eabi-8-2018-q4-major"    if GCC_VERSION_8_2018Q4
+	# default "gcc-arm-none-eabi-8-2019-q3-update"   if GCC_VERSION_8_2019Q3
 
