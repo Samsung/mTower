@@ -1,0 +1,11 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the docs folder of mTower repository.
+#
+
+if PLATFORM_MPS2_AN505_QEMU
+comment "mps2-an505-qemu Peripheral Configuration Options"
+
+endif # PLATFORM_MPS2_AN505_QEMU
+
+

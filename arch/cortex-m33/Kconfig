@@ -5,20 +5,20 @@
 
 choice
 	prompt "MCU Family"
-	default M2351
+	default ARCH_FAMILY_MPS2
 
-config ARCH_FAMILY_M2351
-	bool "M2351"
+config ARCH_FAMILY_MPS2
+	bool "MPS2"
 	---help---
-		The M2351 architecture
+		The MPS2 architecture
 
 endchoice
 
 config ARCH_FAMILY
 	string
-	default "m2351"            if ARCH_FAMILY_M2351
+	default "mps2"            if ARCH_FAMILY_MPS2
 
-if ARCH_FAMILY_M2351
-comment "M2351 Configuration Options"
-source arch/cortex-m23/m2351/Kconfig
+if ARCH_FAMILY_MPS2
+comment "MPS2 Configuration Options"
+source arch/cortex-m33/mps2/Kconfig
 endif

@@ -14,6 +14,7 @@
 /mtower.*
 /mtower-*
 *.map
+.vscode
 *.elf
 /*.srec
 *.bin
