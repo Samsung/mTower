@@ -1,42 +1,15 @@
 // SPDX-License-Identifier: BSD-2-Clause
 /*
  * Copyright (c) 2014, STMicroelectronics International N.V.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
  */
 #include <stdlib.h>
 #include <string.h>
 
 #include <tee_api.h>
 #include <utee_syscalls.h>
-//#include "tee_api_private.h"
-#include "utee_types.h"
+#include "tee_api_private.h"
 
 #define TEE_USAGE_DEFAULT   0xffffffff
-
-#define TEE_ATTR_BIT_VALUE                  (1 << 29)
-#define TEE_ATTR_BIT_PROTECTED              (1 << 28)
 
 void __utee_from_attr(struct utee_attribute *ua, const TEE_Attribute *attrs,
 			uint32_t attr_count)
@@ -45,7 +18,7 @@ void __utee_from_attr(struct utee_attribute *ua, const TEE_Attribute *attrs,
 
 	for (n = 0; n < attr_count; n++) {
 		ua[n].attribute_id = attrs[n].attributeID;
-		if (attrs[n].attributeID & TEE_ATTR_BIT_VALUE) {
+		if (attrs[n].attributeID & TEE_ATTR_FLAG_VALUE) {
 			ua[n].a = attrs[n].content.value.a;
 			ua[n].b = attrs[n].content.value.b;
 		} else {
@@ -85,6 +58,7 @@ TEE_Result TEE_GetObjectInfo1(TEE_ObjectHandle object, TEE_ObjectInfo *objectInf
 {
 	TEE_Result res;
 
+	__utee_check_out_annotation(objectInfo, sizeof(*objectInfo));
 	res = utee_cryp_obj_get_info((unsigned long)object, objectInfo);
 
 	if (res != TEE_SUCCESS &&
@@ -138,12 +112,14 @@ TEE_Result TEE_GetObjectBufferAttribute(TEE_ObjectHandle object,
 	TEE_ObjectInfo info;
 	uint64_t sz;
 
+	__utee_check_inout_annotation(size, sizeof(*size));
+
 	res = utee_cryp_obj_get_info((unsigned long)object, &info);
 	if (res != TEE_SUCCESS)
 		goto exit;
 
 	/* This function only supports reference attributes */
-	if ((attributeID & TEE_ATTR_BIT_VALUE)) {
+	if ((attributeID & TEE_ATTR_FLAG_VALUE)) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		goto exit;
 	}
@@ -173,12 +149,17 @@ TEE_Result TEE_GetObjectValueAttribute(TEE_ObjectHandle object,
 	uint32_t buf[2];
 	uint64_t size = sizeof(buf);
 
+	if (a)
+		__utee_check_out_annotation(a, sizeof(*a));
+	if (b)
+		__utee_check_out_annotation(b, sizeof(*b));
+
 	res = utee_cryp_obj_get_info((unsigned long)object, &info);
 	if (res != TEE_SUCCESS)
 		goto exit;
 
 	/* This function only supports value attributes */
-	if (!(attributeID & TEE_ATTR_BIT_VALUE)) {
+	if (!(attributeID & TEE_ATTR_FLAG_VALUE)) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		goto exit;
 	}
@@ -226,6 +207,8 @@ TEE_Result TEE_AllocateTransientObject(TEE_ObjectType objectType,
 {
 	TEE_Result res;
 	uint32_t obj;
+
+	__utee_check_out_annotation(object, sizeof(*object));
 
 	res = utee_cryp_obj_alloc(objectType, maxKeySize, &obj);
 
@@ -288,6 +271,8 @@ TEE_Result TEE_PopulateTransientObject(TEE_ObjectHandle object,
 	TEE_ObjectInfo info;
 	struct utee_attribute ua[attrCount];
 
+	__utee_check_attr_in_annotation(attrs, attrCount);
+
 	res = utee_cryp_obj_get_info((unsigned long)object, &info);
 	if (res != TEE_SUCCESS)
 		TEE_Panic(res);
@@ -301,7 +286,7 @@ TEE_Result TEE_PopulateTransientObject(TEE_ObjectHandle object,
 		TEE_Panic(0);
 
 	__utee_from_attr(ua, attrs, attrCount);
-res = utee_cryp_obj_populate((unsigned long)object, ua, attrCount);
+	res = utee_cryp_obj_populate((unsigned long)object, ua, attrCount);
 	if (res != TEE_SUCCESS && res != TEE_ERROR_BAD_PARAMETERS)
 		TEE_Panic(res);
 	return res;
@@ -310,9 +295,9 @@ res = utee_cryp_obj_populate((unsigned long)object, ua, attrCount);
 void TEE_InitRefAttribute(TEE_Attribute *attr, uint32_t attributeID,
 			  const void *buffer, uint32_t length)
 {
-	if (attr == NULL)
-		TEE_Panic(0);
-	if ((attributeID & TEE_ATTR_BIT_VALUE) != 0)
+	__utee_check_out_annotation(attr, sizeof(*attr));
+
+	if ((attributeID & TEE_ATTR_FLAG_VALUE) != 0)
 		TEE_Panic(0);
 	attr->attributeID = attributeID;
 	attr->content.ref.buffer = (void *)buffer;
@@ -322,9 +307,9 @@ void TEE_InitRefAttribute(TEE_Attribute *attr, uint32_t attributeID,
 void TEE_InitValueAttribute(TEE_Attribute *attr, uint32_t attributeID,
 			    uint32_t a, uint32_t b)
 {
-	if (attr == NULL)
-		TEE_Panic(0);
-	if ((attributeID & TEE_ATTR_BIT_VALUE) == 0)
+	__utee_check_out_annotation(attr, sizeof(*attr));
+
+	if ((attributeID & TEE_ATTR_FLAG_VALUE) == 0)
 		TEE_Panic(0);
 	attr->attributeID = attributeID;
 	attr->content.value.a = a;
@@ -394,6 +379,8 @@ TEE_Result TEE_GenerateKey(TEE_ObjectHandle object, uint32_t keySize,
 	TEE_Result res;
 	struct utee_attribute ua[paramCount];
 
+	__utee_check_attr_in_annotation(params, paramCount);
+
 	__utee_from_attr(ua, params, paramCount);
 	res = utee_cryp_obj_generate_key((unsigned long)object, keySize,
 					 ua, paramCount);
@@ -413,27 +400,13 @@ TEE_Result TEE_OpenPersistentObject(uint32_t storageID, const void *objectID,
 	TEE_Result res;
 	uint32_t obj;
 
-	if (!objectID) {
-		res = TEE_ERROR_ITEM_NOT_FOUND;
-		goto out;
-	}
-
-	if (objectIDLen > TEE_OBJECT_ID_MAX_LEN) {
-		res = TEE_ERROR_BAD_PARAMETERS;
-		goto out;
-	}
-
-	if (!object) {
-		res = TEE_ERROR_BAD_PARAMETERS;
-		goto out;
-	}
+	__utee_check_out_annotation(object, sizeof(*object));
 
 	res = utee_storage_obj_open(storageID, objectID, objectIDLen, flags,
 				     &obj);
 	if (res == TEE_SUCCESS)
 		*object = (TEE_ObjectHandle)(uintptr_t)obj;
 
-out:
 	if (res != TEE_SUCCESS &&
 	    res != TEE_ERROR_ITEM_NOT_FOUND &&
 	    res != TEE_ERROR_ACCESS_CONFLICT &&
@@ -441,6 +414,9 @@ out:
 	    res != TEE_ERROR_CORRUPT_OBJECT &&
 	    res != TEE_ERROR_STORAGE_NOT_AVAILABLE)
 		TEE_Panic(res);
+
+	if (res != TEE_SUCCESS)
+		*object = TEE_HANDLE_NULL;
 
 	return res;
 }
@@ -455,40 +431,28 @@ TEE_Result TEE_CreatePersistentObject(uint32_t storageID, const void *objectID,
 	TEE_Result res;
 	uint32_t obj;
 
-	if (!objectID) {
-		res = TEE_ERROR_ITEM_NOT_FOUND;
-		goto err;
-	}
-
-	if (objectIDLen > TEE_OBJECT_ID_MAX_LEN) {
-		res = TEE_ERROR_BAD_PARAMETERS;
-		goto err;
-	}
+	__utee_check_out_annotation(object, sizeof(*object));
 
 	res = utee_storage_obj_create(storageID, objectID, objectIDLen, flags,
-				      (unsigned long)attributes, initialData,
-				      initialDataLen, &obj);
-	if (res == TEE_SUCCESS) {
-		if (object)
-			*object = (TEE_ObjectHandle)(uintptr_t)obj;
-		else
-			res = utee_cryp_obj_close(obj);
-		if (res == TEE_SUCCESS)
-			goto out;
-	}
-err:
-	if (object)
+				       (unsigned long)attributes, initialData,
+				       initialDataLen, &obj);
+
+	if (res == TEE_SUCCESS)
+		*object = (TEE_ObjectHandle)(uintptr_t)obj;
+
+	if (res != TEE_SUCCESS &&
+	    res != TEE_ERROR_ITEM_NOT_FOUND &&
+	    res != TEE_ERROR_ACCESS_CONFLICT &&
+	    res != TEE_ERROR_OUT_OF_MEMORY &&
+	    res != TEE_ERROR_STORAGE_NO_SPACE &&
+	    res != TEE_ERROR_CORRUPT_OBJECT &&
+	    res != TEE_ERROR_STORAGE_NOT_AVAILABLE)
+		TEE_Panic(res);
+
+	if (res != TEE_SUCCESS)
 		*object = TEE_HANDLE_NULL;
-	if (res == TEE_ERROR_ITEM_NOT_FOUND ||
-	    res == TEE_ERROR_ACCESS_CONFLICT ||
-	    res == TEE_ERROR_OUT_OF_MEMORY ||
-	    res == TEE_ERROR_STORAGE_NO_SPACE ||
-	    res == TEE_ERROR_CORRUPT_OBJECT ||
-	    res == TEE_ERROR_STORAGE_NOT_AVAILABLE)
-		return res;
-	TEE_Panic(res);
-out:
-	return TEE_SUCCESS;
+
+	return res;
 }
 
 /*
@@ -515,7 +479,7 @@ TEE_Result TEE_CloseAndDeletePersistentObject1(TEE_ObjectHandle object)
 	TEE_Result res;
 
 	if (object == TEE_HANDLE_NULL)
-		return TEE_ERROR_STORAGE_NOT_AVAILABLE;
+		return TEE_SUCCESS;
 
 	res = utee_storage_obj_del((unsigned long)object);
 
@@ -537,18 +501,8 @@ TEE_Result TEE_RenamePersistentObject(TEE_ObjectHandle object,
 		goto out;
 	}
 
-	if (!newObjectID) {
-		res = TEE_ERROR_BAD_PARAMETERS;
-		goto out;
-	}
-
-	if (newObjectIDLen > TEE_OBJECT_ID_MAX_LEN) {
-		res = TEE_ERROR_BAD_PARAMETERS;
-		goto out;
-	}
-
-	res = utee_storage_obj_rename((unsigned long)object, newObjectID,
-				      newObjectIDLen);
+	res = _utee_storage_obj_rename((unsigned long)object, newObjectID,
+				       newObjectIDLen);
 
 out:
 	if (res != TEE_SUCCESS &&
@@ -566,8 +520,8 @@ TEE_Result TEE_AllocatePersistentObjectEnumerator(TEE_ObjectEnumHandle *
 	TEE_Result res;
 	uint32_t oe;
 
-	if (!objectEnumerator)
-		return TEE_ERROR_BAD_PARAMETERS;
+	__utee_check_out_annotation(objectEnumerator,
+				    sizeof(*objectEnumerator));
 
 	res = utee_storage_alloc_enum(&oe);
 
@@ -636,12 +590,11 @@ TEE_Result TEE_GetNextPersistentObject(TEE_ObjectEnumHandle objectEnumerator,
 	TEE_ObjectInfo local_info;
 	TEE_ObjectInfo *pt_info;
 
-	if (!objectID) {
-		res = TEE_ERROR_BAD_PARAMETERS;
-		goto out;
-	}
+	if (objectInfo)
+		__utee_check_out_annotation(objectInfo, sizeof(*objectInfo));
+	__utee_check_out_annotation(objectIDLen, sizeof(*objectIDLen));
 
-	if (!objectIDLen) {
+	if (!objectID) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		goto out;
 	}
@@ -677,6 +630,7 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
 		res = TEE_ERROR_BAD_PARAMETERS;
 		goto out;
 	}
+	__utee_check_out_annotation(count, sizeof(*count));
 
 	cnt64 = *count;
 	res = utee_storage_obj_read((unsigned long)object, buffer, size,
