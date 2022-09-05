@@ -190,8 +190,15 @@ static int sign_pFwInfo(FW_INFO_T *pFwInfo, ECC_KEY_T *ecdsa_key)
   BIGNUM* y = BN_bin2bn((void *) ecdsa_key->Qy, 32, NULL);
   BIGNUM* d = BN_bin2bn((void *) ecdsa_key->d, 32, NULL);
 
-  EC_KEY_set_private_key(eckey, d);
-  EC_KEY_set_public_key_affine_coordinates(eckey, x, y);
+  if(!EC_KEY_set_private_key(eckey, d)) {
+    printf("Failed to sets the private key\n");
+    goto exit;
+  }
+
+  if(!EC_KEY_set_public_key_affine_coordinates(eckey, x, y)) {
+    printf("Failed to sets the public key\n");
+    goto exit;
+  }
 
   uint32_t au32HeadHash[8];
   unsigned int u32Size = sizeof(FW_INFO_T) - sizeof(ECDSA_SIGN_T);

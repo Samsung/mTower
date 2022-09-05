@@ -132,7 +132,11 @@ Message *aes256_encrypt(Message * plaintext)
 
   encrypted_message = message_init(enc_length);
   //set up encryption context
-  enc_ctx = EVP_CIPHER_CTX_new();
+  if(!(enc_ctx = EVP_CIPHER_CTX_new())){
+    printf("EVP Error: couldn't allocate a cipher context!\n");
+    return NULL;
+  }
+
   EVP_EncryptInit(enc_ctx, EVP_aes_256_cfb(), plaintext->aes_settings->key,
       plaintext->aes_settings->iv);
   //encrypt all the bytes up to but not including the last block
