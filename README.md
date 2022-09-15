@@ -26,9 +26,9 @@ the beginnings of corresponding files; also, all licenses are listed in
 --- 
 ## 3. Platforms supported
 
-| **NuMaker-PFM-M2351** | **M2351-Badge** | **How to add a platform**             |           |
+| **NuMaker-PFM-M2351** | **M2351-Badge** | **V2M-MPS2-Qemu** | **How to add a platform** |
 |-----------------------|---------------------------|-------------|-----------|
-|[![](docs/images/platforms/numaker_pfm_m2351/numaker_pfm_m2351.png)](docs/numaker_pfm_m2351.md)|[![](docs/images/platforms/m2351_badge/m2351_badge.png)](docs/m2351_badge.md) |[![](docs/images/platforms/add_new_board.jpg)](docs/port-new-platform.md)||
+|[![](docs/images/platforms/numaker_pfm_m2351/numaker_pfm_m2351.png)](docs/numaker_pfm_m2351.md)|[![](docs/images/platforms/m2351_badge/m2351_badge.png)](docs/m2351_badge.md) |[![V2M-MPS2-Qemu](docs/images/platforms/v2m-mps2/v2m-mps2.png)](docs/v2m-mps2-qemu.md)|[![](docs/images/platforms/add_new_board.jpg)](docs/port-new-platform.md)|
 
 
 Several platforms are supported. In order to manage slight differences
@@ -36,8 +36,9 @@ between platforms, a `PLATFORM` flag has been introduced.
 
 | Platform              | Composite PLATFORM flag            | Maintained |
 |-----------------------|------------------------------------|------------|
-| [NuMaker-PFM-M2351]   |`PLATFORM=numaker_pfm_m2351`        | v0.3       |
-| [M2351-Badge]         |`PLATFORM=m2351_badge`              | v0.3       |
+| [NuMaker-PFM-M2351]   |`PLATFORM=numaker_pfm_m2351`        | v0.4       |
+| [M2351-Badge]         |`PLATFORM=m2351_badge`              | v0.4       |
+| [V2M-MPS2-Qemu]       |`PLATFORM=mps2_an505_qemu`          | v0.4       |
 
 For information on adding a new platform see the [how to add a platform].
 
@@ -88,4 +89,5 @@ you can find here](.github/CONTRIBUTING.md).
 [doxygen]: http://www.doxygen.nl
 [NuMaker-PFM-M2351]: http://www.nuvoton.com.cn/hq/products/iot-solution/iot-platform/numaker-maker-platform/numaker-pfm-m2351?__locale=en
 [M2351-Badge]: docs/schemes/m2351_badge
+[V2M-MPS2-Qemu]: https://developer.arm.com/documentation/100964/1114/Microcontroller-Prototyping-System-2?lang=en
 

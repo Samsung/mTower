@@ -6,8 +6,9 @@ differences between platforms, a `PLATFORM` flag has been introduced.
 
 | Platform            | Composite PLATFORM flag     | Maintained |  Quick start guide doc |
 |---------------------|-----------------------------|------------|------------------------| 
-| [NuMaker-PFM-M2351] |`PLATFORM=numaker_pfm_m2351` | v0.3       | [numaker_pfm_m2351.md] |
-| [M2351-Badge]       |`PLATFORM=m2351_badge`       | v0.3       | [m2351_badge.md]       |
+| [NuMaker-PFM-M2351] |`PLATFORM=numaker_pfm_m2351` | v0.4       | [numaker_pfm_m2351.md] |
+| [M2351-Badge]       |`PLATFORM=m2351_badge`       | v0.4       | [m2351_badge.md]       |
+| [V2M-MPS2-Qemu]     |`PLATFORM=mps2_an505_qemu`   | v0.4       | [v2m-mps2-qemu.md]     |
 
 
 ---
@@ -159,3 +160,4 @@ Please see instructions for specific devices (e.g., for NuMaker-PFM-M2351, see [
 [numaker_pfm_m2351.md]: ./numaker_pfm_m2351.md
 [M2351-Badge]: ./m2351_badge.md
 [m2351_badge.md]: ./m2351_badge.md
+[v2m-mps2-qemu.md]: ./v2m-mps2-qemu.md
