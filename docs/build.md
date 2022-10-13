@@ -10,7 +10,6 @@ differences between platforms, a `PLATFORM` flag has been introduced.
 | [M2351-Badge]       |`PLATFORM=m2351_badge`       | v0.4       | [m2351_badge.md]       |
 | [V2M-MPS2-Qemu]     |`PLATFORM=mps2_an505_qemu`   | v0.4       | [v2m-mps2-qemu.md]     |
 
-
 ---
 
 ## 2. Get and build the solution
@@ -26,7 +25,7 @@ to start with. Therefore install the following packages regardless of what
 target you will use in the end.
 
 ```sh
-$ sudo apt-get install git gcc subversion make gperf flex bison libncurses5-dev texinfo g++ curl pkg-config 	autoconf libtool libtool-bin libc6:i386 libc6-dev:i386 gcc-multilib doxygen doxygen-gui libssl-dev libcurl4-openssl-dev wget
+sudo apt-get install git gcc subversion make gperf flex bison libncurses5-dev texinfo g++ curl pkg-config autoconf libtool libtool-bin libc6:i386 libc6-dev:i386 gcc-multilib doxygen doxygen-gui libssl-dev libcurl4-openssl-dev wget
 ```
 
 ### 2.2 Building kconfig-frontends in Linux (optional)
@@ -40,9 +39,9 @@ folder.
 #### 2.2.1 Download and extract the source tarball
 
 ```sh
-$ curl -O http://ymorin.is-a-geek.org/download/kconfig-frontends/kconfig-frontends-3.12.0.0.tar.xz
-$ tar -xf kconfig-frontends-3.12.0.0.tar.xz
-$ cd kconfig-frontends-3.12.0.0
+curl -O http://ymorin.is-a-geek.org/download/kconfig-frontends/kconfig-frontends-3.12.0.0.tar.xz
+tar -xf kconfig-frontends-3.12.0.0.tar.xz
+cd kconfig-frontends-3.12.0.0
 ```
 > Sometimes the http://ymorin.is-a-geek.org site does not work, in this case
 you can download it [here](https://autobuilder.yocto.io/pub/sources/) or find
@@ -75,9 +74,9 @@ your build to fail with following error message:
 The procedure to fix is below:
 
 ```sh
-$ curl -O https://gist.githubusercontent.com/KamilSzczygiel/d16a5d88075939578f7bd8fadd0907aa/raw/1928495cfb6a6141365d545a23d66203222d28c0/kconfig-frontends.patch
-$ patch -p1 -i kconfig-frontends.patch
-$ autoreconf -fi
+curl -O https://gist.githubusercontent.com/KamilSzczygiel/d16a5d88075939578f7bd8fadd0907aa/raw/1928495cfb6a6141365d545a23d66203222d28c0/kconfig-frontends.patch
+patch -p1 -i kconfig-frontends.patch
+autoreconf -fi
 ```
 #### 2.2.4 Configure
 
@@ -85,13 +84,13 @@ The recommended set of options to configure kconfig-frontends for use with
 distortos would be:
 
 ```sh
-$ ./configure --enable-conf --enable-mconf --disable-shared --enable-static
+./configure --enable-conf --enable-mconf --disable-shared --enable-static
 ```
 #### 2.2.5 Compile and install
 
 ```sh
-$ make
-$ sudo make install
+make
+sudo make install
 # sudo strip /usr/local/bin/kconfig-*
 cd <mTower_PATH>
 ```
@@ -101,7 +100,7 @@ cd <mTower_PATH>
 ### 2.3 Get the source code
 
 ```sh
-$ git clone https://github.com/Samsung/mTower.git
+git clone https://github.com/Samsung/mTower.git
 ```
 Choose the PLATFORM corresponding to the platform you intend to use. For
 example, if you intend to use NuMaker-PFM-M2351, then `PLATFORM` should be
@@ -109,19 +108,29 @@ example, if you intend to use NuMaker-PFM-M2351, then `PLATFORM` should be
 options.
 
 ```sh
-$ cd mTower/
-$ make PLATFORM=numaker_pfm_m2351 create_context
+cd mTower/
+```
+```sh
+make PLATFORM=numaker_pfm_m2351 create_context
 ```
 
 To use BootLoader2 for M2351 Nuvoton chips, you need to download NuBL2 sources and 
 syscall file. This can be done by executing following shell commands:
 
 ```sh
-$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/Library/Device/Nuvoton/M2351/Source/GCC/_syscalls.c ./arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/_syscalls.c
-$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/main.c ./arch/cortex-m23/m2351/src/NuBL2/
-$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/VerifyNuBL3x.c ./arch/cortex-m23/m2351/src/NuBL2/
-$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/NuBL2.h ./arch/cortex-m23/m2351/src/NuBL2/
-$ svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/FwInfo/FwInfo.c ./arch/cortex-m23/m2351/src/NuBL2
+svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/Library/Device/Nuvoton/M2351/Source/GCC/_syscalls.c ./arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/_syscalls.c
+```
+```sh
+svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/main.c ./arch/cortex-m23/m2351/src/NuBL2/
+```
+```sh
+svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/VerifyNuBL3x.c ./arch/cortex-m23/m2351/src/NuBL2/
+```
+```sh
+svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/NuBL2.h ./arch/cortex-m23/m2351/src/NuBL2/
+```
+```sh
+svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/FwInfo/FwInfo.c ./arch/cortex-m23/m2351/src/NuBL2
 ```
 
 > Please note that files from these downloads contain the following copyright
@@ -138,7 +147,7 @@ architecture 32-bit solutions). In any case start by downloading the
 toolchains by:
 
 ```sh
-$ make toolchain
+make toolchain
 ```
 ### 2.5 Build the solution
 We've configured default .config and Make.defs for each platforms, so that 
@@ -146,7 +155,7 @@ configuration will always automatically to the correct device specific make,
 that means that you simply start the build by running:
 
 ```sh
-$ make
+make
 ```
 
 ### 2.6 Flash the device
@@ -160,4 +169,5 @@ Please see instructions for specific devices (e.g., for NuMaker-PFM-M2351, see [
 [numaker_pfm_m2351.md]: ./numaker_pfm_m2351.md
 [M2351-Badge]: ./m2351_badge.md
 [m2351_badge.md]: ./m2351_badge.md
+[V2M-MPS2-Qemu]: https://developer.arm.com/documentation/100964/1114/Microcontroller-Prototyping-System-2?lang=en
 [v2m-mps2-qemu.md]: ./v2m-mps2-qemu.md

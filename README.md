@@ -62,12 +62,12 @@ the code also uses other open source components.
 There is a brief overall [functionality description](docs/mtower_functionality_description.md) of mTower. Other mTower documentation for the project is located in the [docs] folder. The latest version of the specification that describes the mTower source code can be generated using [doxygen] tool from command line. To generate documentation, use
 
 ```sh
-$ make docs_gen
+make docs_gen
 ```
 command, and to view generated docs use
 
 ```sh
-$ make docs_show
+make docs_show
 ```
 > Note that documentation on mTower is work in progress, and right now doxygen does not provide much documentation.
 
@@ -90,4 +90,3 @@ you can find here](.github/CONTRIBUTING.md).
 [NuMaker-PFM-M2351]: http://www.nuvoton.com.cn/hq/products/iot-solution/iot-platform/numaker-maker-platform/numaker-pfm-m2351?__locale=en
 [M2351-Badge]: docs/schemes/m2351_badge
 [V2M-MPS2-Qemu]: https://developer.arm.com/documentation/100964/1114/Microcontroller-Prototyping-System-2?lang=en
-
