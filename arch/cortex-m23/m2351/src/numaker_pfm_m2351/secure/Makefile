@@ -72,7 +72,7 @@ LIBS =  -lm -lc -lnosys -lm2351_StdDriver_s -lcrypt_s
 $(AOBJS_S): $(OBJDIR)/%$(OBJEXT): %.S
 	$(Q) mkdir -p $(OBJDIR)/$(dir $<)
 	@echo "AS: $<"
-	$(Q) $(CC) -c $(AFLAGS) -mcmse -DHeap_Size=0x00000700 -DStack_Size=0x00000B00 $< -o $@
+	$(Q) $(CC) -c $(AFLAGS) -mcmse -DHeap_Size=0x00001400 -DStack_Size=0x00000B00 $< -o $@
 
 $(COBJS_S): $(OBJDIR)/%$(OBJEXT): %.c
 	$(Q) mkdir -p $(OBJDIR)/$(dir $<)
