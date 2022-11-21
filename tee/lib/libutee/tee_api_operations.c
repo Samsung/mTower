@@ -1246,6 +1246,11 @@ TEE_Result TEE_MACCompareFinal(TEE_OperationHandle operation,
 	uint8_t computed_mac[TEE_MAX_HASH_SIZE];
 	uint32_t computed_mac_size = TEE_MAX_HASH_SIZE;
 
+	if (operation == TEE_HANDLE_NULL) {
+		res = TEE_ERROR_BAD_PARAMETERS;
+		goto out;
+	}
+
 	if (operation->info.operationClass != TEE_OPERATION_MAC) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		goto out;
