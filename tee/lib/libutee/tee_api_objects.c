@@ -269,6 +269,11 @@ TEE_Result TEE_PopulateTransientObject(TEE_ObjectHandle object,
 {
 	TEE_Result res;
 	TEE_ObjectInfo info;
+
+	if (attrCount > 4) {
+		TEE_Panic(TEE_ERROR_BAD_PARAMETERS);
+		return TEE_ERROR_BAD_PARAMETERS;
+	}
 	struct utee_attribute ua[attrCount];
 
 	__utee_check_attr_in_annotation(attrs, attrCount);
