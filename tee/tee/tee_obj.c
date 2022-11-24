@@ -99,7 +99,8 @@ TEE_Result tee_obj_verify(struct tee_ta_session *sess, struct tee_obj *o)
 
 struct tee_obj *tee_obj_alloc(void)
 {
-	return calloc(1, sizeof(struct tee_obj));
+	// return calloc(1, sizeof(struct tee_obj));
+	return TEE_Malloc(sizeof(struct tee_obj), TEE_MALLOC_FILL_ZERO);
 }
 
 void tee_obj_free(struct tee_obj *o)

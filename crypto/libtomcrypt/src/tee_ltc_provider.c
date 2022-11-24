@@ -390,7 +390,8 @@ TEE_Result crypto_hash_alloc_ctx(void **ctx_ret, uint32_t algo)
 	if (res)
 		return res;
 
-	ctx = calloc(1, ctx_size);
+	ctx = TEE_Malloc(ctx_size, TEE_MALLOC_FILL_ZERO);
+	// ctx = calloc(1, ctx_size);
 	if (!ctx)
 		return TEE_ERROR_OUT_OF_MEMORY;
 
@@ -697,8 +698,8 @@ void crypto_bignum_copy(struct bignum *to, const struct bignum *from)
 struct bignum *crypto_bignum_allocate(size_t size_bits)
 {
 	size_t sz = mpa_StaticVarSizeInU32(size_bits) *	sizeof(uint32_t);
-	struct mpa_numbase_struct *bn = calloc(1, sz);
-
+	// struct mpa_numbase_struct *bn = calloc(1, sz);
+	struct mpa_numbase_struct *bn= TEE_Malloc(sz, TEE_MALLOC_FILL_ZERO);
 	if (!bn)
 		return NULL;
 	bn->alloc = sz - MPA_NUMBASE_METADATA_SIZE_IN_U32 * sizeof(uint32_t);
@@ -1999,7 +2000,8 @@ TEE_Result crypto_cipher_alloc_ctx(void **ctx_ret, uint32_t algo)
 	if (res)
 		return res;
 
-	ctx = calloc(1, ctx_size);
+	// ctx = calloc(1, ctx_size);
+	ctx = TEE_Malloc(ctx_size, TEE_MALLOC_FILL_ZERO);
 	if (!ctx)
 		return TEE_ERROR_OUT_OF_MEMORY;
 
@@ -2351,8 +2353,8 @@ TEE_Result crypto_mac_alloc_ctx(void **ctx_ret, uint32_t algo)
 	res = mac_get_ctx_size(algo, &ctx_size);
 	if (res)
 		return res;
-
-	ctx = calloc(1, ctx_size);
+	ctx = TEE_Malloc(ctx_size, TEE_MALLOC_FILL_ZERO);
+	// ctx = calloc(1, ctx_size);
 	if (!ctx)
 		return TEE_ERROR_OUT_OF_MEMORY;
 
@@ -2637,7 +2639,8 @@ struct tee_ccm_state {
 
 TEE_Result crypto_aes_ccm_alloc_ctx(void **ctx_ret)
 {
-	struct tee_ccm_state *ctx = calloc(1, sizeof(*ctx));
+	struct tee_ccm_state *ctx = TEE_Malloc(sizeof(*ctx), TEE_MALLOC_FILL_ZERO);
+	// struct tee_ccm_state *ctx = calloc(1, sizeof(*ctx));
 
 	if (!ctx)
 		return TEE_ERROR_OUT_OF_MEMORY;
@@ -2817,7 +2820,8 @@ struct tee_gcm_state {
 
 TEE_Result crypto_aes_gcm_alloc_ctx(void **ctx_ret)
 {
-	struct tee_gcm_state *ctx = calloc(1, sizeof(*ctx));
+	struct tee_gcm_state *ctx =  TEE_Malloc(sizeof(*ctx), TEE_MALLOC_FILL_ZERO);
+	// struct tee_gcm_state *ctx = calloc(1, sizeof(*ctx));
 
 	if (!ctx)
 		return TEE_ERROR_OUT_OF_MEMORY;

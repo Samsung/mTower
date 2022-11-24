@@ -505,7 +505,10 @@ static TEE_Result tee_ta_init_session(TEE_ErrorOrigin *err,
 	TEE_Result res;
 //	struct tee_ta_ctx *ctx;
 //  struct tee_ta_session *s = calloc(1, sizeof(struct tee_ta_session));
-  struct tee_ta_session *s = malloc(sizeof(struct tee_ta_session));
+
+// TEE_Malloc(sizeof(struct pseudo_ta_ctx), TEE_MALLOC_FILL_ZERO);
+//   struct tee_ta_session *s = malloc(sizeof(struct tee_ta_session));
+  struct tee_ta_session *s = TEE_Malloc(sizeof(struct tee_ta_session), TEE_MALLOC_FILL_ZERO);
   *err = TEE_ORIGIN_TEE;
   if (!s)
     return TEE_ERROR_OUT_OF_MEMORY;

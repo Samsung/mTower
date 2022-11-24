@@ -315,7 +315,8 @@ TEE_Result tee_ta_init_pseudo_ta_session(const TEE_UUID *uuid,
 
 	/* Load a new TA and create a session */
 	DMSG("Open %s", ta->name);
-	stc = calloc(1, sizeof(struct pseudo_ta_ctx));
+	// stc = calloc(1, sizeof(struct pseudo_ta_ctx));
+	stc = TEE_Malloc(sizeof(struct pseudo_ta_ctx), TEE_MALLOC_FILL_ZERO);
 	if (!stc)
 		return TEE_ERROR_OUT_OF_MEMORY;
 	ctx = &stc->ctx;
