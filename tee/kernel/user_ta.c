@@ -810,7 +810,8 @@ TEE_Result tee_ta_init_user_ta_session(const TEE_UUID *uuid,
   DMSG("Open %s", ta_head->name);
 
   /* Register context */
-  utc = calloc(1, sizeof(struct user_ta_ctx));
+  // utc = calloc(1, sizeof(struct user_ta_ctx));
+  utc = TEE_Malloc(sizeof(struct user_ta_ctx), TEE_MALLOC_FILL_ZERO);
   if (!utc) {
     res = TEE_ERROR_OUT_OF_MEMORY;
     goto error_return;

@@ -1192,7 +1192,8 @@ TEE_Result tee_obj_set_type(struct tee_obj *o, uint32_t obj_type,
 		if (max_key_size > type_props->max_size)
 			return TEE_ERROR_NOT_SUPPORTED;
 
-		o->attr = calloc(1, type_props->alloc_size);
+		o->attr = TEE_Malloc(type_props->alloc_size, TEE_MALLOC_FILL_ZERO);
+		// o->attr = calloc(1, type_props->alloc_size);
 		if (!o->attr)
 			return TEE_ERROR_OUT_OF_MEMORY;
 	}
@@ -2012,7 +2013,8 @@ TEE_Result utee_cryp_state_alloc(unsigned long algo, unsigned long mode,
 			return res;
 	}
 
-	cs = calloc(1, sizeof(struct tee_cryp_state));
+	cs = TEE_Malloc(sizeof(struct tee_cryp_state), TEE_MALLOC_FILL_ZERO);
+	// cs = calloc(1, sizeof(struct tee_cryp_state));
 	if (!cs)
 		return TEE_ERROR_OUT_OF_MEMORY;
 	TAILQ_INSERT_TAIL(&utc->cryp_states, cs, link);
