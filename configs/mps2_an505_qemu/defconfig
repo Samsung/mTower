@@ -135,6 +135,11 @@ CONFIG_PLATFORM_MPS2_AN505_QEMU=y
 CONFIG_GCC_VERSION_8_2018Q4=y
 
 #
+# GP TEE Configuration
+#
+CONFIG_MAX_CRYPTO_CHUNK_SIZE=0x400
+
+#
 # Application Configuration
 #
 
