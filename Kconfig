@@ -259,6 +259,16 @@ endmenu
 #source "libc/Kconfig"
 #endmenu
 
+menu "GP TEE Configuration"
+
+config MAX_CRYPTO_CHUNK_SIZE
+	hex "Maximum crypto chunk size (hex)"
+	default 0x400
+	default 0x00010000 if BOOTLOADER2
+	---help---
+		"Maximum chunk size for TEE crypto operations. Keep in mind that this is the heap size..."
+endmenu
+
 menu "Application Configuration"
 source "apps/Kconfig"
 endmenu

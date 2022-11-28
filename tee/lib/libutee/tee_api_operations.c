@@ -38,6 +38,8 @@
 #include "tee_api_private.h"
 #include "utee_types.h"
 
+#include "config.h"
+
 TEE_Result utee_cipher_update(unsigned long state, const void *src,
     size_t src_len, void *dst, uint64_t *dst_len);
 
@@ -972,7 +974,8 @@ TEE_Result TEE_CipherUpdate(TEE_OperationHandle operation, const void *srcData,
 	if (operation == TEE_HANDLE_NULL ||
 	    (srcData == NULL && srcLen != 0) ||
 	    destLen == NULL ||
-	    (destData == NULL && *destLen != 0)) {
+	    (destData == NULL && *destLen != 0) ||
+	    (srcLen > CONFIG_MAX_CRYPTO_CHUNK_SIZE || *destLen > CONFIG_MAX_CRYPTO_CHUNK_SIZE)) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		goto out;
 	}
@@ -1185,6 +1188,9 @@ void TEE_MACUpdate(TEE_OperationHandle operation, const void *chunk,
 	if (operation->operationState != TEE_OPERATION_STATE_ACTIVE)
 		TEE_Panic(0);
 
+	if (CONFIG_MAX_CRYPTO_CHUNK_SIZE < chunkSize)
+		TEE_Panic(TEE_ERROR_BAD_PARAMETERS);
+
 	res = utee_hash_update(operation->state, chunk, chunkSize);
 	if (res != TEE_SUCCESS)
 		TEE_Panic(res);
@@ -1216,6 +1222,11 @@ TEE_Result TEE_MACComputeFinal(TEE_OperationHandle operation,
 	}
 
 	if (operation->operationState != TEE_OPERATION_STATE_ACTIVE) {
+		res = TEE_ERROR_BAD_PARAMETERS;
+		goto out;
+	}
+
+	if (CONFIG_MAX_CRYPTO_CHUNK_SIZE < *macLen) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		goto out;
 	}

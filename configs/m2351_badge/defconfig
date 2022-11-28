@@ -429,6 +429,11 @@ CONFIG_GCC_SITE="https://armkeil.blob.core.windows.net/developer/Files/downloads
 CONFIG_GCC_FOLDER="gcc-arm-none-eabi-6-2017-q2-update"
 
 #
+# GP TEE Configuration
+#
+CONFIG_MAX_CRYPTO_CHUNK_SIZE=0x400
+
+#
 # Application Configuration
 #
 
