@@ -77,7 +77,7 @@ $(COBJS_NS): $(OBJDIR)/%$(OBJEXT): %.c
 	$(Q) $(CC) -c $(CFLAGS) $< -o $@
 
 mtower_ns$(EXEEXT): $(OBJS_NS) 
-	$(Q) $(MAKE) -C $(TOPDIR)/freertos/ TOPDIR="$(TOPDIR)" libFreeRTOS_ns.a
+	$(Q) $(MAKE) -C $(TOPDIR)/freertos/ TOPDIR="$(TOPDIR)" FREE_RTOS_ARCH=ARM_V8M libFreeRTOS_ns.a
 	$(Q) $(MAKE) -C ../../StdDriver/src/ TOPDIR="$(TOPDIR)" libm2351_StdDriver_ns.a
 	@echo "LD: mTower_ns$(EXEEXT)"
 	$(Q) $(CC) $(CFLAGS) -Wl,--section-start=.text=$(CONFIG_START_ADDRESS_BL33) -Tnonsecure.ld $(OBJS_NS) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl33.elf

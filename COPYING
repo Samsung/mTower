@@ -269,30 +269,23 @@ arch/cortex-m23/m2351/src/CMSIS/Include/
  * limitations under the License.
  */
 
-Please keep in mind that after downloading source code of std driver
-for M2351 Nuvoton chip the two copyright notices given below become
-valid.
-
-./arch/cortex-m23/m2351/src/NuBL2/main.c
-./arch/cortex-m23/m2351/src/NuBL2/VerifyNuBL3x.c
-./arch/cortex-m23/m2351/src/NuBL2/NuBL2.h
-./arch/cortex-m23/m2351/src/NuBL2/FwInfo.c
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/**
-  * Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.
-  */
-
+arch/cortex-m23/m2351/src/NuBL2/main.c
+arch/cortex-m23/m2351/src/NuBL2/VerifyNuBL3x.c
+arch/cortex-m23/m2351/src/NuBL2/NuBL2.h
+arch/cortex-m23/m2351/src/NuBL2/FwInfo.c
 arch/cortex-m23/m2351/src/Device/
 arch/cortex-m23/m2351/src/StdDriver/
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/*
  * SPDX-License-Identifier: Apache-2.0
  * @copyright (C) 2016-2020 Nuvoton Technology Corp. All rights reserved.
+ */
 
 freertos/
 ^^^^^^^^
- /*
- * FreeRTOS Kernel V10.1.1
- * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+/*
+ * FreeRTOS Kernel V10.2.1
+ * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in

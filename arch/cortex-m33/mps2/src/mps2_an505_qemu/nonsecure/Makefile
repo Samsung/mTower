@@ -75,7 +75,6 @@ OBJS_NS = $(AOBJS_NS) $(COBJS_NS)
 
 LIBPATHS = -L. -L"$(TOPDIR)/lib"
 
-# LIBS =  -lm -lc -lnosys -lStdDriver_ns -lnsc -lFreeRTOS_ns
 LIBS =  -lm -lc -lnosys -lnsc -lFreeRTOS_ns
 
 $(AOBJS_NS): $(OBJDIR)/%$(OBJEXT): %.S
@@ -90,7 +89,7 @@ $(COBJS_NS): $(OBJDIR)/%$(OBJEXT): %.c
 	$(Q) $(CC) -c $(CFLAGS) $< -o $@
 
 mtower_ns$(EXEEXT): $(OBJS_NS) 
-	$(Q) $(MAKE) -C $(TOPDIR)/freertos/ TOPDIR="$(TOPDIR)" libFreeRTOS_ns.a
+	$(Q) $(MAKE) -C $(TOPDIR)/freertos/ TOPDIR="$(TOPDIR)" FREE_RTOS_ARCH=ARM_V8M libFreeRTOS_ns.a
 # $(Q) $(MAKE) -C ../../StdDriver/src/ TOPDIR="$(TOPDIR)" libStdDriver_ns.a
 	@echo "LD: mTower_ns$(EXEEXT)"
 	$(Q) $(CC) $(CFLAGS) -Tnonsecure.ld $(OBJS_NS) $(LIBPATHS) $(LIBS) -Wl,-Map=output.map -o $(OBJDIR)/bl33.elf
