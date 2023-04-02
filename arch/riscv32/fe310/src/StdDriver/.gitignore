@@ -1,0 +1,4 @@
+*.o
+!libmkrom.a
+*.lib
+

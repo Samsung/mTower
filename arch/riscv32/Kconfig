@@ -1,0 +1,36 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the docs folder of mTower repository.
+#
+
+choice
+	prompt "MCU Family"
+	default FE310
+
+config ARCH_FAMILY_FE310
+	bool "FE310"
+	---help---
+		The FE310 architecture
+
+config ARCH_FAMILY_BL808
+	bool "BL808"
+	---help---
+		The BL808 architecture	
+
+endchoice
+
+config ARCH_FAMILY
+	string
+	default "fe310"            if ARCH_FAMILY_FE310
+	default "bl808"            if ARCH_FAMILY_BL808
+
+if ARCH_FAMILY_FE310
+comment "FE310 Configuration Options"
+source arch/riscv32/fe310/Kconfig
+endif
+
+if ARCH_FAMILY_BL808
+comment "BL808 Configuration Options"
+source arch/riscv32/bl808/Kconfig
+endif
+	

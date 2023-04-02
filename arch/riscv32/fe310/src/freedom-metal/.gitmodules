@@ -1,0 +1,3 @@
+[submodule "doc/html"]
+	path = doc/html
+	url = ../freedom-metal-docs.git

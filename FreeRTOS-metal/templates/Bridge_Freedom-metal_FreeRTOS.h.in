@@ -1,0 +1,37 @@
+/**
+ * @file Bridge_Freedom-metal_FreeRTOS.h
+ * @author Pierre-Henry Moussay (pierre-henry.moussay@sifive.com)
+ * @brief Bridge_Freedom-metal_FreeRTOS.h.in template for FreeRTOS
+ * @version 0.1
+ * @date 2020-02-26
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * 
+ */
+
+#ifndef BRIDGE_FREEDOM_METAL_FREERTOS_H
+#define BRIDGE_FREEDOM_METAL_FREERTOS_H
+
+#include <metal/machine/platform.h>
+
+#if defined(METAL_RISCV_CLINT0)
+#define MTIME_CTRL_ADDR               METAL_RISCV_CLINT0_0_BASE_ADDRESS
+#elif defined(METAL_SIFIVE_CLIC0)
+#define MTIME_CTRL_ADDR               METAL_SIFIVE_CLIC0_0_BASE_ADDRESS
+{% if config.freeRTOS.define.MTIME_CTRL_ADDR is defined %}
+#else
+#define MTIME_CTRL_ADDR               {{config.freeRTOS.define.MTIME_CTRL_ADDR}} 
+{% endif %}
+#endif
+
+#define MTIME_RATE_HZ               {{config.freeRTOS.define.MTIME_RATE_HZ}} 
+
+#define portHANDLE_INTERRUPT        {{config.freeRTOS.define.portHANDLE_INTERRUPT}}
+#define portHANDLE_EXCEPTION        {{config.freeRTOS.define.portHANDLE_EXCEPTION}}
+
+{% if config.freeRTOS.define.portUSING_MPU_WRAPPERS is defined %}
+#define portUSING_MPU_WRAPPERS      {{config.freeRTOS.define.portUSING_MPU_WRAPPERS}}
+{% endif %}
+
+#endif /* BRIDGE_FREEDOM_METAL_FREERTOS_H */

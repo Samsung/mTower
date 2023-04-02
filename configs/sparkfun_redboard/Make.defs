@@ -1,0 +1,105 @@
+############################################################################
+# Make.defs
+#
+# Copyright (c) 2019 Samsung Electronics Co., Ltd. All Rights Reserved.
+# Author: Taras Drozdovskyi t.drozdovsky@samsung.com
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+############################################################################
+
+-include ${TOPDIR}/.config
+
+GCC_OFFICIAL_VER:=$(CONFIG_GCC_VERSION)
+GCC_SITE:=$(CONFIG_GCC_SITE)
+GCC_SOURCE:=$(GCC_OFFICIAL_VER).tar.gz
+
+TOOLCHAINPATH=$(TOPDIR)/toolchain/$(subst ",,$(CONFIG_GCC_FOLDER))
+
+CROSSDEV =$(TOOLCHAINPATH)/bin/riscv64-unknown-elf-
+
+CC = $(CROSSDEV)gcc
+LD = $(CROSSDEV)ld
+AR = $(ARCROSSDEV)ar rcs
+NM = $(ARCROSSDEV)nm
+OBJCOPY = $(CROSSDEV)objcopy
+OBJDUMP = $(CROSSDEV)objdump
+SIZE = $(CROSSDEV)size
+
+JC = javac
+
+ARCHWARNINGS = -Wall -Wextra -Wstrict-prototypes -Wshadow -Wundef -Wunused-parameter
+
+ARCHOPTIMIZATION = $(subst ",,$(CONFIG_OPTIMIZATION_LEVEL))
+
+ifeq ($(CONFIG_DEBUG_SYMBOLS),y)
+  ARCHOPTIMIZATION += -g
+else
+  ARCHOPTIMIZATION += -ffunction-sections -fdata-sections
+endif
+
+# Produce debugging information for use by GDB.
+ifeq ($(CONFIG_DEBUG_INF_GDB),y)
+  ARCHOPTIMIZATION += -ggdb
+endif
+
+ARCHCPUFLAGS = -march=rv32imac -mabi=ilp32 -mcmodel=medlow --specs=nano.specs
+
+ARCHINCLUDES  = -I$(TOPDIR)/include
+
+ARCHDEFINES = -DPACKAGE_NAME=\"freedom-metal\" -DPACKAGE_TARNAME=\"freedom-metal\"
+ARCHDEFINES += -DPACKAGE_VERSION=\"v0.1.2\" -DPACKAGE_STRING=\"freedom-metal\ v0.1.2\"
+ARCHDEFINES += -DPACKAGE_BUGREPORT=\"https://github.com/sifive/freedom-metal/issues\"
+ARCHDEFINES += -DPACKAGE_URL=\"https://github.com/sifive/freedom-metal\" -DPACKAGE=\"freedom-metal\" -DVERSION=\"v0.1.2\"
+ARCHDEFINES += -DMTIME_RATE_HZ_DEF=32768 -DportUSING_MPU_WRAPPERS=1 
+
+# -I.
+# -I/home/virtual-box/projects/SiFive/freedom-e-sdk/freedom-metal
+# -I/home/virtual-box/projects/SiFive/freedom-e-sdk/bsp/sifive-hifive1-revb/install/include
+# --specs=nano.specs -DMTIME_RATE_HZ_DEF=32768
+# -O0 -g -MT gloss/sys_read.o -MD -MP -MF
+
+# $depbase.Tpo -c -o gloss/sys_read.o 
+# /home/virtual-box/projects/SiFive/freedom-e-sdk/freedom-metal/gloss/sys_read.c &&\
+#depbase=`echo gloss/sys_sbrk.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+
+CFLAGS  = -std=gnu99 -pipe -Wl,--gc-sections
+
+CFLAGS += $(ARCHWARNINGS) $(ARCHOPTIMIZATION) $(ARCHCPUFLAGS) $(ARCHINCLUDES) $(ARCHDEFINES)
+
+AFLAGS = $(CFLAGS) -D__ASSEMBLY__
+
+LDFLAGS = $(ARCHOPTIMIZATION)
+
+ASMEXT = .S
+OBJEXT = .o
+LIBEXT = .a
+EXEEXT = .elf
+HEXEXT = .hex
+
+ECHO = `which echo`
+
+HOSTCC = gcc
+HOSTINCLUDES = -I.
+HOSTCFLAGS = -Wall -Wstrict-prototypes -Wshadow -Wundef -g -pipe
+HOSTLDFLAGS =
+
+GREEN=\033[0;32m
+NORMAL=\033[0m
+BLACK=\033[0;30m1
+RED=\033[0;31m
+YELLOW=\033[0;33m
+BLUE=\033[0;34m
+MAGENTA=\033[0;35m
+CYAN=\033[0;36m
+GRAY=\033[0;37m

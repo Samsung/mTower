@@ -1,0 +1,8 @@
+BasedOnStyle: LLVM
+Language: Cpp
+
+BreakBeforeBraces: Allman
+
+IndentWidth: 4
+TabWidth : 4
+UseTab : Never

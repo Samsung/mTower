@@ -1,0 +1,41 @@
+on:
+  push:
+    # Require one of the following patterns to match the tag
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+.[0-9]+' # ex. v20.00.00.00
+      - 'v[0-9]+.[0-9]+.RC.[0-9]+'     # ex. v20.00.RC.00
+
+name: Create Release
+
+env:
+  PROJECT_NAME: FreeRTOS-metal
+  # Release is a prerelease if the tag contains rc
+  PRERELEASE: ${{ contains(github.ref, 'RC') }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: 'Create Release Notes'
+        uses: sifive/action-release-notes@v1
+        id: create-release-notes
+        with:
+          project-name: ${{ env.PROJECT_NAME }}
+          release: ${{ github.ref }}
+
+      - name: 'Create Release'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ env.PROJECT_NAME }} ${{ github.ref }}
+          body: ${{ steps.create-release-notes.outputs.release-notes }}
+          draft: false
+          prerelease: ${{ env.PRERELEASE }}

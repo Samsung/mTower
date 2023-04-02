@@ -17,12 +17,18 @@ config ARCH_CORTEX_M33
 	---help---
 		The ARM architecture
 
+config ARCH_RISCV_32
+	bool "riscv32"
+	---help---
+		The ARM architecture
+
 endchoice
 
 config ARCH
 	string
 	default "cortex-m23"    if ARCH_CORTEX_M23
 	default "cortex-m33"    if ARCH_CORTEX_M33
+	default "riscv32"    if ARCH_RISCV_32
 
 if ARCH_CORTEX_M23
 source arch/cortex-m23/Kconfig
@@ -30,6 +36,10 @@ endif
 
 if ARCH_CORTEX_M33
 source arch/cortex-m33/Kconfig
+endif
+
+if ARCH_RISCV_32
+source arch/riscv32/Kconfig
 endif
 
 comment "Toolchain Configuration Options"
@@ -53,6 +63,12 @@ config GCC_VERSION_8_2018Q4
 # 	depends on ARCH_FAMILY_MPS2
 # 	bool "GCC compiler Version: 8 2019 q3"
 
+config GCC_VERSION_10_2_0_2020_12
+	bool "GCC compiler Version: SiFive GCC-Metal 10.2.0-2020.12.8"
+
+config GCC_VERSION_T_HEAD_10_2_0
+	bool "GCC compiler Version: T-Head GCC 10.2.0"
+
 endchoice
 
 config GCC_VERSION
@@ -61,6 +77,7 @@ config GCC_VERSION
 	default arm-none-eabi-6-2017-q2-update-linux   if GCC_VERSION_6_1_2017Q2
 	default arm-none-eabi-8-2018-q4-major-linux    if GCC_VERSION_8_2018Q4
 	# default gcc-arm-none-eabi-8-2019-q3-update-linux   if GCC_VERSION_8_2019Q3
+	default riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14 if GCC_VERSION_10_2_0_2020_12
 
 config GCC_SITE
 	string
@@ -70,6 +87,8 @@ config GCC_SITE
 	# default "https://developer.arm.com/-/media/Files/downloads/gnu-rm/8-2019q3" if GCC_VERSION_8_2019Q3
 	# default "https://developer.arm.com/-/media/Files/downloads/gnu-rm/8-2019q3/RC1.1" if GCC_VERSION_8_2019Q3
 	# https://developer.arm.com/-/media/Files/downloads/gnu-rm/8-2019q3/RC1.1/gcc-arm-none-eabi-8-2019-q3-update-linux.tar.bz2?revision=c34d758a-be0c-476e-a2de-af8c6e16a8a2?product=GNU%20Arm%20Embedded%20Toolchain%20Downloads,64-bit,,Linux,8-2019-q3-update
+	default "https://static.dev.sifive.com/dev-tools/freedom-tools/v2020.12" 	if GCC_VERSION_10_2_0_2020_12
+	default "https://github.com/bouffalolab/toolchain_gcc_t-head_linux" if GCC_VERSION_T_HEAD_10_2_0
 
 config GCC_FOLDER
 	string
@@ -77,4 +96,5 @@ config GCC_FOLDER
 	default "gcc-arm-none-eabi-6-2017-q2-update"   if GCC_VERSION_6_1_2017Q2
 	default "gcc-arm-none-eabi-8-2018-q4-major"    if GCC_VERSION_8_2018Q4
 	# default "gcc-arm-none-eabi-8-2019-q3-update"   if GCC_VERSION_8_2019Q3
-
+	default "riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14" if GCC_VERSION_10_2_0_2020_12
+	default "toolchain_gcc_t-head_linux-master" if GCC_VERSION_T_HEAD_10_2_0

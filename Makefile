@@ -120,7 +120,7 @@ $(TOPDIR)/toolchain/$(GCC_SOURCE):
 
 gcc-unpacked: $(TOPDIR)/toolchain/$(GCC_SOURCE)
 	$(Q) if [ ! -d $(TOOLCHAINPATH) ]; then \
-		tar xjf $(TOPDIR)/toolchain/$(GCC_SOURCE) -C $(TOPDIR)/toolchain ; \
+		tar xvf $(TOPDIR)/toolchain/$(GCC_SOURCE) -C $(TOPDIR)/toolchain ; \
 	fi
 
 toolchain: check_context Make.defs .config $(TOPDIR)/toolchain/$(GCC_SOURCE) gcc-unpacked
