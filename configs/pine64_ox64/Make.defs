@@ -1,0 +1,131 @@
+############################################################################
+# Make.defs
+#
+# Copyright (c) 2019 Samsung Electronics Co., Ltd. All Rights Reserved.
+# Author: Taras Drozdovskyi t.drozdovsky@samsung.com
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+############################################################################
+
+-include ${TOPDIR}/.config
+
+GCC_OFFICIAL_VER:=$(CONFIG_GCC_VERSION)
+GCC_SITE:=$(CONFIG_GCC_SITE)
+GCC_SOURCE:=$(GCC_OFFICIAL_VER).zip
+
+TOOLCHAINPATH=$(TOPDIR)/toolchain/$(subst ",,$(CONFIG_GCC_FOLDER))
+
+CROSSDEV =$(TOOLCHAINPATH)/bin/riscv64-unknown-elf-
+
+CC = $(CROSSDEV)gcc
+LD = $(CROSSDEV)ld
+AR = $(ARCROSSDEV)ar rcs
+NM = $(ARCROSSDEV)nm
+OBJCOPY = $(CROSSDEV)objcopy
+OBJDUMP = $(CROSSDEV)objdump
+SIZE = $(CROSSDEV)size
+
+ARCHWARNINGS  = -Wall -Wextra -Wstrict-prototypes -Wshadow -Wundef -Wunused-parameter -Wchar-subscripts -Wformat -Wuninitialized -Winit-self -Wignored-qualifiers
+ARCHWARNINGS += -Wno-error=unused-variable -Wno-error=format= -Wno-error=unused-function -Wno-error=implicit-function-declaration -Wno-error=deprecated-declarations -Wno-format -Wno-unused-parameter
+ARCHWARNINGS += -Wno-strict-prototypes
+
+ARCHOPTIMIZATION = $(subst ",,$(CONFIG_OPTIMIZATION_LEVEL))
+
+ifeq ($(CONFIG_DEBUG_SYMBOLS),y)
+  ARCHOPTIMIZATION += -g
+else
+  ARCHOPTIMIZATION += -ffunction-sections -fdata-sections
+endif
+
+# Produce debugging information for use by GDB.
+ifeq ($(CONFIG_DEBUG_INF_GDB),y)
+  ARCHOPTIMIZATION += -ggdb
+endif
+
+ARCHCPUFLAGS = -march=rv32imafcpzpsfoperand_xtheade -mabi=ilp32f -mtune=e907
+
+#-mcmodel=medlow --specs=nano.specs
+
+#ARCHDEFINES += -DMTIME_RATE_HZ_DEF=32768 -DportUSING_MPU_WRAPPERS=1 
+#ARCHDEFINES += -DCHIP=bl808 -DCPU_ID=m0 -DBOARD=bl808dk -DCONFIG_COMX=COM5 -DCMAKE_EXPORT_COMPILE_COMMANDS=OFF -DCONFIG_TLSF=y
+#ARCHDEFINES += -DBL808 -DCPU_M0 -DARCH_RISCV -DCONFIG_IRQ_NUM=80 -DBOARD=bl808dk -DBOARD_DIR= -DCONFIG_DEBUG=1 -DCONFIG_ROMAPI=1 -DCONFIG_USB_HS=y
+#ARCHDEFINES += -DNEWLIB=0 -DNEWLIB_STANDARD=0
+
+ARCHDEFINES += -DARCH_RISCV -DBFLB_TIMESTAMP_TIMEZONE=8 -DBFLB_USE_HAL_DRIVER -DBL808 -DCPU_M0
+ARCHDEFINES += -DCONFIG_IRQ_NUM=80 -DCONFIG_LIBC_FLOAT=1 -DCONFIG_LIBC_FLOAT_EX=1 -DCONFIG_LIBC_LONG_LONG=1 -DCONFIG_LOG_LEVEL=3 -DCONFIG_TLSF
+ARCHDEFINES += -DportasmHANDLE_INTERRUPT=interrupt_entry -Ddefault_interrupt_handler=freertos_risc_v_trap_handler -DCONFIG_FREERTOS
+ARCHDEFINES += -DportUSING_MPU_WRAPPERS=1
+
+AFLAGS = $(CFLAGS) -D__ASSEMBLY__
+
+LDFLAGS = $(ARCHOPTIMIZATION)
+
+ARCHINCLUDES  = -I$(TOPDIR)/include
+#ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/bsp/board/bl808dk/.
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/components/libc/newlib/.
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/components/libc/.
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/components/mm/.
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/components/mm/tlsf/.
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/components/utils/log
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/components/utils/ring_buffer
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/components/utils/bflb_block_pool
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/components/utils/bflb_timestamp
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/components/utils/getopt
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/drivers/lhal/include
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/drivers/lhal/include/arch 
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/drivers/lhal/include/arch/risc-v/t-head 
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/drivers/lhal/include/arch/risc-v/t-head/Core/Include 
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/drivers/lhal/config/bl808 
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/drivers/lhal/src/flash 
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/drivers/soc/bl808/std/include 
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/drivers/soc/bl808/std/include/hardware
+
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/pine64_ox64/nonsecure$ 
+
+#ARCHINCLUDES += -I$(TOPDIR)/FreeRTOS-metal/FreeRTOS-Kernel/include
+#ARCHINCLUDES += -I$(TOPDIR)/FreeRTOS-metal/FreeRTOS-Kernel/portable/GCC/RISC-V
+#ARCHINCLUDES += -I$(TOPDIR)/FreeRTOS-metal/FreeRTOS-Kernel/portable/GCC/RISC-V/chip_specific_extensions/RV32I_CLINT_no_extensions
+
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/components/os/freertos/include
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/components/os/freertos/portable/GCC/RISC-V/common
+ARCHINCLUDES += -I$(TOPDIR)/arch/riscv32/bl808/src/components/os/freertos/portable/GCC/RISC-V/common/chip_specific_extensions/RV32I_CLINT_no_extensions
+
+CFLAGS = -fno-jump-tables -fno-common -fms-extensions -ffunction-sections -fdata-sections -fmessage-length=0 -fstrict-volatile-bitfields -fshort-enums -fno-builtin
+
+CFLAGS += -MMD -std=gnu99 -g3 -O2
+
+CFLAGS += $(ARCHWARNINGS) $(ARCHOPTIMIZATION) $(ARCHCPUFLAGS) $(ARCHINCLUDES) $(ARCHDEFINES)
+
+ASMEXT = .S
+OBJEXT = .o
+LIBEXT = .a
+EXEEXT = .elf
+HEXEXT = .hex
+
+ECHO = `which echo`
+
+HOSTCC = gcc
+HOSTINCLUDES = -I.
+HOSTCFLAGS = -Wall -Wstrict-prototypes -Wshadow -Wundef -g -pipe
+HOSTLDFLAGS =
+
+GREEN=\033[0;32m
+NORMAL=\033[0m
+BLACK=\033[0;30m1
+RED=\033[0;31m
+YELLOW=\033[0;33m
+BLUE=\033[0;34m
+MAGENTA=\033[0;35m
+CYAN=\033[0;36m
+GRAY=\033[0;37m

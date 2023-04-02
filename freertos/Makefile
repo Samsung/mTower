@@ -24,17 +24,21 @@
 CFLAGS += -I./include
 CFLAGS += -I$(TOPDIR)/include/mtower
 CFLAGS += -I$(TOPDIR)/arch/$(CONFIG_ARCH)/$(CONFIG_ARCH_FAMILY)/src/$(CONFIG_PLATFORM)
-CFLAGS += -I./portable/GCC/ARM_V8M
+CFLAGS += -I./portable/GCC/$(FREE_RTOS_ARCH)
 CFLAGS += -I../arch/$(subst ",,$(CONFIG_ARCH))/$(subst ",,$(CONFIG_ARCH_FAMILY))/src/$(subst ",,$(CONFIG_PLATFORM))/nonsecure
-CFLAGS += -I../arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Include
-CFLAGS += -I../arch/cortex-m23/m2351/src/CMSIS/Include
-CFLAGS += -I../arch/cortex-m23/m2351/src/StdDriver/inc
+CFLAGS += -I$(TOPDIR)/arch/$(CONFIG_ARCH)/$(CONFIG_ARCH_FAMILY)/src/CMSIS/Include
 ifeq ($(WORLD), secure)
 CFLAGS += -mcmse
 endif
 
-SRCS  = croutine.c list.c queue.c stream_buffer.c tasks.c timers.c 
-SRCS += portable/GCC/ARM_V8M/port.c portable/MemMang/heap_2.c
+SRCS  = croutine.c list.c queue.c stream_buffer.c tasks.c timers.c event_groups.c
+SRCS += portable/GCC/$(FREE_RTOS_ARCH)/port.c portable/MemMang/heap_4.c
+
+ifeq ($(FREE_RTOS_ARCH), RISC-V)
+SRCS += portable/GCC/$(FREE_RTOS_ARCH)/pmp.c
+SRCS += portable/Common/mpu_wrappers.c
+CFLAGS += -DportUSING_MPU_WRAPPERS=1
+endif
 
 ifneq ($(WORLD), secure)
 CFLAGS += -DDEBUG_PORT=$(subst ",,$(CONFIG_NONSECURE_DEBUG_UART))

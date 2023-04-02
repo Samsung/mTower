@@ -1,0 +1,120 @@
+############################################################################
+# arch/riscv32/fe310/src/sparkfun_redboard/nonsecure/Make.defs
+#
+# Copyright (c) 2023 Samsung Electronics Co., Ltd. All Rights Reserved.
+# Author: Taras Drozdovskyi t.drozdovsky@samsung.com
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+############################################################################
+
+HEAD_ASRC = 
+
+# Common fe310 files
+
+CMN_ASRCS = 
+
+CMN_CSRCS = 
+
+# Required CHIP files
+
+CHIP_ASRCS_NS = ../../../../../../freertos/portable/GCC/RISC-V/portASM.S \
+                 ../../freedom-metal/src/vector.S \
+                 ../../freedom-metal/src/trap.S \
+                 ../../freedom-metal/src/crt0.S \
+                 ../../freedom-metal/src/entry.S \
+                 ../../freedom-metal/src/scrub.S
+
+CHIP_CSRCS_NS = main_ns.c \
+                Bridge_Freedom-metal_FreeRTOS.c \
+                printf.c
+
+CHIP_CSRCS_NS += ../../freedom-metal/src/atomic.c \
+                 ../../freedom-metal/src/cache.c \
+                 ../../freedom-metal/src/cpu.c \
+                 ../../freedom-metal/src/hpm.c \
+                 ../../freedom-metal/src/init.c \
+                 ../../freedom-metal/src/led.c \
+                 ../../freedom-metal/src/memory.c \
+                 ../../freedom-metal/src/prci.c \
+                 ../../freedom-metal/src/pwm.c \
+                 ../../freedom-metal/src/rtc.c \
+                 ../../freedom-metal/src/shutdown.c \
+                 ../../freedom-metal/src/switch.c \
+                 ../../freedom-metal/src/time.c \
+                 ../../freedom-metal/src/uart.c \
+                 ../../freedom-metal/src/watchdog.c \
+                 ../../freedom-metal/src/button.c \
+                 ../../freedom-metal/src/clock.c \
+                 ../../freedom-metal/src/gpio.c \
+                 ../../freedom-metal/src/i2c.c \
+                 ../../freedom-metal/src/interrupt.c \
+                 ../../freedom-metal/src/lock.c \
+                 ../../freedom-metal/src/pmp.c \
+                 ../../freedom-metal/src/privilege.c \
+                 ../../freedom-metal/src/remapper.c \
+                 ../../freedom-metal/src/spi.c \
+                 ../../freedom-metal/src/synchronize_harts.c \
+                 ../../freedom-metal/src/timer.c \
+                 ../../freedom-metal/src/tty.c \
+                 ../../freedom-metal/src/drivers/fixed-clock.c \
+                 ../../freedom-metal/src/drivers/riscv_plic0.c \
+                 ../../freedom-metal/src/drivers/sifive_fe310-g000_hfxosc.c \
+                 ../../freedom-metal/src/drivers/sifive_gpio0.c \
+                 ../../freedom-metal/src/drivers/sifive_l2pf0.c \
+                 ../../freedom-metal/src/drivers/sifive_pwm0.c \
+                 ../../freedom-metal/src/drivers/sifive_test0.c \
+                 ../../freedom-metal/src/drivers/fixed-factor-clock.c \
+                 ../../freedom-metal/src/drivers/sifive_buserror0.c \
+                 ../../freedom-metal/src/drivers/sifive_fe310-g000_lfrosc.c \
+                 ../../freedom-metal/src/drivers/sifive_gpio-buttons.c \
+                 ../../freedom-metal/src/drivers/sifive_l2pf1.c \
+                 ../../freedom-metal/src/drivers/sifive_remapper2.c \
+                 ../../freedom-metal/src/drivers/sifive_trace.c \
+                 ../../freedom-metal/src/drivers/inline.c \
+                 ../../freedom-metal/src/drivers/sifive_ccache0.c \
+                 ../../freedom-metal/src/drivers/sifive_fe310-g000_pll.c \
+                 ../../freedom-metal/src/drivers/sifive_gpio-leds.c \
+                 ../../freedom-metal/src/drivers/sifive_local-external-interrupts0.c \
+                 ../../freedom-metal/src/drivers/sifive_rtc0.c \
+                 ../../freedom-metal/src/drivers/sifive_uart0.c \
+                 ../../freedom-metal/src/drivers/riscv_clint0.c \
+                 ../../freedom-metal/src/drivers/sifive_clic0.c \
+                 ../../freedom-metal/src/drivers/sifive_fe310-g000_prci.c \
+                 ../../freedom-metal/src/drivers/sifive_gpio-switches.c \
+                 ../../freedom-metal/src/drivers/sifive_pl2cache0.c \
+                 ../../freedom-metal/src/drivers/sifive_simuart0.c \
+                 ../../freedom-metal/src/drivers/sifive_wdog0.c \
+                 ../../freedom-metal/src/drivers/riscv_cpu.c \
+                 ../../freedom-metal/src/drivers/sifive_fe310-g000_hfrosc.c \
+                 ../../freedom-metal/src/drivers/sifive_global-external-interrupts0.c \
+                 ../../freedom-metal/src/drivers/sifive_i2c0.c \
+                 ../../freedom-metal/src/drivers/sifive_prci0.c \
+                 ../../freedom-metal/src/drivers/sifive_spi0.c \
+                 ../../freedom-metal/src/drivers/ucb_htif0.c
+                 
+ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
+CHIP_CSRCS_NS += ../../../../../../apps/hello_world/ca/hello_world_ns.c
+endif
+
+ifeq ($(CONFIG_APPS_AES),y)
+CHIP_CSRCS_NS += ../../../../../../apps/aes/ca/aes_ns.c
+endif
+
+ifeq ($(CONFIG_APPS_HOTP),y)
+CHIP_CSRCS_NS += ../../../../../../apps/hotp/ca/hotp_ns.c
+endif
+
+ifeq ($(CONFIG_APPS_TEST),y)
+CHIP_CSRCS_NS += ../../../../../../apps/test/ca/test_ns.c
+endif
