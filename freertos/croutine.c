@@ -53,7 +53,7 @@ static List_t xPendingReadyCoRoutineList;								/*< Holds co-routines that have
 CRCB_t * pxCurrentCoRoutine = NULL;
 static UBaseType_t uxTopCoRoutineReadyPriority = 0;
 static TickType_t xCoRoutineTickCount = 0, xLastTickCount = 0, xPassedTicks = 0;
-
+static TickType_t xCoRoutineTickCount223= 0;
 /* The initial state of the co-routine when it is created. */
 #define corINITIAL_STATE	( 0 )
 
