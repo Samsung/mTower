@@ -18,6 +18,9 @@ that based on Global Platform API standards to add security to their solution.
 
 ---
 ## 2. License
+ of multiple components that are individually available
+nder different licensing terms. Terms for each individual file are listed at
+the beginnings of corresponding files; also, all licenses are listed in
 mTower software consists of multiple components that are individually available
 under different licensing terms. Terms for each individual file are listed at
 the beginnings of corresponding files; also, all licenses are listed in
