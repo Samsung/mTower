@@ -1,0 +1,54 @@
+name: Fossology check
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  fossology:
+    runs-on: ubuntu-latest
+    
+    container:
+      image: fossology/fossology:scanner
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Fossology run
+        run: /bin/fossologyscanner repo nomos ojo copyright keyword
+        continue-on-error: true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+          with:
+            name: scan-result
+            path: ./results
+
+      - name: Artifact download
+        uses: actions/download-artifact@v3
+        with:
+          name: scan-result
+
+# jobs:
+#   build:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         platform: [numaker_pfm_m2351, m2351_badge, mps2_an505_qemu]
+#     runs-on: ubuntu-20.04
+#     steps:
+#       - uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791
+
+#       - name: Install extra tools
+#         run: |
+#           sudo apt-get install -y subversion make build-essential libncurses5-dev libssl-dev libcurl4-openssl-dev wget
+#       - name: Build the project
+#         run: |
+#           make PLATFORM=${{ matrix.platform }} create_context
+#           svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/Library/Device/Nuvoton/M2351/Source/GCC/_syscalls.c ./arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/_syscalls.c
+#           svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/main.c ./arch/cortex-m23/m2351/src/NuBL2/
+#           svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/VerifyNuBL3x.c ./arch/cortex-m23/m2351/src/NuBL2/
+#           svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/NuBL2.h ./arch/cortex-m23/m2351/src/NuBL2/
+#           svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/FwInfo/FwInfo.c ./arch/cortex-m23/m2351/src/NuBL2
+#           make toolchain
+#           make
