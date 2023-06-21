@@ -12,10 +12,11 @@ jobs:
         platform: [numaker_pfm_m2351, m2351_badge, mps2_an505_qemu]
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791
+      - uses: actions/checkout@v3
 
       - name: Install extra tools
         run: |
+          sudo apt-get update
           sudo apt-get install -y subversion make build-essential libncurses5-dev libssl-dev libcurl4-openssl-dev wget
       - name: Build the project
         run: |

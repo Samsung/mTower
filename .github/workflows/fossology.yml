@@ -1,0 +1,33 @@
+name: Fossology check
+on: [push, pull_request]
+
+# permissions:
+#   contents: read
+
+jobs:
+  fossology:
+    runs-on: ubuntu-latest
+    
+    container:
+      image: fossology/fossology:scanner
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Fossology run
+        run: |
+          export GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}}
+          export GITHUB_PULL_REQUEST="None"
+          /bin/fossologyscanner repo nomos ojo copyright keyword
+        continue-on-error: true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: scan-fossology-report
+          path: ./results
+
+      - name: Artifact download
+        uses: actions/download-artifact@v3
+        with:
+          name: scan-fossology-report

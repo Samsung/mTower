@@ -1,0 +1,31 @@
+name: License Finder
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  license_finder:
+    runs-on: ubuntu-latest
+
+    container:
+      image: gianlucadb0/license_finder
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: License finder run
+        run: | 
+          license_finder approvals add awesome_gpl_gem
+          license_finder > ./license-finder-report
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: scan-license-finder-report
+          path: ./license-finder-report
+
+      - name: Artifact download
+        uses: actions/download-artifact@v3
+        with:
+          name: scan-license-finder-report
