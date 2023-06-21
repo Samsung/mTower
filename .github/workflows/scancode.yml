@@ -1,0 +1,32 @@
+name: Scancode
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  scancode:
+    runs-on: ubuntu-latest
+
+    container:
+      image: gianlucadb0/scancode-toolkit
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create results directory
+        run: mkdir results
+
+      - name: Scancode run
+        run: scancode -clpeui -n 2 --cyclonedx ./results/sbom-cyclonedx --spdx-rdf ./results/sbom-spdx ./
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: scan-scancode-report
+          path: ./results/
+
+      - name: Artifact download
+        uses: actions/download-artifact@v3
+        with:
+          name: scan-scancode-report
