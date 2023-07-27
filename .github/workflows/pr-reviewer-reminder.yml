@@ -4,6 +4,9 @@ on:
     # Check reviews every weekday, 10:00 and 17:00
     - cron: '0 10,17 * * 1-5'
 
+permissions:
+  contents: read
+
 jobs:
   pull-request-reviewer-reminder: 
     runs-on: ubuntu-latest
