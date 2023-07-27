@@ -1,0 +1,11 @@
+version: 2
+updates:
+# Enable version updates for Actions
+  - package-ecosystem: github-actions
+    directory: /
+    # Check for updates once a month
+    schedule:
+      interval: monthly
+    # Allow up to 15 open pull requests for github-actions dependencies
+    open-pull-requests-limit: 15
+    
