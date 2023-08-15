@@ -5,6 +5,9 @@ on:
     #- cron: '0 10,17 * * 1-5'
     - cron: '*/20 * * * *'
 
+permissions:
+  contents: read
+
 jobs:
   pull-request-reviewer-reminder: 
     runs-on: ubuntu-latest
