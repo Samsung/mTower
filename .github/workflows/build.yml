@@ -12,7 +12,7 @@ jobs:
         platform: [numaker_pfm_m2351, m2351_badge, mps2_an505_qemu]
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
 
       - name: Install extra tools
         run: |
