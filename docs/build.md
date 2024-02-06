@@ -118,19 +118,19 @@ To use BootLoader2 for M2351 Nuvoton chips, you need to download NuBL2 sources a
 syscall file. This can be done by executing following shell commands:
 
 ```sh
-svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/Library/Device/Nuvoton/M2351/Source/GCC/_syscalls.c ./arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/_syscalls.c
+wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/Library/Device/Nuvoton/M2351/Source/GCC/_syscalls.c -O ./arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/_syscalls.c
 ```
 ```sh
-svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/main.c ./arch/cortex-m23/m2351/src/NuBL2/
+wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode/MKROM/SecureBootDemo/NuBL2/main.c -O ./arch/cortex-m23/m2351/src/NuBL2/main.c
 ```
 ```sh
-svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/VerifyNuBL3x.c ./arch/cortex-m23/m2351/src/NuBL2/
+wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode/MKROM/SecureBootDemo/NuBL2/VerifyNuBL3x.c -O ./arch/cortex-m23/m2351/src/NuBL2/VerifyNuBL3x.c
 ```
 ```sh
-svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/NuBL2.h ./arch/cortex-m23/m2351/src/NuBL2/
+wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode/MKROM/SecureBootDemo/NuBL2/NuBL2.h -O ./arch/cortex-m23/m2351/src/NuBL2/NuBL2.h
 ```
 ```sh
-svn --force export https://github.com/OpenNuvoton/M2351BSP/trunk/SampleCode/MKROM/SecureBootDemo/NuBL2/FwInfo/FwInfo.c ./arch/cortex-m23/m2351/src/NuBL2
+wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode/MKROM/SecureBootDemo/NuBL2/FwInfo/FwInfo.c -O ./arch/cortex-m23/m2351/src/NuBL2/FwInfo.c
 ```
 
 > Please note that files from these downloads contain the following copyright
