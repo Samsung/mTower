@@ -1,0 +1,138 @@
+name: Create Release & Upload Asset
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  # Build mTower
+  build:
+    runs-on: ubuntu-latest
+    name: Build mTower
+    outputs:
+      artifacts: ${{ steps.build.outputs.artifacts }}
+      hashes: ${{ steps.hash.outputs.hashes }}
+      version:  ${{ steps.mtower_version.outputs.version }}
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
+
+      - name: Install extra tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make build-essential libncurses5-dev libssl-dev libcurl4-openssl-dev wget
+      - name: Build the project
+        run: |
+          make PLATFORM=numaker_pfm_m2351 create_context
+          wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/Library/Device/Nuvoton/M2351/Source/GCC/_syscalls.c -O ./arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/_syscalls.c
+          wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode/MKROM/SecureBootDemo/NuBL2/main.c -O ./arch/cortex-m23/m2351/src/NuBL2/main.c
+          wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode/MKROM/SecureBootDemo/NuBL2/VerifyNuBL3x.c -O ./arch/cortex-m23/m2351/src/NuBL2/VerifyNuBL3x.c
+          wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode/MKROM/SecureBootDemo/NuBL2/NuBL2.h -O ./arch/cortex-m23/m2351/src/NuBL2/NuBL2.h
+          wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode/MKROM/SecureBootDemo/NuBL2/FwInfo/FwInfo.c -O ./arch/cortex-m23/m2351/src/NuBL2/FwInfo.c
+          make toolchain
+          make
+          # Save the location of the mtower_*.bin output files for easier reference
+          # ARTIFACT_PATTERN=./mtower_s.bin
+          # echo "artifact_pattern=$ARTIFACT_PATTERN" >> "$GITHUB_OUTPUT"
+          # echo "artifact_pattern=mtower_s.bin" >> "$GITHUB_OUTPUT"
+
+      - name: Generate subject
+        id: hash
+        run: |
+          echo "hashes=$(sha256sum mtower_s.bin mtower_ns.bin | base64 -w0)" >> "$GITHUB_OUTPUT"
+
+      - name: Get mTower version
+        id: mtower_version
+        run: |
+          echo "version=mtower" >> "$GITHUB_OUTPUT"
+
+        # VERSION=${{ github.ref_name }}
+        # echo "version=mtower-${VERSION:1}.bin" >> "$GITHUB_OUTPUT"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # tag=v3
+        with:
+          name: ${{ steps.mtower_version.outputs.version }}_s.bin
+          path: ./${{ steps.mtower_version.outputs.version }}_s.bin
+          if-no-files-found: error
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # tag=v3
+        with:
+          name: ${{ steps.mtower_version.outputs.version }}_ns.bin
+          path: ./${{ steps.mtower_version.outputs.version }}_ns.bin
+          if-no-files-found: error
+
+  # Create Release
+  create-release:
+    permissions:
+      contents: write  # for marvinpinto/action-automatic-releases to generate pre-release
+    needs: [build]
+    name: Create Release
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
+      - uses: marvinpinto/action-automatic-releases@d68defdd11f9dcc7f52f35c1b7c236ee7513bcc1
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          title: "mTower ${{ github.ref_name }}"
+
+  # Generate Provenance
+  provenance:
+    needs: [build, create-release]
+    name: Generate Provenance
+    permissions:
+      actions: read # To read the workflow path.
+      id-token: write # To sign the provenance.
+      contents: write # To add assets to a release.
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.9.0
+    with:
+      base64-subjects: "${{ needs.build.outputs.hashes }}"
+      upload-assets: true # Optional: Upload to a new release
+
+  # Upload Assets
+  release:
+    permissions:
+      contents: write  # for softprops/action-gh-release to create GitHub release  
+    needs: [build, create-release, provenance]
+    name: Upload Assets
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
+      - name: Download ${{ needs.build.outputs.version }}_s.bin
+        uses: actions/download-artifact@f44cd7b40bfd40b6aa1cc1b9b5b7bf03d3c67110 # tag=v2.1.0
+        with:
+          name: ${{ needs.build.outputs.version }}_s.bin
+
+      - name: Download ${{ needs.build.outputs.version }}_ns.bin
+        uses: actions/download-artifact@f44cd7b40bfd40b6aa1cc1b9b5b7bf03d3c67110 # tag=v2.1.0
+        with:
+          name: ${{ needs.build.outputs.version }}_ns.bin
+
+      - name: Upload assets
+        uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5 # v0.1.14
+        with:
+          files: |
+            ${{ needs.build.outputs.version }}_s.bin
+            ${{ needs.build.outputs.version }}_ns.bin
