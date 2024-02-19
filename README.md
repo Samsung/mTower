@@ -3,6 +3,7 @@
 [![Build](https://github.com/samsung/mtower/workflows/Build/badge.svg)](https://github.com/samsung/mtower/actions?query=workflow%3ABuild)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6108/badge)](https://bestpractices.coreinfrastructure.org/projects/6108)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Samsung/mTower/badge)](https://api.securityscorecards.dev/projects/github.com/Samsung/mTower)
+[![cpp-linter](https://github.com/cpp-linter/cpp-linter-action/actions/workflows/cpp-linter.yml/badge.svg)](https://github.com/cpp-linter/cpp-linter-action/actions/workflows/cpp-linter.yml)
 [![RepoSize](https://img.shields.io/github/repo-size/samsung/mtower.svg)](https://github.com/samsung/mtower)
 [![Release](https://img.shields.io/github/v/release/samsung/mtower.svg)](https://github.com/samsung/mtower/releases)
 [![LICENSE](https://img.shields.io/github/license/samsung/mtower.svg)](https://github.com/samsung/mtower/blob/master/LICENSE)

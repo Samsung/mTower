@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <tee_client_api.h>
+#include "tee_client_api.h"
 
 /* To the the UUID (found the the TA's h-file(s)) */
 #include <hello_world_ta.h>

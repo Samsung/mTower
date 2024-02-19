@@ -7,6 +7,8 @@
 ## 1. Overview
 mTower GP API test suite demonstrates the valid execution of relevant GP TEE API function implementations. As many of the functions depend on each other for successful operation, it is not reasonable to create a separate test for every possible combination of invalid parameters for each function in API, so, while the tests demonstrate behavior of API functions under some error conditions, most of the tests are concerned with correct use of functions, where returned results signal successful execution. Also note that many of the functions in Trusted part of TEE do not have full-fledged error handling mechanisms, as these functions are considered critical - that is, they must succeed, because it is impossible for system to recover if these functions fail. In such functions, error condition typically results in calling TEE_Panic() function, which writes an error message into log and drops the system into infinite loop, essentially hanging it.
 
+**When adding or changing functionality, it is highly advisable to add new tests as part of your contribution.**
+
 ## 2. How to run
 Start out by following the "Get and build the solution" in the [build.md] file.
 > Warning: Need to download the toolchain (exec. `make toolchain`).
