@@ -493,7 +493,8 @@ int main(int argc, char** argv)
 #endif
   ret = 0;
 exit:
-  free(buf);
+  if (buf != NULL)
+    free(buf);
   fclose(fd);
 
 #ifdef CONFIG_BOOTLOADER2
