@@ -75,11 +75,11 @@ typedef struct Message_Struct {
 
 /* Private Data. */
 /* All static data definitions appear here. */
-uint32_t key[] =
+const uint32_t key[] =
   { 0x78563412, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
       0x00000000, 0xefcdac00 };
 
-uint32_t iv[] =
+const uint32_t iv[] =
   { 0x78563412, 0x00000000, 0x00000000, 0xefcdac00 };
 
 /* Public Data. */
@@ -374,7 +374,7 @@ int main(int argc, char * argv[])
   }
   fclose(fd);
 
-exit:
+// exit:
   BN_free(x);
   BN_free(y);
   EC_GROUP_free(ecgroup);

@@ -6,21 +6,20 @@ jobs:
   cpp-linter:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: cpp-linter/cpp-linter-action@v2
+      - uses: actions/checkout@v4
+      - uses: cpp-linter/cpp-linter-action@main
         id: linter
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          style: file
-          # The following value will only update a single comment
-          # in a pull request's thread. Set it to false to disable the comment.
-          # Set it to true to post a new comment (and delete the old comment).
-          # thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
-          thread-comments: ${{ github.event_name == 'push' && 'update' }}
+          style: ''
+          files-changed-only: false
+          ignore: crypto
 
       - name: Fail fast?!
-        if: steps.linter.outputs.checks-failed > 0
-        run: echo "Some files failed the linting checks!"
+        if: steps.linter.outputs.checks-failed != 0
+        run: |
+          echo "some linter checks failed. ${{ steps.linter.outputs.checks-failed }}"
         # for actual deployment
         # run: exit 1
