@@ -35,6 +35,8 @@
 #include <tee_api_defines_extensions.h>
 #include <tee_api_types.h>
 
+#include "printf.h"
+
 void tee_user_mem_mark_heap(void);
 size_t tee_user_mem_check_heap(void);
 /* Hint implementation defines */

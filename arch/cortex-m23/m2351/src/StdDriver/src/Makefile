@@ -67,6 +67,7 @@ SRCS += uart.c
 #SRCS += usci_uart.c
 #SRCS += wdt.c
 #SRCS += wwdt.c
+SRCS += printf.c
 
 ifeq ($(WORLD), secure)
 SRCS += clk.c

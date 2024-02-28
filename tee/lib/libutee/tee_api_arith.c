@@ -30,6 +30,8 @@
 #include <tee_arith_internal.h>
 #include <mpalib.h>
 
+#include "printf.h"
+
 /*
  * The mem pool.
  * We have a pool of scratch memory for internal usage.

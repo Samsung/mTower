@@ -7,6 +7,8 @@
 #include <utee_syscalls.h>
 #include <stdio.h>
 
+#include "printf.h"
+
 #define ACCESS_RW	(TEE_MEMORY_ACCESS_READ | TEE_MEMORY_ACCESS_WRITE)
 #define ACCESS_W_ANY	(TEE_MEMORY_ACCESS_WRITE | TEE_MEMORY_ACCESS_ANY_OWNER)
 #define ACCESS_R	TEE_MEMORY_ACCESS_READ

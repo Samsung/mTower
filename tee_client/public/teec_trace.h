@@ -36,6 +36,8 @@ extern "C" {
 #include <stdint.h>
 #include <config.h>
 
+#include "printf.h"
+
 #ifndef BINARY_PREFIX
 #error "BINARY_PREFIX not defined"
 #endif

@@ -282,12 +282,6 @@ valid.
   * Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.
   */
 
-arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/_syscalls.c
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-// This file is part of the uOS++ III distribution
-// Parts of this file are from the newlib sources, issued under GPL.
-// Copyright (c) 2014 Liviu Ionescu
-
 arch/cortex-m23/m2351/src/Device/
 arch/cortex-m23/m2351/src/StdDriver/
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -29,6 +29,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "printf.h"
+
 /* OP-TEE TEE client API (built by optee_client) */
 #include <tee_client_api.h>
 

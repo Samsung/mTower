@@ -34,6 +34,8 @@
 //#include <util.h>
 //#include <types_ext.h>
 
+#include "printf.h"
+
 #if (TRACE_LEVEL > 0)
 
 int trace_level = TRACE_MAX;

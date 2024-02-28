@@ -22,7 +22,7 @@
 #define __INCLUDE_MTOWER_ERR_H_
 
 /* Included Files */
-
+#include "printf.h"
 
 /* Pre-processor Definitions */
 /* All C pre-processor macros are defined here. */

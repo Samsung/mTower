@@ -42,6 +42,8 @@
 //#include <teec_trace.h>
 //#include <unistd.h>
 
+#include "printf.h"
+
 #ifndef __aligned
 #define __aligned(x) __attribute__((__aligned__(x)))
 #endif

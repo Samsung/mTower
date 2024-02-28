@@ -27,6 +27,7 @@
 #include "config.h"
 #include "version.h"
 #include "tee_api_types.h"
+#include "printf.h"
 
 /* Pre-processor Definitions. */
 #define NORMAL  "\e[0m"
@@ -370,7 +371,7 @@ void menu_security_exception_example(void)
   printf("|[any]| Go non-secure code                       | Exec. non-sec code |\n");
   printf("+---------------------------------------------------------------------+\n");
 
-  printf("\n[%c] ", ch = getchar());
+  printf("\n[%c]\n", ch = GetChar());
 
   switch (ch) {
     case '1':
@@ -614,7 +615,7 @@ int main(void)
   /* UART is configured as debug port */
   DEBUG_PORT_Init();
 
-  printf(NORMAL "\n\n\t-=mTower v" VERSION "=-  " __DATE__ "  " __TIME__"\n\n");
+  printf(NORMAL "\n\n\t-= mTower v" VERSION " =-  " __DATE__ "  " __TIME__"\n\n");
 
   printf("+---------------------------------------------+\n");
   printf("|     Secure handler (BL32) is running ...    |\n");

@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include "NuMicro.h"
 
+#include "printf.h"
+
 #if defined (__ICCARM__)
 # pragma diag_suppress=Pm150
 #endif
@@ -511,7 +513,10 @@ int32_t SH_Return(int32_t n32In_R0, int32_t n32In_R1, int32_t *pn32Out_R0)
 
 #endif /* defined(DEBUG_ENABLE_SEMIHOST) */
 
-
+void _putchar(char character)
+{
+    SendChar_ToUART(character);
+}
 /**
  * @brief    Routine to send a char
  *
@@ -769,42 +774,42 @@ int fputc(int ch, FILE *stream)
 #if (defined(__GNUC__) && !defined(__ARMCC_VERSION))
 
 #if !defined(OS_USE_SEMIHOSTING)
-int _write (int fd, char *ptr, int len)
-{
-    int i = len;
-#ifdef DEBUG_OUT_PREFIX
-    char fnt_clr[] = {'\e','[','3','1','m'};
-    char *ptr1 = fnt_clr;
-    int cnt = 5;
-    fnt_clr[3] = '0' + DEBUG_OUT_PREFIX;
-    while(cnt--) {
-      while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
-      DEBUG_PORT->DAT = *ptr1++;
-    }
-#endif
+// int _write (int fd, char *ptr, int len)
+// {
+//     int i = len;
+// #ifdef DEBUG_OUT_PREFIX
+//     char fnt_clr[] = {'\e','[','3','1','m'};
+//     char *ptr1 = fnt_clr;
+//     int cnt = 5;
+//     fnt_clr[3] = '0' + DEBUG_OUT_PREFIX;
+//     while(cnt--) {
+//       while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
+//       DEBUG_PORT->DAT = *ptr1++;
+//     }
+// #endif
 
-    while(i--) {
-        while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
+//     while(i--) {
+//         while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
 
-        if(*ptr == '\n') {
-            DEBUG_PORT->DAT = '\r';
-            while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
-        }
+//         if(*ptr == '\n') {
+//             DEBUG_PORT->DAT = '\r';
+//             while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
+//         }
 
-        DEBUG_PORT->DAT = *ptr++;
-    }
-    return len;
-}
+//         DEBUG_PORT->DAT = *ptr++;
+//     }
+//     return len;
+// }
 
-int _read (int fd, char *ptr, int len)
-{
+// int _read (int fd, char *ptr, int len)
+// {
 
-    while((DEBUG_PORT->FIFOSTS & UART_FIFOSTS_RXEMPTY_Msk) != 0);
-    *ptr = DEBUG_PORT->DAT;
-    return 1;
+//     while((DEBUG_PORT->FIFOSTS & UART_FIFOSTS_RXEMPTY_Msk) != 0);
+//     *ptr = DEBUG_PORT->DAT;
+//     return 1;
 
 
-}
+// }
 #endif
 
 #else

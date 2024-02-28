@@ -45,6 +45,8 @@
 #include "tee.h"
 #include "tee_api_defines.h"
 
+#include "printf.h"
+
 extern const struct pseudo_ta_head __start_ta_head_section;
 extern const struct pseudo_ta_head __stop_ta_head_section;
 

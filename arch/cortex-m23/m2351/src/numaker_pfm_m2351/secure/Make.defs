@@ -50,7 +50,6 @@ CMN_CSRCS =    ../../../../../../tee/lib/libutee/tee_api_operations.c \
 CHIP_ASRCS_S = ../../Device/Nuvoton/M2351/Source/GCC/startup_M2351.S
 
 CHIP_CSRCS_S = ../../Device/Nuvoton/M2351/Source/system_M2351.c \
-               ../../Device/Nuvoton/M2351/Source/GCC/_syscalls.c \
                main.c
 
 ifeq ($(CONFIG_APPS_HELLO_WORLD),y)

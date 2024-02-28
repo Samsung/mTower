@@ -32,6 +32,8 @@
 #include "task.h"
 #include "semphr.h"
 
+#include "printf.h"
+
 /* Demo application include. */
 
 /* Pre-processor Definitions. */
@@ -215,7 +217,7 @@ static void menuTask(void *pvParameters)
 #endif
     printf("+-----------------------------------------------------------+\n");
 
-    printf("\n[%c]\n", ch = getchar());
+    printf("\n[%c]\n", ch = GetChar());
 
     switch (ch) {
 #ifdef CONFIG_APPS_HELLO_WORLD
@@ -660,7 +662,7 @@ void menu_security_exception_example_ns(void)
   printf("| [a] | Read 0x30018000 address (nonexistent)     | Hard fault         |\n");
   printf("+----------------------------------------------------------------------+\n");
 
-  printf("\n[%c] ", ch = getchar());
+  printf("\n[%c]\n", ch = GetChar());
 
   switch (ch) {
     case '1':
@@ -728,7 +730,7 @@ int main( void )
   /* Prepare the hardware to run this demo. */
   prvSetupHardware();
 
-  printf("\n\n\t-=mTower v" VERSION "=-  " __DATE__ "  " __TIME__"\n\n");
+  printf("\n\n\t-= mTower v" VERSION " =-  " __DATE__ "  " __TIME__"\n\n");
 
   printf("+---------------------------------------------+\n");
   printf("|  Nonsecure FreeRTOS (BL33) is running ...   |\n");

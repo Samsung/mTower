@@ -58,6 +58,8 @@
 //#include "tee_client_api.h"
 //#include "tee.h"
 
+#include "printf.h"
+
 struct tee_ta_session *current_session;
 /* This mutex protects the critical section in tee_ta_init_session */
 //struct mutex tee_ta_mutex = MUTEX_INITIALIZER;

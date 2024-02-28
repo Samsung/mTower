@@ -114,12 +114,8 @@ cd mTower/
 make PLATFORM=numaker_pfm_m2351 create_context
 ```
 
-To use BootLoader2 for M2351 Nuvoton chips, you need to download NuBL2 sources and 
-syscall file. This can be done by executing following shell commands:
+To use BootLoader2 for M2351 Nuvoton chips, you need to download NuBL2 sources. This can be done by executing following shell commands:
 
-```sh
-wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/Library/Device/Nuvoton/M2351/Source/GCC/_syscalls.c -O ./arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/_syscalls.c
-```
 ```sh
 wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode/MKROM/SecureBootDemo/NuBL2/main.c -O ./arch/cortex-m23/m2351/src/NuBL2/main.c
 ```
@@ -136,10 +132,6 @@ wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode
 > Please note that files from these downloads contain the following copyright
 notice: `Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.`
 Licensing terms specified [here](https://github.com/OpenNuvoton/M2351BSP/blob/master/NUVOTON%20SOFTWARE%20LICENSE%20AGREEMENT.pdf).  
-`arch/cortex-m23/m2351/src/Device/Nuvoton/M2351/Source/GCC/_syscalls.c` under:  
-// This file is part of the uOS++ III distribution  
-// Parts of this file are from the newlib sources, issued under GPL.  
-// Copyright (c) 2014 Liviu Ionescu  
 
 ### 2.4 Get the toolchains
 In mTower different toolchains are used for different targets (depends on

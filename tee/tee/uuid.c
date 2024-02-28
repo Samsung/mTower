@@ -8,6 +8,8 @@
 #include <tee/uuid.h>
 #include <util.h>
 
+#include "printf.h"
+
 void tee_uuid_to_octets(uint8_t *d, const TEE_UUID *s)
 {
 	d[0] = s->timeLow >> 24;
