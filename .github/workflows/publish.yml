@@ -30,14 +30,10 @@ jobs:
       - name: Install extra tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y make build-essential libncurses5-dev libssl-dev libcurl4-openssl-dev wget
+          sudo apt-get install -y make build-essential libncurses5-dev libssl-dev libcurl4-openssl-dev
       - name: Build the project
         run: |
           make PLATFORM=numaker_pfm_m2351 create_context
-          wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode/MKROM/SecureBootDemo/NuBL2/main.c -O ./arch/cortex-m23/m2351/src/NuBL2/main.c
-          wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode/MKROM/SecureBootDemo/NuBL2/VerifyNuBL3x.c -O ./arch/cortex-m23/m2351/src/NuBL2/VerifyNuBL3x.c
-          wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode/MKROM/SecureBootDemo/NuBL2/NuBL2.h -O ./arch/cortex-m23/m2351/src/NuBL2/NuBL2.h
-          wget -L https://raw.githubusercontent.com/OpenNuvoton/M2351BSP/master/SampleCode/MKROM/SecureBootDemo/NuBL2/FwInfo/FwInfo.c -O ./arch/cortex-m23/m2351/src/NuBL2/FwInfo.c
           make toolchain
           make
           # Save the location of the mtower_*.bin output files for easier reference

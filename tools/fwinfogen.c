@@ -147,7 +147,7 @@ typedef struct {
 /* Public Data. */
 /* All data definitions with global scope appear here. */
 const char header[] = "\n"
-    "const uint32_t g_InitialFWinfo[] =\n"
+    "const uint32_t g_InitialFWInfo[] =\n"
     "{\n"
     "  /* public key - 64-bytes (256-bits + 256-bits) */\n";
 
