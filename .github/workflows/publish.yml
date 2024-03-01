@@ -116,12 +116,12 @@ jobs:
           egress-policy: audit
 
       - name: Download ${{ needs.build.outputs.version }}_s.bin
-        uses: actions/download-artifact@f44cd7b40bfd40b6aa1cc1b9b5b7bf03d3c67110 # tag=v2.1.0
+        uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # tag=v2.1.0
         with:
           name: ${{ needs.build.outputs.version }}_s.bin
 
       - name: Download ${{ needs.build.outputs.version }}_ns.bin
-        uses: actions/download-artifact@f44cd7b40bfd40b6aa1cc1b9b5b7bf03d3c67110 # tag=v2.1.0
+        uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # tag=v2.1.0
         with:
           name: ${{ needs.build.outputs.version }}_ns.bin
 
