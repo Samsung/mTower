@@ -33,6 +33,7 @@
 #include <tee_api_defines_extensions.h>
 #include <tee_internal_api_extensions.h>
 #include <utee_syscalls.h>
+#include <sys/queue.h>
 #include <utee_defines.h>
 #include <util.h>
 #include "tee_api_private.h"
@@ -57,6 +58,30 @@ struct __TEE_OperationHandle {
 				 * tag_len in bytes for AE operation else unused
 				 */
 };
+
+/*
+ * Link list definition for tracking the operation activity.
+ */
+struct oprtn_hndl_elem {
+	TAILQ_ENTRY(oprtn_hndl_elem) link;
+	uint32_t addr;
+};
+TAILQ_HEAD(oprtn_hndl_head, oprtn_hndl_elem) oprtn_hndl_head =
+TAILQ_HEAD_INITIALIZER(oprtn_hndl_head);
+
+/*
+ * Get operation address if it has been allocated with this tool.
+ */
+static struct oprtn_hndl_elem * get_operation_elem(void *op)
+{
+	struct oprtn_hndl_elem *e;
+
+	TAILQ_FOREACH(e, &oprtn_hndl_head, link) {
+		if (e->addr == op)
+			return e;
+	}
+	return NULL;
+}
 
 /* Cryptographic Operations API - Generic Operation Functions */
 
@@ -280,6 +305,19 @@ TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,
 	if (!op)
 		return TEE_ERROR_OUT_OF_MEMORY;
 
+	void *cp = NULL;
+	cp = malloc(sizeof(struct oprtn_hndl_elem));
+	if (!cp) {
+		TEE_Free(op);
+		return TEE_ERROR_OUT_OF_MEMORY;
+	}
+
+	struct oprtn_hndl_elem *e = (struct oprtn_hndl_elem *)(void *)cp;
+	e->addr = op;
+
+	/* Enqueue buffer on allocated list */
+	TAILQ_INSERT_TAIL(&oprtn_hndl_head, e, link);
+
 	op->info.algorithm = algorithm;
 	op->info.operationClass = TEE_ALG_GET_CLASS(algorithm);
 	op->info.mode = mode;
@@ -374,7 +412,8 @@ void TEE_FreeOperation(TEE_OperationHandle operation)
 {
 	TEE_Result res;
 
-	if (operation == TEE_HANDLE_NULL)
+	if (operation == TEE_HANDLE_NULL ||
+		get_operation_elem(operation) == NULL)
 		TEE_Panic(0);
 
 	/*
@@ -387,6 +426,13 @@ void TEE_FreeOperation(TEE_OperationHandle operation)
 		TEE_Panic(res);
 
 	TEE_Free(operation->buffer);
+
+	struct oprtn_hndl_elem *e;
+	e = get_operation_elem(operation);
+	if (e != NULL) {
+		TAILQ_REMOVE(&oprtn_hndl_head, e, link);
+		free(e);
+	}
 	TEE_Free(operation);
 }
 
@@ -412,7 +458,8 @@ TEE_Result TEE_GetOperationInfoMultiple(TEE_OperationHandle operation,
 	uint32_t num_of_keys;
 	size_t n;
 
-	if (operation == TEE_HANDLE_NULL) {
+	if (operation == TEE_HANDLE_NULL ||
+		get_operation_elem(operation) == NULL) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		goto out;
 	}
@@ -502,7 +549,8 @@ void TEE_ResetOperation(TEE_OperationHandle operation)
 {
 	TEE_Result res;
 
-	if (operation == TEE_HANDLE_NULL)
+	if (operation == TEE_HANDLE_NULL ||
+		get_operation_elem(operation) == NULL)
 		TEE_Panic(0);
 
 	if (!(operation->info.handleState & TEE_HANDLE_FLAG_KEY_SET))
@@ -527,7 +575,8 @@ TEE_Result TEE_SetOperationKey(TEE_OperationHandle operation,
 	uint32_t key_size = 0;
 	TEE_ObjectInfo key_info;
 
-	if (operation == TEE_HANDLE_NULL) {
+	if (operation == TEE_HANDLE_NULL ||
+		get_operation_elem(operation) == NULL) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		goto out;
 	}
@@ -604,7 +653,8 @@ TEE_Result TEE_SetOperationKey2(TEE_OperationHandle operation,
 	TEE_ObjectInfo key_info1;
 	TEE_ObjectInfo key_info2;
 
-	if (operation == TEE_HANDLE_NULL) {
+	if (operation == TEE_HANDLE_NULL ||
+		get_operation_elem(operation) == NULL) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		goto out;
 	}
@@ -792,6 +842,7 @@ void TEE_DigestUpdate(TEE_OperationHandle operation,
 	TEE_Result res = TEE_ERROR_GENERIC;
 
 	if (operation == TEE_HANDLE_NULL ||
+		get_operation_elem(operation) == NULL ||
 	    operation->info.operationClass != TEE_OPERATION_DIGEST)
 		TEE_Panic(0);
 
@@ -809,6 +860,7 @@ TEE_Result TEE_DigestDoFinal(TEE_OperationHandle operation, const void *chunk,
 	uint64_t hl;
 
 	if ((operation == TEE_HANDLE_NULL) ||
+		get_operation_elem(operation) == NULL ||
 	    (!chunk && chunkLen) ||
 	    !hash ||
 	    !hashLen ||
@@ -843,7 +895,8 @@ void TEE_CipherInit(TEE_OperationHandle operation, const void *IV,
 {
 	TEE_Result res;
 
-	if (operation == TEE_HANDLE_NULL)
+	if (operation == TEE_HANDLE_NULL ||
+		get_operation_elem(operation) == NULL)
 		TEE_Panic(0);
 
 	if (operation->info.operationClass != TEE_OPERATION_CIPHER)
@@ -1153,7 +1206,8 @@ out:
 
 void TEE_MACInit(TEE_OperationHandle operation, const void *IV, uint32_t IVLen)
 {
-	if (operation == TEE_HANDLE_NULL)
+	if (operation == TEE_HANDLE_NULL ||
+		get_operation_elem(operation) == NULL)
 		TEE_Panic(0);
 
 	if (operation->info.operationClass != TEE_OPERATION_MAC)
@@ -1176,7 +1230,9 @@ void TEE_MACUpdate(TEE_OperationHandle operation, const void *chunk,
 {
 	TEE_Result res;
 
-	if (operation == TEE_HANDLE_NULL || (chunk == NULL && chunkSize != 0))
+	if (operation == TEE_HANDLE_NULL ||
+		get_operation_elem(operation) == NULL ||
+		(chunk == NULL && chunkSize != 0))
 		TEE_Panic(0);
 
 	if (operation->info.operationClass != TEE_OPERATION_MAC)
@@ -1204,6 +1260,7 @@ TEE_Result TEE_MACComputeFinal(TEE_OperationHandle operation,
 	uint64_t ml;
 
 	if (operation == TEE_HANDLE_NULL ||
+		get_operation_elem(operation) == NULL ||
 	    (message == NULL && messageLen != 0) ||
 	    mac == NULL ||
 	    macLen == NULL) {
@@ -1388,6 +1445,7 @@ TEE_Result TEE_AEUpdate(TEE_OperationHandle operation, const void *srcData,
 	uint64_t dl;
 
 	if (operation == TEE_HANDLE_NULL ||
+		get_operation_elem(operation) == NULL ||
 	    (srcData == NULL && srcLen != 0) ||
 	    destLen == NULL ||
 	    (destData == NULL && *destLen != 0)) {
@@ -1471,6 +1529,7 @@ TEE_Result TEE_AEEncryptFinal(TEE_OperationHandle operation,
 //	uint64_t tl;
 
 	if (operation == TEE_HANDLE_NULL ||
+		get_operation_elem(operation) == NULL ||
 	    (srcData == NULL && srcLen != 0) ||
 	    destLen == NULL ||
 	    (destData == NULL && *destLen != 0) ||
@@ -1563,6 +1622,7 @@ TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
 	size_t req_dlen;
 
 	if (operation == TEE_HANDLE_NULL ||
+		get_operation_elem(operation) == NULL ||
 	    (srcData == NULL && srcLen != 0) ||
 	    destLen == NULL ||
 	    (destData == NULL && *destLen != 0) ||
