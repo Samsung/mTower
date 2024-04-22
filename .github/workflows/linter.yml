@@ -2,12 +2,15 @@ name: cpp-linter
 
 on: [push, pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   cpp-linter:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: cpp-linter/cpp-linter-action@main
+      - uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f
+      - uses: cpp-linter/cpp-linter-action@bbc213852a439498b38fa21ea5c698e852abd3f5 
         id: linter
         continue-on-error: true
         env:
