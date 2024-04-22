@@ -6,8 +6,13 @@ jobs:
   cpp-linter:
     runs-on: ubuntu-latest
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
       - uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f
-      - uses: cpp-linter/cpp-linter-action@main
+      - uses: cpp-linter/cpp-linter-action@bbc213852a439498b38fa21ea5c698e852abd3f5 # main
         id: linter
         continue-on-error: true
         env:

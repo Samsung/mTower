@@ -9,6 +9,11 @@ jobs:
     name: Check license, copyright, keyword
     runs-on: ubuntu-22.04
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
       - uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f
       - run: |
           docker run --rm --name "fossologyscanner" -w "/opt/repo" -v ${PWD}:/opt/repo \
