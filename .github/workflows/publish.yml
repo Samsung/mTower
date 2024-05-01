@@ -55,14 +55,14 @@ jobs:
         # echo "version=mtower-${VERSION:1}.bin" >> "$GITHUB_OUTPUT"
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # tag=v3
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # tag=v3
         with:
           name: ${{ steps.mtower_version.outputs.version }}_s.bin
           path: ./${{ steps.mtower_version.outputs.version }}_s.bin
           if-no-files-found: error
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # tag=v3
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # tag=v3
         with:
           name: ${{ steps.mtower_version.outputs.version }}_ns.bin
           path: ./${{ steps.mtower_version.outputs.version }}_ns.bin
