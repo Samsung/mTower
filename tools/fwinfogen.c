@@ -213,7 +213,8 @@ static int sign_pFwInfo(FW_INFO_T *pFwInfo, ECC_KEY_T *ecdsa_key)
         eckey) != 1) {
       printf("Failed to verify EC Signature\n");
     } else {
-      BIGNUM *r, *s;
+      BIGNUM *r = NULL;
+      BIGNUM *s = NULL;
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
         ECDSA_SIG_get0(signature, &r, &s);
 #else
@@ -333,7 +334,7 @@ int main(int argc, char** argv)
 {
   unsigned char *buf = NULL;
   int ret = -1;
-  FILE* fd;
+  FILE* fd = NULL;
   int img_size = 0;
 
 #ifdef CONFIG_BOOTLOADER2

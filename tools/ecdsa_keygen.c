@@ -86,11 +86,11 @@ const uint32_t iv[] =
 /* All data definitions with global scope appear here. */
 
 /* Public Function Prototypes */
-Message *message_init(int);
-int aes256_init(Message *);
-Message *aes256_encrypt(Message *);
-void aes_cleanup(AES_DATA *);
-void message_cleanup(Message *);
+Message *message_init(int length);
+int aes256_init(Message *input);
+Message *aes256_encrypt(Message *plaintext);
+void aes_cleanup(AES_DATA *aes_data);
+void message_cleanup(Message *message);
 
 void sha256(unsigned char *data, unsigned int data_len, unsigned char *hash)
 {
@@ -125,8 +125,8 @@ int aes256_init(Message * input)
 
 Message *aes256_encrypt(Message * plaintext)
 {
-  EVP_CIPHER_CTX *enc_ctx;
-  Message * encrypted_message;
+  EVP_CIPHER_CTX *enc_ctx = NULL;
+  Message * encrypted_message = NULL;
   int enc_length = *(plaintext->length)
       + (AES_BLOCK_SIZE - *(plaintext->length) % AES_BLOCK_SIZE);
 
