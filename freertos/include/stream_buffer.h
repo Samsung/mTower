@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.1.1
- * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.2.1
+ * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -50,6 +50,10 @@
 
 #ifndef STREAM_BUFFER_H
 #define STREAM_BUFFER_H
+
+#ifndef INC_FREERTOS_H
+	#error "include FreeRTOS.h must appear in source files before include stream_buffer.h"
+#endif
 
 #if defined( __cplusplus )
 extern "C" {
