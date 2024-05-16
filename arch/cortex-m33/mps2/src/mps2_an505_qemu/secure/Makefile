@@ -33,7 +33,7 @@ CFLAGS += -I../../CMSIS/Include
 CFLAGS += -I../../StdDriver/inc
 CFLAGS += -I../../Device/
 CFLAGS += -I../../Device/ARM/ARMCM33/Include
-CFLAGS += -I../../CMSIS/Core/Include
+CFLAGS += -I../../CMSIS/Include
 CFLAGS += -I../common
 
 CFLAGS += -I$(TOPDIR)/tee_client/public

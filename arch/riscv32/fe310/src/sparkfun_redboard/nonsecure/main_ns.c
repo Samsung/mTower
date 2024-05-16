@@ -89,7 +89,7 @@ find the queue full. */
  *
  * @return pdFALSE if privilege was raised, pdTRUE otherwise.
  */
-BaseType_t xPortRaisePrivilege( void ) FREERTOS_SYSTEM_CALL;
+// BaseType_t xPortRaisePrivilege( void ) FREERTOS_SYSTEM_CALL;
 extern pmp_info_t xPmpInfo;
 #endif
 
@@ -1080,7 +1080,8 @@ static void prvSetupHardware( void )
 	// led0_blue = metal_led_get_rgb("LD0", "blue");
 	// if ((led0_red == NULL) || (led0_green == NULL) || (led0_blue == NULL))
 	// {
-	// 	write( STDOUT_FILENO, pcWarningMsg, strlen( pcWarningMsg ) );
+	// 	printf(pcWarningMsg);
+	// 	// write( STDOUT_FILENO, pcWarningMsg, strlen( pcWarningMsg ) );
 	// }
 	// else
 	// {
@@ -1090,9 +1091,12 @@ static void prvSetupHardware( void )
 	// 	metal_led_enable(led0_blue);
 
 	// 	// All Off
-	// 	metal_led_on(led0_red);
-	// 	metal_led_on(led0_green);
-	// 	metal_led_on(led0_blue);
+	// 	metal_led_off(led0_red);
+	// 	metal_led_off(led0_green);
+	// 	metal_led_off(led0_blue);
+	// 	// metal_led_on(led0_red);
+	// 	// metal_led_on(led0_green);
+	// 	// metal_led_on(led0_blue);
 	// }
 }
 /*-----------------------------------------------------------*/
@@ -1111,15 +1115,13 @@ void vApplicationMallocFailedHook( void )
 	to query the size of free heap space that remains (although it does not
 	provide information on how the remaining heap might be fragmented). */
 
-	const char * const pcErrorMsg = "ERROR malloc \r\n";
-
 	taskDISABLE_INTERRUPTS();
 
 #if( portUSING_MPU_WRAPPERS == 1 )
 	/* need to be machine mode */
-	xPortRaisePrivilege();
+//	xPortRaisePrivilege();
 #endif /* ( portUSING_MPU_WRAPPERS == 1 ) */
-	write( STDOUT_FILENO, pcErrorMsg, strlen(pcErrorMsg) );
+	printf("ERROR malloc\r\n");
 
 	if ( led0_red != NULL )
 	{
@@ -1155,9 +1157,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 	function is called if a stack overflow is detected. */
 	taskDISABLE_INTERRUPTS();
 
-	write( STDOUT_FILENO, "ERROR Stack overflow on func: ", 30 );
-	write( STDOUT_FILENO, pcTaskName, strlen( pcTaskName ) );
-	write( STDOUT_FILENO, "\r\n", 3 );
+	printf("ERROR Stack overflow on func: %s\r\n",pcTaskName);
 
 	// if ( led0_red != NULL )
 	// {

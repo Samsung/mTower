@@ -33,7 +33,7 @@ CFLAGS += -I$(TOPDIR)/tee_client/public
 CFLAGS += -I$(TOPDIR)/tee_client/libteec/include/freertos
 
 CFLAGS += -I../../Device/ARM/ARMCM33/Include \
-  	-I../../CMSIS/Core/Include \
+  	-I../../CMSIS/Include \
   	-I../common
 
 ifeq ($(CONFIG_APPS_HELLO_WORLD),y)

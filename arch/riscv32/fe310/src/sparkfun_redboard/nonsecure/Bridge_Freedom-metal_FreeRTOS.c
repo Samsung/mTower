@@ -7,6 +7,7 @@
 /* Freedom metal includes. */
 #include <metal/machine.h>
 #include <metal-platform.h>
+#include <printf.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -24,7 +25,6 @@ __attribute__((constructor)) static void FreeRTOS_init(void);
 
 void vExceptionFaultHandler(struct metal_cpu *cpu, int ecode)
 {
-	const char * const pcException = "Exception cause: ";
 	const char *pcCauses[] = {
 		"0 Instruction address misaligned",
 		"1 Instruction access fault",
@@ -35,9 +35,7 @@ void vExceptionFaultHandler(struct metal_cpu *cpu, int ecode)
 		"6 Store/AMO address misaligned",
 		"7 Store/AMO access fault"};
 
-	write( STDOUT_FILENO, pcException, strlen( pcException ) );
-	write( STDOUT_FILENO, pcCauses[ecode], strlen( pcCauses[ecode] ) );
-	write( STDOUT_FILENO, "\r\n", 2 );
+	printf("Exception cause: %s\r\n", pcCauses[ecode]);
 }
 __attribute__((constructor)) static void FreeRTOS_init(void)
 {

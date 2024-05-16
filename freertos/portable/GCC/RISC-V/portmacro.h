@@ -1,6 +1,8 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.4.6
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,11 +21,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
+
 
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
@@ -57,6 +59,7 @@ extern "C" {
 #else
 	#error Assembler did not define __riscv_xlen
 #endif
+
 
 typedef portSTACK_TYPE StackType_t;
 typedef portBASE_TYPE BaseType_t;
@@ -261,12 +264,14 @@ BaseType_t xIsPrivileged( void );
 /*-----------------------------------------------------------*/
 
 /* Architecture specifics. */
-/* We use decreasing stack  */
 #define portSTACK_GROWTH			( -1 )
-/* Number of tick per milliseconds */
 #define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
-
-#define portBYTE_ALIGNMENT 			16
+#ifdef __riscv64
+	#error This is the RV32 port that has not yet been adapted for 64.
+	#define portBYTE_ALIGNMENT			16
+#else
+	#define portBYTE_ALIGNMENT			16
+#endif
 /*-----------------------------------------------------------*/
 
 void vPortFreeRTOSInit( StackType_t xTopOfStack );
@@ -284,12 +289,13 @@ extern void vTaskSwitchContext( void );
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
 
+
 /* Critical section management. */
 #define portCRITICAL_NESTING_IN_TCB					1
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
 
-#define portSET_INTERRUPT_MASK_FROM_ISR() 			0
+#define portSET_INTERRUPT_MASK_FROM_ISR() 0
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusValue ) ( void ) uxSavedStatusValue
 #if( portUSING_MPU_WRAPPERS == 1 )
 #define portDISABLE_INTERRUPTS()	vPortSyscall(portSVC_DISABLE_INTERRUPTS)
@@ -300,6 +306,7 @@ extern void vTaskExitCritical( void );
 #endif
 #define portENTER_CRITICAL()	vTaskEnterCritical()
 #define portEXIT_CRITICAL()		vTaskExitCritical()
+
 /*-----------------------------------------------------------*/
 
 /* Architecture specific optimisations. */
@@ -323,6 +330,8 @@ extern void vTaskExitCritical( void );
 	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - __builtin_clz( uxReadyPriorities ) )
 
 #endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
+
+
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site.  These are
@@ -330,20 +339,22 @@ not necessary for to use this port.  They are defined so the common demo files
 (which build with all the ports) will build. */
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
+
 /*-----------------------------------------------------------*/
 
-#define portNOP() 	__asm volatile ( " nop " )
+#define portNOP() __asm volatile 	( " nop " )
 
 #define portINLINE	__inline
 
 #ifndef portFORCE_INLINE
-	#define portFORCE_INLINE inline __attribute__(( always_inline, ))
+	#define portFORCE_INLINE inline __attribute__(( always_inline))
 #endif
 
-#define portMEMORY_BARRIER() 	__asm volatile ( "" ::: "memory" )
+#define portMEMORY_BARRIER() __asm volatile( "" ::: "memory" )
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* PORTMACRO_H */
+
