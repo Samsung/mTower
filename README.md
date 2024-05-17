@@ -46,10 +46,10 @@ between platforms, a `PLATFORM` flag has been introduced.
 
 | Platform                  | Composite PLATFORM flag            | Maintained |
 |---------------------------|------------------------------------|------------|
-| [NuMaker-PFM-M2351]       |`PLATFORM=numaker_pfm_m2351`        | v0.4       |
-| [M2351-Badge]             |`PLATFORM=m2351_badge`              | v0.4       |
-| [V2M-MPS2-Qemu]           |`PLATFORM=mps2_an505_qemu`          | v0.4       |
-| [SparkFun RED-V RedBoard] |`PLATFORM=sparkfun_redboard`        | v0.5       |
+| [NuMaker-PFM-M2351]       |`PLATFORM=numaker_pfm_m2351`        | v0.5.0     |
+| [M2351-Badge]             |`PLATFORM=m2351_badge`              | v0.5.0     |
+| [V2M-MPS2-Qemu]           |`PLATFORM=mps2_an505_qemu`          | v0.5.0     |
+| [SparkFun RED-V RedBoard] |`PLATFORM=sparkfun_redboard`        | v0.5.0     |
 
 For information on adding a new platform see the [how to add a platform].
 

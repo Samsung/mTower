@@ -28,7 +28,7 @@
 /* All C pre-processor macros are defined here. */
 
 /** mTower version */
-#define VERSION "0.4.1"
+#define VERSION "0.5.0"
 
 
 /* Public Types */
