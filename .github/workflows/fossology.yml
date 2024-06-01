@@ -9,7 +9,7 @@ jobs:
     name: Check license, copyright, keyword
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f
+      - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
       - run: |
           docker run --rm --name "fossologyscanner" -w "/opt/repo" -v ${PWD}:/opt/repo \
             -e GITHUB_TOKEN=${{ github.token }} \
