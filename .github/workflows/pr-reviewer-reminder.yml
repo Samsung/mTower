@@ -11,6 +11,11 @@ jobs:
   pull-request-reviewer-reminder: 
     runs-on: ubuntu-latest
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
+        with:
+          egress-policy: audit
+
       - uses: tommykw/pull-request-reviewer-reminder-action@5d110f904528e96d48accfac688540e95cf382fe
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }} # Required
