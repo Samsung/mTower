@@ -36,21 +36,10 @@
  */
 #include <stdlib.h>
 #include <stdint.h>
-// #include "portable.h"
-// #include "portmacro.h"
-
-/* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
- * all the API functions to use the MPU wrappers.  That should only be done when
- * task.h is included from an application file. */
-// #define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
-
-// #include "FreeRTOS.h"
-// #include "task.h"
-
-// #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+#include "config.h"
 
 #define configSUPPORT_DYNAMIC_ALLOCATION    1
-#define configTOTAL_HEAP_SIZE               8000
+#define configTOTAL_HEAP_SIZE               CONFIG_TOTAL_HEAP_SIZE
 #define configAPPLICATION_ALLOCATED_HEAP    0
 
 #define PRIVILEGED_FUNCTION

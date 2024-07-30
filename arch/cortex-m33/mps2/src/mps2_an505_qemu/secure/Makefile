@@ -91,7 +91,6 @@ OBJS_S = $(AOBJS_S) $(COBJS_S)
 LIBPATHS = -L. -L"$(TOPDIR)/lib"
 
 LIBS =  -lm -lc -lnosys -lalloc_s -lcrypt_s
-#-lStdDriver_s
 
 $(AOBJS_S): $(OBJDIR)/%$(OBJEXT): %.S
 	$(Q) mkdir -p $(OBJDIR)/$(dir $<)

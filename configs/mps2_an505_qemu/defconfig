@@ -49,6 +49,7 @@ CONFIG_START_ADDRESS_BL33=0x10040000
 #
 # CONFIG_ARCH_CORTEX_M23 is not set
 CONFIG_ARCH_CORTEX_M33=y
+# CONFIG_ARCH_RISCV_32 is not set
 CONFIG_ARCH="cortex-m33"
 CONFIG_ARCH_FAMILY="mps2"
 CONFIG_PLATFORM="mps2_an505_qemu"
@@ -91,9 +92,6 @@ CONFIG_SAU_INIT_END6=0x30017FFF
 CONFIG_SAU_INIT_REGION7=y
 CONFIG_SAU_INIT_START7=0x50000000
 CONFIG_SAU_INIT_END7=0x5FFFFFFF
-CONFIG_GCC_VERSION="arm-none-eabi-8-2018-q4-major-linux"
-CONFIG_GCC_SITE="https://developer.arm.com/-/media/Files/downloads/gnu-rm/8-2018q4"
-CONFIG_GCC_FOLDER="gcc-arm-none-eabi-8-2018-q4-major"
 CONFIG_ARCH_FAMILY_MPS2=y
 
 #
@@ -132,7 +130,23 @@ CONFIG_PLATFORM_MPS2_AN505_QEMU=y
 #
 # Toolchain Configuration Options
 #
+# CONFIG_GCC_VERSION_6_1_2017Q1 is not set
+# CONFIG_GCC_VERSION_6_1_2017Q2 is not set
 CONFIG_GCC_VERSION_8_2018Q4=y
+# CONFIG_GCC_VERSION_10_2_0_2020_12 is not set
+# CONFIG_GCC_VERSION_T_HEAD_10_2_0 is not set
+CONFIG_GCC_VERSION="arm-none-eabi-8-2018-q4-major-linux"
+CONFIG_GCC_SITE="https://developer.arm.com/-/media/Files/downloads/gnu-rm/8-2018q4"
+CONFIG_GCC_FOLDER="gcc-arm-none-eabi-8-2018-q4-major"
+
+#
+# Standard Libc Configuration
+#
+
+#
+# Heap of secure part:
+#
+CONFIG_TOTAL_HEAP_SIZE=0x2000
 
 #
 # GP TEE Configuration

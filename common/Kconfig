@@ -1,0 +1,12 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the docs folder of mTower repository.
+#
+
+comment "Heap of secure part"
+
+config TOTAL_HEAP_SIZE
+	hex "Total heap size (hex)"
+	default 0x2000
+	---help---
+		"Total heap size for secure part"

@@ -255,9 +255,9 @@ menu "System Type"
 source "arch/Kconfig"
 endmenu
 
-#menu "Standard Libc Configuration"
-#source "libc/Kconfig"
-#endmenu
+menu "Standard Libc Configuration"
+source "common/Kconfig"
+endmenu
 
 menu "GP TEE Configuration"
 
