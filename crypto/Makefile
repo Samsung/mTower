@@ -85,6 +85,9 @@ CFLAGS += -D_CFG_CRYPTO_WITH_HASH -DCFG_CRYPTO_SHA1 -DCFG_CRYPTO_HMAC
 
 CFLAGS += -D_CFG_CRYPTO_WITH_MAC
 
+CFLAGS += -DXMALLOC=pvPortMalloc
+CFLAGS += -DXFREE=vPortFree
+
 ifneq ($(WORLD), secure)
 CFLAGS += -DDEBUG_PORT=$(subst ",,$(CONFIG_NONSECURE_DEBUG_UART))
 OBJDIR = $(TOPDIR)/build/nonsecure$(subst $(TOPDIR),,$(shell pwd))

@@ -1545,7 +1545,7 @@ TEE_Result utee_cryp_obj_populate(unsigned long obj,
 	if (MUL_OVERFLOW(sizeof(TEE_Attribute), attr_count, &alloc_size))
 	    return TEE_ERROR_OVERFLOW;
 
-	attrs = malloc(alloc_size);
+	attrs = TEE_Malloc(alloc_size, TEE_MALLOC_FILL_ZERO);
 	if (!attrs)
 		return TEE_ERROR_OUT_OF_MEMORY;
 
@@ -1564,7 +1564,7 @@ TEE_Result utee_cryp_obj_populate(unsigned long obj,
 		o->info.handleFlags |= TEE_HANDLE_FLAG_INITIALIZED;
 
 out:
-	free(attrs);
+	TEE_Free(attrs);
 	return res;
 }
 
@@ -1890,7 +1890,7 @@ static void cryp_state_free(struct user_ta_ctx *utc, struct tee_cryp_state *cs)
 		assert(!cs->ctx);
 	}
 
-	free(cs);
+	TEE_Free(cs);
 }
 
 static TEE_Result tee_svc_cryp_check_key_type(const struct tee_obj *o,

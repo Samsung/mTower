@@ -251,7 +251,7 @@ static void pseudo_ta_enter_close_session(struct tee_ta_session *s)
 
 static void pseudo_ta_destroy(struct tee_ta_ctx *ctx)
 {
-	free(to_pseudo_ta_ctx(ctx));
+	TEE_Free(to_pseudo_ta_ctx(ctx));
 }
 
 static const struct tee_ta_ops pseudo_ta_ops = {

@@ -126,9 +126,9 @@ TEE_Result tee_pobj_get(TEE_UUID *uuid, void *obj_id, uint32_t obj_id_len,
 	o->fops = fops;
 	o->temporary = temporary;
 
-	o->obj_id = malloc(obj_id_len);
+	o->obj_id = TEE_Malloc(obj_id_len, TEE_MALLOC_FILL_ZERO);
 	if (o->obj_id == NULL) {
-		free(o);
+		TEE_Free(o);
 		res = TEE_ERROR_OUT_OF_MEMORY;
 		goto out;
 	}
@@ -155,8 +155,8 @@ TEE_Result tee_pobj_release(struct tee_pobj *obj)
 	obj->refcnt--;
 	if (obj->refcnt == 0) {
 		TAILQ_REMOVE(&tee_pobjs, obj, link);
-		free(obj->obj_id);
-		free(obj);
+		TEE_Free(obj->obj_id);
+		TEE_Free(obj);
 	}
 //	mutex_unlock(&pobjs_mutex);
 
@@ -178,7 +178,7 @@ TEE_Result tee_pobj_rename(struct tee_pobj *obj, void *obj_id,
 		goto exit;
 	}
 
-	new_obj_id = malloc(obj_id_len);
+	new_obj_id = TEE_Malloc(obj_id_len, TEE_MALLOC_FILL_ZERO);
 	if (new_obj_id == NULL) {
 		res = TEE_ERROR_OUT_OF_MEMORY;
 		goto exit;
@@ -186,13 +186,13 @@ TEE_Result tee_pobj_rename(struct tee_pobj *obj, void *obj_id,
 	memcpy(new_obj_id, obj_id, obj_id_len);
 
 	/* update internal data */
-	free(obj->obj_id);
+	TEE_Free(obj->obj_id);
 	obj->obj_id = new_obj_id;
 	obj->obj_id_len = obj_id_len;
 	new_obj_id = NULL;
 
 exit:
 //	mutex_unlock(&pobjs_mutex);
-	free(new_obj_id);
+	TEE_Free(new_obj_id);
 	return res;
 }

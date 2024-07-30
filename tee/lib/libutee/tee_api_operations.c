@@ -306,7 +306,7 @@ TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,
 		return TEE_ERROR_OUT_OF_MEMORY;
 
 	void *cp = NULL;
-	cp = malloc(sizeof(struct oprtn_hndl_elem));
+	cp = TEE_Malloc(sizeof(struct oprtn_hndl_elem), TEE_MALLOC_FILL_ZERO);
 	if (!cp) {
 		TEE_Free(op);
 		return TEE_ERROR_OUT_OF_MEMORY;
@@ -431,7 +431,7 @@ void TEE_FreeOperation(TEE_OperationHandle operation)
 	e = get_operation_elem(operation);
 	if (e != NULL) {
 		TAILQ_REMOVE(&oprtn_hndl_head, e, link);
-		free(e);
+		TEE_Free(e);
 	}
 	TEE_Free(operation);
 }

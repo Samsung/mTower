@@ -90,7 +90,7 @@ OBJS_S = $(AOBJS_S) $(COBJS_S)
 
 LIBPATHS = -L. -L"$(TOPDIR)/lib"
 
-LIBS =  -lm -lc -lnosys -lcrypt_s
+LIBS =  -lm -lc -lnosys -lalloc_s -lcrypt_s
 #-lStdDriver_s
 
 $(AOBJS_S): $(OBJDIR)/%$(OBJEXT): %.S
@@ -106,6 +106,7 @@ $(COBJS_S): $(OBJDIR)/%$(OBJEXT): %.c
 
 mtower_s$(EXEEXT): $(OBJS_S)
 #	$(Q) $(MAKE) -C ../../StdDriver/src/ TOPDIR="$(TOPDIR)" WORLD=secure libStdDriver_s.a
+	$(Q) $(MAKE) -C $(TOPDIR)/common/ TOPDIR="$(TOPDIR)" WORLD=secure liballoc_s.a
 	$(Q) $(MAKE) -C $(TOPDIR)/crypto/ TOPDIR="$(TOPDIR)" WORLD=secure libcrypt_s.a
 	@echo "CC: mTower_s$(EXEEXT)"
 	$(Q) $(CC) $(CFLAGS) -mcmse -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -Wl,--out-implib=$(OBJDIR)/libnsc$(LIBEXT) -Wl,--cmse-implib -Wl,-Map=output.map -o $(OBJDIR)/bl32.elf

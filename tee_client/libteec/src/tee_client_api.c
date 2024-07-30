@@ -746,6 +746,7 @@ TEEC_Result TEEC_AllocateSharedMemory(TEEC_Context *ctx, TEEC_SharedMemory *shm)
 
 	if (ctx->reg_mem) {
 		shm->buffer = malloc(s);
+		// shm->buffer = pvPortMalloc(s);
 		if (!shm->buffer)
 			return TEEC_ERROR_OUT_OF_MEMORY;
 
@@ -788,6 +789,7 @@ void TEEC_ReleaseSharedMemory(TEEC_SharedMemory *shm)
 //		if (shm->registered_fd >= 0) {
 			if (shm->buffer_allocated)
 				free(shm->buffer);
+				// vPortFree(shm->buffer);
 //			close(shm->registered_fd);
 //		} else
 //			munmap(shm->buffer, shm->alloced_size);

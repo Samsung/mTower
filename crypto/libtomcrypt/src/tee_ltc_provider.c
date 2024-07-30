@@ -409,7 +409,7 @@ void crypto_hash_free_ctx(void *ctx, uint32_t algo __unused)
 	 */
 	if (ctx)
 		assert(!hash_get_ctx_size(algo, &ctx_size));
-	free(ctx);
+	TEE_Free(ctx);
 }
 
 void crypto_hash_copy_state(void *dst_ctx, void *src_ctx, uint32_t algo)
@@ -708,7 +708,7 @@ struct bignum *crypto_bignum_allocate(size_t size_bits)
 
 void crypto_bignum_free(struct bignum *s)
 {
-	free(s);
+	TEE_Free(s);
 }
 
 void crypto_bignum_clear(struct bignum *s)
@@ -841,7 +841,7 @@ static TEE_Result rsadorep(rsa_key *ltc_key, const uint8_t *src,
 	 */
 	blen = (mpa_StaticTempVarSizeInU32(LTC_MAX_BITS_PER_VARIABLE)) *
 	       sizeof(uint32_t);
-	buf = malloc(blen);
+	buf = TEE_Malloc(blen, TEE_MALLOC_FILL_ZERO);
 	if (!buf) {
 		res = TEE_ERROR_OUT_OF_MEMORY;
 		goto out;
@@ -883,7 +883,7 @@ static TEE_Result rsadorep(rsa_key *ltc_key, const uint8_t *src,
 
 out:
 	if (buf)
-		free(buf);
+		TEE_Free(buf);
 
 	return res;
 }
@@ -972,7 +972,7 @@ TEE_Result crypto_acipher_rsaes_decrypt(uint32_t algo, struct rsa_keypair *key,
 		ltc_rsa_algo = LTC_PKCS_1_OAEP;
 	}
 
-	buf = malloc(blen);
+	buf = TEE_Malloc(blen, TEE_MALLOC_FILL_ZERO);
 	if (!buf) {
 		res = TEE_ERROR_OUT_OF_MEMORY;
 		goto out;
@@ -1017,7 +1017,7 @@ TEE_Result crypto_acipher_rsaes_decrypt(uint32_t algo, struct rsa_keypair *key,
 
 out:
 	if (buf)
-		free(buf);
+		TEE_Free(buf);
 
 	return res;
 }
@@ -2019,7 +2019,7 @@ void crypto_cipher_free_ctx(void *ctx, uint32_t algo __maybe_unused)
 	 */
 	if (ctx)
 		assert(!cipher_get_ctx_size(algo, &ctx_size));
-	free(ctx);
+	TEE_Free(ctx);
 }
 
 void crypto_cipher_copy_state(void *dst_ctx, void *src_ctx, uint32_t algo)
@@ -2372,7 +2372,7 @@ void crypto_mac_free_ctx(void *ctx, uint32_t algo __maybe_unused)
 	 */
 	if (ctx)
 		assert(!mac_get_ctx_size(algo, &ctx_size));
-	free(ctx);
+	TEE_Free(ctx);
 }
 
 void crypto_mac_copy_state(void *dst_ctx, void *src_ctx, uint32_t algo)
@@ -2651,7 +2651,7 @@ TEE_Result crypto_aes_ccm_alloc_ctx(void **ctx_ret)
 
 void crypto_aes_ccm_free_ctx(void *ctx)
 {
-	free(ctx);
+	TEE_Free(ctx);
 }
 
 void crypto_aes_ccm_copy_state(void *dst_ctx, void *src_ctx)
@@ -2832,7 +2832,7 @@ TEE_Result crypto_aes_gcm_alloc_ctx(void **ctx_ret)
 
 void crypto_aes_gcm_free_ctx(void *ctx)
 {
-	free(ctx);
+	TEE_Free(ctx);
 }
 
 void crypto_aes_gcm_copy_state(void *dst_ctx, void *src_ctx)

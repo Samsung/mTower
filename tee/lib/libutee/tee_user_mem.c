@@ -43,14 +43,9 @@
 
 #define CFG_TEE_CORE_USER_MEM_DEBUG 0
 
-extern volatile __HeapBase;
-extern volatile __HeapLimit;
-
 void *tee_user_mem_alloc(size_t len, uint32_t hint)
 {
 	uint8_t *p;
-	void* limit = &__HeapLimit;
-	void* base = &__HeapBase;
 
 	switch (hint) {
 	case TEE_MALLOC_FILL_ZERO:
@@ -60,18 +55,8 @@ void *tee_user_mem_alloc(size_t len, uint32_t hint)
 		EMSG("Invalid alloc hint [%X]", (unsigned int)hint);
 		return NULL;
 	}
-	// printf("malloc = base = %x\n", base );
-	// printf("malloc = (limit - base)/2 = %x\n", (limit - base)/2 );
-	if ((limit - base)/2 < len + 8)
-		return NULL;
-	//  p = utee_malloc(len);
-	p = malloc(len);
-	// printf("malloc 1 = base + ((limit - base)/2) = %x\n", base + ((limit - base)/2) );
-	// printf("malloc 2 = p + len = %x\n", p + len );
-	if ( base + ((limit - base)/2) < p + len) {
-		free(p);
-		return NULL;
-	}
+	p = pvPortMalloc(len);
+	// printf("malloc p = %p\r\n", p);
 	if (p == NULL)
 		return NULL;
 
@@ -84,26 +69,27 @@ void *tee_user_mem_alloc(size_t len, uint32_t hint)
 	return p;
 }
 
-void *tee_user_mem_realloc(void *buffer, size_t len)
-{
-	uint8_t *p;
-	void* limit = &__HeapLimit;
-	void* base = &__HeapBase;
+// void *tee_user_mem_realloc(void *buffer, size_t len)
+// {
+// 	uint8_t *p;
+// 	void* limit = &__HeapLimit;
+// 	void* base = &__HeapBase;
 
-	if ((limit - base)/2 < len + 8)
-		return NULL;
-	p = realloc(buffer, len);
-	if ( base + ((limit - base)/2) < p + len) {
-		free(p);
-		return NULL;
-	}
-//   return utee_realloc(buffer, len);
-	return p;
-}
+// 	if ((limit - base)/2 < len + 8)
+// 		return NULL;
+// 	p = realloc(buffer, len);
+// 	if ( base + ((limit - base)/2) < p + len) {
+// 		free(p);
+// 		return NULL;
+// 	}
+// //   return utee_realloc(buffer, len);
+// 	return p;
+// }
 
 void tee_user_mem_free(void *buffer)
 {
-	free(buffer);
+	// printf("free p = %p\r\n", buffer);
+	vPortFree(buffer);
 //  utee_free(buffer);
 }
 

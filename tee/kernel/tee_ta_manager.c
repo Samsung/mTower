@@ -444,7 +444,7 @@ TEE_Result tee_ta_close_session(struct tee_ta_session *csess,
 //#if defined(CFG_TA_GPROF_SUPPORT)
 //	free(sess->sbuf);
 //#endif
-	free(sess);
+	TEE_Free(sess);
 
 //	tee_ta_clear_busy(ctx);
 //
@@ -517,7 +517,6 @@ static TEE_Result tee_ta_init_session(TEE_ErrorOrigin *err,
 
   memset(s,0,sizeof(struct tee_ta_session));
 
-//
 //	s->cancel_mask = true;
 //	condvar_init(&s->refc_cv);
 //	condvar_init(&s->lock_cv);
@@ -556,12 +555,12 @@ out:
 		*sess = s;
 	} else {
 		TAILQ_REMOVE(open_sessions, s, link);
-		free(s);
+		TEE_Free(s);
 	}
 //	mutex_unlock(&tee_ta_mutex);
 	return res;
 }
-//
+
 TEE_Result tee_ta_open_session(TEE_ErrorOrigin *err,
 			       struct tee_ta_session **sess,
 			       struct tee_ta_session_head *open_sessions,
