@@ -732,7 +732,7 @@ static void user_ta_ctx_destroy(struct tee_ta_ctx *ctx)
 	tee_obj_close_all(utc);
 //	/* Free emums created by this TA */
 //	tee_svc_storage_close_all_enum(utc);
-	free(utc);
+	TEE_Free(utc);
 }
 
 //static uint32_t user_ta_get_instance_id(struct tee_ta_ctx *ctx)

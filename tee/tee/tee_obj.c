@@ -107,7 +107,7 @@ void tee_obj_free(struct tee_obj *o)
 {
 	if (o) {
 		tee_obj_attr_free(o);
-		free(o->attr);
-		free(o);
+		TEE_Free(o->attr);
+		TEE_Free(o);
 	}
 }
