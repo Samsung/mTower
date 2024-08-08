@@ -297,7 +297,7 @@ extern void vTaskExitCritical( void );
 
 #define portSET_INTERRUPT_MASK_FROM_ISR() 0
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusValue ) ( void ) uxSavedStatusValue
-#if( portUSING_MPU_WRAPPERS == 1 )
+#if( portUSING_MPU_WRAPPERS == 1 && !defined(BL808))
 #define portDISABLE_INTERRUPTS()	vPortSyscall(portSVC_DISABLE_INTERRUPTS)
 #define portENABLE_INTERRUPTS()		vPortSyscall(portSVC_ENABLE_INTERRUPTS)
 #else

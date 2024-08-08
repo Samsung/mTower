@@ -1,0 +1,146 @@
+############################################################################
+# arch/cortex-m23/m2351/src/numaker_pfm_m2351/nonsecure/Make.defs
+#
+# Copyright (c) 2018-2019 Samsung Electronics Co., Ltd. All Rights Reserved.
+# Author: Taras Drozdovskyi t.drozdovsky@samsung.com
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+############################################################################
+
+HEAD_ASRC = 
+
+# Common BL808 files
+
+CMN_ASRCS = 
+
+CMN_CSRCS = 
+
+# Required CHIP files
+
+#CHIP_ASRCS_NS = ../../drivers/soc/bl808/std/startup/m0/riscv_fpu.S \
+#                ../../drivers/soc/bl808/std/startup/m0/start.S \
+#                ../../drivers/soc/bl808/std/startup/m0/vector.S
+
+#   ../../../../../../FreeRTOS-metal/FreeRTOS-Kernel/portable/GCC/RISC-V/portASM.S \
+#                 ../../freedom-metal/src/vector.S \
+#                 ../../freedom-metal/src/trap.S \
+#                 ../../freedom-metal/gloss/crt0.S \
+#                 ../../freedom-metal/src/entry.S \
+#                 ../../freedom-metal/src/scrub.S
+
+CHIP_CSRCS_NS = main.c \
+                board.c \
+                fw_header.c \
+                printf.c
+
+#CHIP_CSRCS_NS = example-freertos-rtower.c \
+#                Bridge_Freedom-metal_FreeRTOS.c \
+#                printf.c
+
+# CHIP_CSRCS_NS += ../../freedom-metal/gloss/sys_write.c
+
+
+#CHIP_CSRCS_NS += ../../drivers/soc/bl808/std/src/bl808_aon.c \
+#                ../../drivers/soc/bl808/std/src/bl808_clock.c \
+#                ../../drivers/soc/bl808/std/port/bl808_clock.c \
+#                ../../drivers/soc/bl808/std/src/bl808_common.c \
+#                ../../drivers/soc/bl808/std/src/bl808_ef_cfg.c \
+#                ../../drivers/soc/bl808/std/src/bl808_glb.c \
+#                ../../drivers/soc/bl808/std/src/bl808_glb_gpio.c \
+#                ../../drivers/soc/bl808/std/src/bl808_hbn.c \
+#                ../../drivers/soc/bl808/std/src/bl808_l1c.c \
+#                ../../drivers/soc/bl808/std/src/bl808_pds.c \
+#                ../../drivers/soc/bl808/std/src/bl808_psram_uhs.c \
+#                ../../drivers/soc/bl808/std/src/bl808_sdh.c \
+#                ../../drivers/soc/bl808/std/src/bl808_tzc_sec.c \
+#                ../../drivers/soc/bl808/std/src/bl808_uhs_phy.c \
+#                ../../drivers/soc/bl808/std/startup/m0/interrupt.c \
+#                ../../drivers/soc/bl808/std/startup/m0/start_load.c \
+#                ../../drivers/soc/bl808/std/startup/m0/system_bl808.c
+#                ../../drivers/lhal/config/bl808/device_table.c \
+#                ../../drivers/lhal/src/bflb_adc.c \
+#                ../../drivers/lhal/src/bflb_cks.c \
+#                ../../drivers/lhal/src/bflb_dac.c \
+#                ../../drivers/lhal/src/bflb_emac.c \
+#                ../../drivers/lhal/src/bflb_i2s.c \
+#                ../../drivers/lhal/src/bflb_kys.c \
+#                ../../drivers/lhal/src/bflb_pwm_v1.c \
+#                ../../drivers/lhal/src/bflb_sec_aes.c \
+#                ../../drivers/lhal/src/bflb_auadc.c \
+#                ../../drivers/lhal/src/bflb_clock.c \
+#                ../../drivers/lhal/src/bflb_dbi.c \
+#                ../../drivers/lhal/src/bflb_flash.c \
+#                ../../drivers/lhal/src/bflb_ir.c \
+#                ../../drivers/lhal/src/bflb_l1c.c \
+#                ../../drivers/lhal/src/bflb_pwm_v2.c \
+#                ../../drivers/lhal/src/bflb_sec_irq.c \
+#                ../../drivers/lhal/src/bflb_audac.c \
+#                ../../drivers/lhal/src/bflb_common.c \
+#                ../../drivers/lhal/src/bflb_dma.c \
+#                ../../drivers/lhal/src/bflb_gpio.c \
+#                ../../drivers/lhal/src/bflb_irq.c \
+#                ../../drivers/lhal/src/bflb_mjpeg.c \
+#                ../../drivers/lhal/src/bflb_rtc.c \
+#                ../../drivers/lhal/src/bflb_sec_sha.c \
+#                ../../drivers/lhal/src/bflb_timer.c \
+#                ../../drivers/lhal/src/bflb_wdg.c \
+#                ../../drivers/lhal/src/bflb_cam.c \
+#                ../../drivers/lhal/src/bflb_csi.c \
+#                ../../drivers/lhal/src/bflb_ef_ctrl.c \
+#                ../../drivers/lhal/src/bflb_i2c.c \
+#                ../../drivers/lhal/src/bflb_iso11898.c \
+#                ../../drivers/lhal/src/bflb_mtimer.c \
+#                ../../drivers/lhal/src/bflb_sdio2.c \
+#                ../../drivers/lhal/src/bflb_sec_trng.c \
+#                ../../drivers/lhal/src/bflb_uart.c \
+#                ../../drivers/lhal/src/flash/bflb_sf_ctrl.c \
+#                ../../drivers/lhal/src/flash/bflb_sflash.c \
+#                ../../drivers/lhal/src/flash/bflb_sf_cfg.c \
+#                ../../drivers/lhal/src/flash/bflb_xip_sflash.c
+
+#                ../../components/mm/mem.c \
+#                ../../components/mm/mmheap/bflb_mmheap.c \
+#                ../../components/mm/mmheap/mmheap.c \
+#                ../../components/utils/log/log.c
+
+#                ../../components/libc/printf.c \
+
+#                ../../components/mm/tlsf/bflb_tlsf.c \
+
+#                ../../drivers/lhal/src/bflb_usb_v1.c \
+#                ../../drivers/lhal/src/bflb_usb_v2.c \
+#                ../../drivers/lhal/src/bflb_spi.c \
+#                ../../drivers/lhal/src/bflb_spi_psram.c \
+
+
+#                ../../../../../../tee_client/libteec/src/tee_client_api.c
+# ../../Device/Nuvoton/M2351/Source/system_M2351.c \
+#                 ../../Device/Nuvoton/M2351/Source/GCC/_syscalls.c \
+
+ifeq ($(CONFIG_APPS_HELLO_WORLD),y)
+CHIP_CSRCS_NS += ../../../../../../apps/hello_world/ca/hello_world_ns.c
+endif
+
+ifeq ($(CONFIG_APPS_AES),y)
+CHIP_CSRCS_NS += ../../../../../../apps/aes/ca/aes_ns.c
+endif
+
+ifeq ($(CONFIG_APPS_HOTP),y)
+CHIP_CSRCS_NS += ../../../../../../apps/hotp/ca/hotp_ns.c
+endif
+
+ifeq ($(CONFIG_APPS_TEST),y)
+CHIP_CSRCS_NS += ../../../../../../apps/test/ca/test_ns.c
+endif
+

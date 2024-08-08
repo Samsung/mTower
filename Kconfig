@@ -245,7 +245,6 @@ config START_ADDRESS_BL33
 	hex	"Start address BL33"
 	depends on BOOTLOADER33
 	default 0x10040000
-	range 0x10000000 0x10080000
 	---help---
 		"Start address of BL33"
 

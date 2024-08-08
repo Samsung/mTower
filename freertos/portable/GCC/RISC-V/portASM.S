@@ -135,8 +135,13 @@
 
 /* Check the freertos_risc_v_chip_specific_extensions.h and/or command line
 definitions. */
-#ifndef portasmHAS_CLINT
-	#error freertos_risc_v_chip_specific_extensions.h must define portasmHAS_CLINT to either 1 (CLINT present) or 0 (clint not present).
+
+#if !defined(portasmHAS_CLINT) && !defined(portasmHAS_MTIME)
+    #error freertos_risc_v_chip_specific_extensions.h must define either portasmHAS_CLINT or portasmHAS_MTIME (or both) to either 1 (present) or 0 (not present).
+#endif
+
+#ifdef portasmHAS_CLINT
+	#warning The portasmHAS_CLINT constant has been deprecated.  Please replace it with portasmHAS_MTIME and portasmHAS_SIFIVE_CLINT.  For now portasmHAS_MTIME and portasmHAS_SIFIVE_CLINT are derived from portasmHAS_CLINT.  See https://www.FreeRTOS.org/Using-FreeRTOS-on-RISC-V.html
 #endif
 
 #ifndef portHANDLE_INTERRUPT
@@ -396,6 +401,8 @@ freertos_risc_v_trap_handler:
 	 */
     csrw	mscratch, t0
     csrr	t0, mcause
+	// li		a1, 0x807FFFFF
+	// and		t0, t0, a1
     blt  	t0, x0, handle_interrupt
 
 handle_exception:
@@ -424,6 +431,8 @@ handle_exception:
 	 * else: problem
 	 */
 
+	slli	t0, t0, 9
+	srli	t0, t0, 9
 	addi	t0, t0, -8
 	blt		t0, x0, is_exception /* mcause < 8, must be fault */
 	addi	t0, t0, -4
@@ -573,17 +582,23 @@ handle_interrupt:
 	/* Load pxCurrentTCB and update first TCB member(pxTopOfStack) with sp. */
 	load_x  s0, pxCurrentTCB
 	store_x  sp, 0( s0 )
+//	csrr a0, mcause
+//	li t0, 0x807FFFFF
+//	and a0, a0, t0
 
 	/* Save sp into s1 */
 	mv  s1, sp
 	load_x sp, xISRStackTop			/* Switch to ISR stack before function call. */
 
-#if( portasmHAS_CLINT != 0 )
+#if ( portasmHAS_CLINT != 0 ) || ( portasmHAS_MTIME != 0 )
 	addi t0, x0, 1
 
 	slli t0, t0, __riscv_xlen - 1   /* LSB is already set, shift into MSB.  Shift 31 on 32-bit or 63 on 64-bit cores. */
 	addi t1, t0, 7					/* 0x8000[]0007 == machine timer interrupt. */
+	addi t1, x0, 7
     csrr t2, mcause
+	slli	t2, t2, 9
+	srli	t2, t2, 9
 	bne t2, t1, test_if_external_interrupt
 
 	load_x t0, pullMachineTimerCompareRegister  /* Load address of compare register into t0. */
@@ -624,10 +639,12 @@ restore_before_exit:
 test_if_external_interrupt:			/* If there is a CLINT and the mtimer interrupt is not pending then check to see if an external interrupt is pending. */
 	addi t1, t1, 4					/* 0x80000007 + 4 = 0x8000000b == Machine external interrupt. */
     csrr t2, mcause
+	li		a1, 0x807FFFFF
+	and		t2, t2, a1
 	bne t2, t1, unrecoverable_error	/* Something as yet unhandled. */
 	j unrecoverable_error
 
-#endif /* portasmHAS_CLINT */
+#endif /* portasmHAS_MTIME or portasmHAS_CLINT*/
 
 external_interrupt:
 	/* Switch to ISR stack before function call. */
