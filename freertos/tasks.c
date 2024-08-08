@@ -2749,7 +2749,7 @@ BaseType_t xTaskIncrementTick( void )
         /* Minor optimisation.  The tick count cannot change in this
          * block. */
         const TickType_t xConstTickCount = xTickCount + ( TickType_t ) 1;
-
+        // printf("\r\ntask=%s\r\n", pxCurrentTCB->pcTaskName);
         /* Increment the RTOS tick, switching the delayed and overflowed
          * delayed lists if it wraps to 0. */
         xTickCount = xConstTickCount;
@@ -3028,6 +3028,7 @@ void vTaskSwitchContext( void )
     }
     else
     {
+        // printf("\r\nSwitchContextS=%s\r\n", pxCurrentTCB->pcTaskName);
         xYieldPending = pdFALSE;
         traceTASK_SWITCHED_OUT();
 
@@ -3091,6 +3092,7 @@ void vTaskSwitchContext( void )
             }
         #endif /* configUSE_NEWLIB_REENTRANT */
     }
+    // printf("\r\nSwitchContextE=%s\r\n", pxCurrentTCB->pcTaskName);
 }
 /*-----------------------------------------------------------*/
 

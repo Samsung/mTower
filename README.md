@@ -34,13 +34,11 @@ the beginnings of corresponding files; also, all licenses are listed in
 --- 
 ## 3. Platforms supported
 
-| Cortex-M23 | Cortex-M23 | Cortex-M33 (Qemu) | RISC-V |
-|-----------------------|---------------------------|-------------|-----------|
-| **NuMaker-PFM-M2351** | **M2351-Badge** | **V2M-MPS2** | **SparkFun RedBoard** |
+| **NuMaker-PFM-M2351** <br> Cortex-M23 | **M2351-Badge** <br> Cortex-M23 | **V2M-MPS2** <br> Cortex-M33 (Qemu) | **SparkFun RedBoard** <br> RISC-V |
+|:----------------------:|:--------------------------:|:-------------:|:-----------:|
 |[![](docs/images/platforms/numaker_pfm_m2351/numaker_pfm_m2351.png)](docs/numaker_pfm_m2351.md)|[![](docs/images/platforms/m2351_badge/m2351_badge.png)](docs/m2351_badge.md) |[![V2M-MPS2](docs/images/platforms/v2m-mps2/v2m-mps2.png)](docs/v2m-mps2-qemu.md)|[![](docs/images/platforms/sparkfun_redboard/sparkfun_redboard.png)](docs/sparkfun_redboard.md)|
-| **How to add a platform** ||||
-|[![](docs/images/platforms/add_new_board.jpg)](docs/port-new-platform.md)||||
-
+| **Pine64 Ox64** <br> RISC-V | **How to add a platform** |||
+|[![](docs/images/platforms/pine64_ox64/pine64-ox64.jpg)](docs/pine64_ox64.md)|[![](docs/images/platforms/add_new_board.jpg)](docs/port-new-platform.md)|||
 
 Several platforms are supported. In order to manage slight differences
 between platforms, a `PLATFORM` flag has been introduced.
@@ -51,6 +49,7 @@ between platforms, a `PLATFORM` flag has been introduced.
 | [M2351-Badge]             |`PLATFORM=m2351_badge`              | v0.5.0     |
 | [V2M-MPS2]                |`PLATFORM=mps2_an505_qemu`          | v0.5.0     |
 | [SparkFun RED-V RedBoard] |`PLATFORM=sparkfun_redboard`        | v0.5.0     |
+| [Pine64 Ox64]             |`PLATFORM=pine64_ox64`              | v0.5.0     |
 
 For information on adding a new platform see the [how to add a platform].
 
@@ -103,3 +102,4 @@ you can find here](.github/CONTRIBUTING.md).
 [M2351-Badge]: docs/schemes/m2351_badge
 [V2M-MPS2]: https://developer.arm.com/documentation/100964/1114/Microcontroller-Prototyping-System-2?lang=en
 [SparkFun RED-V RedBoard]: https://www.sparkfun.com/products/15594
+[Pine64 Ox64]: https://wiki.pine64.org/wiki/Ox64

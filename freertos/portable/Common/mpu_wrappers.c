@@ -45,6 +45,10 @@
 #include "stream_buffer.h"
 #include "mpu_prototypes.h"
 
+#ifdef BL808
+#include "bflb_uart.h"
+#endif
+
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 /*-----------------------------------------------------------*/
 
@@ -140,6 +144,16 @@
     }
 #endif
 /*-----------------------------------------------------------*/
+#ifdef BL808
+void MPU_bflb_uart_putchar(struct bflb_device_s *uart0, int character)
+{
+        BaseType_t xRunningPrivileged;
+
+        xPortRaisePrivilege( xRunningPrivileged );
+        bflb_uart_putchar(uart0, character);
+        vPortResetPrivilege( xRunningPrivileged );
+}
+#endif
 
 #if ( INCLUDE_uxTaskPriorityGet == 1 )
     UBaseType_t MPU_uxTaskPriorityGet( const TaskHandle_t pxTask ) /* FREERTOS_SYSTEM_CALL */
