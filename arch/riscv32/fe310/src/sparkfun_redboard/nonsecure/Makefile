@@ -83,7 +83,7 @@ mtower_ns$(EXEEXT): $(OBJS_NS)
 #	$(Q) $(MAKE) -C ../../freedom-metal/src/ TOPDIR="$(TOPDIR)" libfe310_StdDriver_ns.a
 	@echo "LD: mTower_ns$(EXEEXT)"
 # $(Q) $(CC) $(CFLAGS) -Wl,--section-start=.text=$(CONFIG_START_ADDRESS_BL33) -Tmetal.freertos.lds $(OBJS_NS) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl33.elf
-	$(Q) $(CC) $(CFLAGS) -nostartfiles -Wl,--defsym,__stack_size=0x300 -Wl,--defsym,__heap_size=0x100 -Tmetal.freertos.lds $(OBJS_NS) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl33.elf
+	$(Q) $(CC) $(CFLAGS) -nostartfiles -Wl,--defsym,__stack_size=0x1C0 -Wl,--defsym,__heap_size=0x100 -Tmetal.freertos.lds $(OBJS_NS) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl33.elf
 	$(Q) $(OBJCOPY) -S -O binary $(OBJDIR)/bl33.elf $(OBJDIR)/bl33.bin
 	$(Q) $(OBJCOPY) -S -O ihex $(OBJDIR)/bl33.elf $(OBJDIR)/bl33.hex
 

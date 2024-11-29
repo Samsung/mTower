@@ -64,14 +64,8 @@ ARCHDEFINES += -DPACKAGE_URL=\"https://github.com/sifive/freedom-metal\" -DPACKA
 ARCHDEFINES += -DMTIME_RATE_HZ_DEF=32768 -DportUSING_MPU_WRAPPERS=1 
 
 # -I.
-# -I/home/virtual-box/projects/SiFive/freedom-e-sdk/freedom-metal
-# -I/home/virtual-box/projects/SiFive/freedom-e-sdk/bsp/sifive-hifive1-revb/install/include
 # --specs=nano.specs -DMTIME_RATE_HZ_DEF=32768
 # -O0 -g -MT gloss/sys_read.o -MD -MP -MF
-
-# $depbase.Tpo -c -o gloss/sys_read.o 
-# /home/virtual-box/projects/SiFive/freedom-e-sdk/freedom-metal/gloss/sys_read.c &&\
-#depbase=`echo gloss/sys_sbrk.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
 
 CFLAGS  = -std=gnu99 -pipe -Wl,--gc-sections
 
