@@ -45,11 +45,11 @@ between platforms, a `PLATFORM` flag has been introduced.
 
 | Platform                  | Composite PLATFORM flag            | Maintained |
 |---------------------------|------------------------------------|------------|
-| [NuMaker-PFM-M2351]       |`PLATFORM=numaker_pfm_m2351`        | v0.5.0     |
-| [M2351-Badge]             |`PLATFORM=m2351_badge`              | v0.5.0     |
-| [V2M-MPS2]                |`PLATFORM=mps2_an505_qemu`          | v0.5.0     |
-| [SparkFun RED-V RedBoard] |`PLATFORM=sparkfun_redboard`        | v0.5.0     |
-| [Pine64 Ox64]             |`PLATFORM=pine64_ox64`              | v0.5.0     |
+| [NuMaker-PFM-M2351]       |`PLATFORM=numaker_pfm_m2351`        | v0.6.0     |
+| [M2351-Badge]             |`PLATFORM=m2351_badge`              | v0.6.0     |
+| [V2M-MPS2]                |`PLATFORM=mps2_an505_qemu`          | v0.6.0     |
+| [SparkFun RED-V RedBoard] |`PLATFORM=sparkfun_redboard`        | v0.6.0     |
+| [Pine64 Ox64]             |`PLATFORM=pine64_ox64`              | v0.6.0     |
 
 For information on adding a new platform see the [how to add a platform].
 
