@@ -223,8 +223,6 @@ int32_t Secure_LED_On(uint32_t num)
   PA11 = 0;
   PD11 = 0;
   PD10 = 0;
-
-//  PA10 = 0;
   PB0 = 0;
 
   return 0;
@@ -246,7 +244,6 @@ int32_t Secure_LED_Off(uint32_t num)
   PA11 = 1;
   PD11 = 1;
   PD10 = 1;
-//  PA10 = 1;
   PB0 = 1;
 
   return 1;

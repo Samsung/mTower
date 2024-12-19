@@ -1,7 +1,7 @@
 /* Linker script to configure memory regions of Non-secure region */
 MEMORY
 {
-  /* FLASH (rx) : ORIGIN = 0x10040000, LENGTH = 0x40000 */
+  FLASH (rx) : ORIGIN = START_ADDRESS_BL33, LENGTH = 0x40000
   RAM (rwx)  : ORIGIN = 0x30008000, LENGTH = 0x10000
 }
 

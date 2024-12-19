@@ -30,7 +30,6 @@ CFLAGS += -I../../Device/Nuvoton/M2351/Include
 CFLAGS += -I$(TOPDIR)/tee_client/public
 CFLAGS += -I$(TOPDIR)/tee_client/libteec/include/freertos
 CFLAGS += -I$(TOPDIR)/tee/lib/libutee/include
-
 CFLAGS += -I$(TOPDIR)/tee/lib/libutils/ext/include
 CFLAGS += -I$(TOPDIR)/tee/lib/libutils/isoc/include
 CFLAGS += -I$(TOPDIR)/tee/include
@@ -84,9 +83,11 @@ mtower_s$(EXEEXT): $(OBJS_S)
 	$(Q) $(MAKE) -C $(TOPDIR)/common/ TOPDIR="$(TOPDIR)" WORLD=secure liballoc_s.a
 	$(Q) $(MAKE) -C $(TOPDIR)/crypto/ TOPDIR="$(TOPDIR)" WORLD=secure libcrypt_s.a
 	@echo "CC: mTower_s$(EXEEXT)"
-	$(Q) $(CC) $(CFLAGS) -mcmse -Wl,--section-start=.text=$(CONFIG_START_ADDRESS_BL32) -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl32.elf
+	$(Q) $(CC) $(CFLAGS) -mcmse -Wl,--defsym,START_ADDRESS_BL32=$(CONFIG_START_ADDRESS_BL32) -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl32.elf
+	$(Q) $(CC) $(CFLAGS) -Wl,--defsym,START_ADDRESS_BL32=$(CONFIG_START_ADDRESS_BL32),--unresolved-symbols=ignore-all,--out-implib=$(OBJDIR)/libnsc$(LIBEXT),--cmse-implib -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS)
+#	$(Q) $(CC) $(CFLAGS) -mcmse -Wl,--section-start=.text=$(CONFIG_START_ADDRESS_BL32) -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS) -o $(OBJDIR)/bl32.elf
 #	$(Q) $(CC) $(CFLAGS) -Wl,--unresolved-symbols=ignore-all -Wl,--section-start=.gnu.sgstubs=0x3f000 -Wl,--out-implib=$(OBJDIR)/libnsc$(LIBEXT) -Wl,--cmse-implib $(OBJS_S) $(LIBPATHS) $(LIBS)
-	$(Q) $(CC) $(CFLAGS) -Wl,--section-start=.text=$(CONFIG_START_ADDRESS_BL32) -Wl,--unresolved-symbols=ignore-all -Wl,--out-implib=$(OBJDIR)/libnsc$(LIBEXT) -Wl,--cmse-implib -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS)
+#	$(Q) $(CC) $(CFLAGS) -Wl,--section-start=.text=$(CONFIG_START_ADDRESS_BL32) -Wl,--unresolved-symbols=ignore-all -Wl,--out-implib=$(OBJDIR)/libnsc$(LIBEXT) -Wl,--cmse-implib -Tsecure.ld $(OBJS_S) $(LIBPATHS) $(LIBS)
 	$(Q) rm -f a.out
 	$(Q) $(OBJCOPY) -S -O binary $(OBJDIR)/bl32.elf $(OBJDIR)/bl32.bin
 	$(Q) cp -f $(OBJDIR)/libnsc$(LIBEXT) $(TOPDIR)/lib/

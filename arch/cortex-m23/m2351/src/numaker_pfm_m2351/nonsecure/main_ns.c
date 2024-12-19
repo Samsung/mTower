@@ -26,13 +26,12 @@
 #include "M2351.h"
 #include "version.h"
 #include "config.h"
+#include "printf.h"
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
-
-#include "printf.h"
 
 /* Demo application include. */
 
