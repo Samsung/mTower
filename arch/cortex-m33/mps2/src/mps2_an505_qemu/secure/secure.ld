@@ -4,7 +4,7 @@ MEMORY
 {
  /* Flash is actually 224M */
    S_FLASH     (rx)  : ORIGIN = 0x10000000, LENGTH = 512K
-   S_FLASH_END (rx)  : ORIGIN = 0x10020000, LENGTH = 32K
+   S_FLASH_END (rx)  : ORIGIN = 0x10030000, LENGTH = 32K
    S_RAM       (rwx) : ORIGIN = 0x38000000, LENGTH = 0x2000
 }
 
@@ -50,13 +50,14 @@ SECTIONS
    * '--section-start' or in a linker script, to indicate where to place these
    * veneers in memory.
    */
-  .gnu.sgstubs :
+  .gnu.sgstubs 0x10020000 : AT(0x10020000)
   {
     _ld_veneer_base = .;
     *(.gnu.sgstubs*)
     . = ALIGN(32);
     _ld_veneer_limit = .;
   } > S_FLASH
+ASSERT(SIZEOF(.gnu.sgstubs) <= 0x010000, "Error: .gnu.sgstubs section is too large!")
 
  	.heap (COPY):
 	{
