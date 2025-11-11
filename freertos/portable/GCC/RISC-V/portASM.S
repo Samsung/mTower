@@ -642,7 +642,6 @@ test_if_external_interrupt:			/* If there is a CLINT and the mtimer interrupt is
 	li		a1, 0x807FFFFF
 	and		t2, t2, a1
 	bne t2, t1, unrecoverable_error	/* Something as yet unhandled. */
-	j unrecoverable_error
 
 #endif /* portasmHAS_MTIME or portasmHAS_CLINT*/
 
