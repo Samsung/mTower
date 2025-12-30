@@ -529,7 +529,7 @@ ecall_end:
 
 ecall_yield:
 	/* restore t0 */
-	csrr t0, mstatus
+	csrr t0, mscratch
 	portSAVE_BaseReg
 	/* a4 = mepc
 	 * a5 = mstatus
