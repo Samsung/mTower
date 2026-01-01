@@ -21,7 +21,7 @@ jobs:
         run: scancode -clpeui -n 2 --cyclonedx ./results/sbom-cyclonedx --spdx-rdf ./results/sbom-spdx ./
 
       - name: Upload artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
           name: scan-scancode-report
           path: ./results/
