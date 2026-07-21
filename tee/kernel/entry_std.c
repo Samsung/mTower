@@ -450,23 +450,28 @@ TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
   TEE_ErrorOrigin err;
   struct tee_ta_session *sess = NULL;
   struct tee_ta_param *param = NULL;
+  struct tee_ta_param param_copy;
 
   struct tee_ioctl_open_session_arg *arg;
   //struct tee_ioctl_param *params;
   TEE_UUID uuid;
 
   /*
-   * The Non-Secure buffer must cover the header AND the trailing
-   * tee_ta_param that is dereferenced at (arg + 1) below. Validate the whole
-   * range (read/write - session/ret/ret_origin are written back) before
-   * touching any field. On failure, return without accessing the buffer.
+   * Snapshot buf_ptr/buf_len once (they must not be re-fetched from Non-Secure
+   * memory between validation and use). The buffer must cover the header AND
+   * the trailing tee_ta_param that is dereferenced at (arg + 1) below. Validate
+   * the whole range (read/write - session/ret/ret_origin are written back)
+   * before touching any field. On failure, return without accessing it.
    */
-  if (buf_data->buf_len < sizeof(struct tee_ioctl_open_session_arg) +
-                          sizeof(struct tee_ta_param) ||
-      !nsec_check((void *)buf_data->buf_ptr, buf_data->buf_len, 1))
+  uint32_t ptr = buf_data->buf_ptr;
+  uint32_t len = buf_data->buf_len;
+
+  if (len < sizeof(struct tee_ioctl_open_session_arg) +
+            sizeof(struct tee_ta_param) ||
+      !nsec_check((void *)ptr, len, 1))
     return TEEC_ERROR_ACCESS_DENIED;
 
-  arg = (struct tee_ioctl_open_session_arg *)buf_data->buf_ptr;
+  arg = (struct tee_ioctl_open_session_arg *)ptr;
   //params = (struct tee_ioctl_param *)(arg + 1);
 
   //uuid_print(arg->uuid);
@@ -477,18 +482,29 @@ TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
   param = (struct tee_ta_param *)(arg + 1);
 
   /*
-   * The memref buffer pointers inside this Non-Secure tee_ta_param are raw
-   * Non-Secure input and are passed straight to the TA (no copy_in_params on
-   * this path). Attribute-check them before the TA can dereference them.
+   * Snapshot the Non-Secure tee_ta_param into a secure local before validating
+   * and using it. This param is passed straight through to the TA, which
+   * re-reads types / u[n].mem.buffer several times; validating it in place
+   * would leave a double-fetch/TOCTOU window - a Non-Secure interrupt can
+   * preempt secure execution and rewrite the buffer between the check and the
+   * use. Validate and use the copy; write TA output params back afterwards.
+   * (The invoke path is already protected: copy_in_params copies into a secure
+   * local.)
    */
-  {
-    TEEC_Result vres = validate_param_memrefs(param);
+  param_copy = *param;
 
-    if (vres != TEEC_SUCCESS)
-      return vres;
-  }
+  if (validate_param_memrefs(&param_copy) != TEEC_SUCCESS)
+    return TEEC_ERROR_ACCESS_DENIED;
 
-  res = tee_ta_open_session(&err, &sess, &tee_open_sessions, &uuid, param);
+  res = tee_ta_open_session(&err, &sess, &tee_open_sessions, &uuid, &param_copy);
+
+  /*
+   * Propagate TA output params back to the validated Non-Secure buffer:
+   * pseudo TAs write value params into param->u[n].val via update_out_param;
+   * user TAs mutate param->u in place. Both now land in param_copy, so copy it
+   * back. *param lies in the already-validated Non-Secure range.
+   */
+  *param = param_copy;
 
   if (res != TEE_SUCCESS)
     sess = NULL;
@@ -516,24 +532,41 @@ TEEC_Result tee_ioctl_invoke(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
   uint32_t saved_attr[TEE_NUM_PARAMS];
 
   /*
-   * Validate the whole optee_msg_arg (header + inline params[4]) is
-   * Non-Secure before reading any field or writing arg->ret back.
+   * Snapshot buf_ptr/buf_len once, then validate that the whole optee_msg_arg
+   * (header + inline params[4]) is Non-Secure before reading any field or
+   * writing arg->ret back.
    */
-  if (buf_data->buf_len < sizeof(struct optee_msg_arg) ||
-      !nsec_check((void *)buf_data->buf_ptr, buf_data->buf_len, 1))
+  uint32_t ptr = buf_data->buf_ptr;
+  uint32_t len = buf_data->buf_len;
+  uint32_t num_params;
+  uint32_t session;
+  uint32_t func;
+
+  if (len < sizeof(struct optee_msg_arg) ||
+      !nsec_check((void *)ptr, len, 1))
     return TEEC_ERROR_ACCESS_DENIED;
 
-  arg = (struct optee_msg_arg *)buf_data->buf_ptr;
+  arg = (struct optee_msg_arg *)ptr;
 
-  sess = tee_ta_get_session(arg->session, true, &tee_open_sessions);
+  /*
+   * Snapshot the scalars once: num_params in particular must not be re-fetched
+   * from Non-Secure memory in copy_out_param after copy_in_params bounded it,
+   * or a preempting NS interrupt could grow it past TEE_NUM_PARAMS and drive an
+   * out-of-bounds walk of the secure-stack arrays.
+   */
+  num_params = arg->num_params;
+  session = arg->session;
+  func = arg->func;
 
-  res = copy_in_params(arg->params, arg->num_params, &param, saved_attr);
+  sess = tee_ta_get_session(session, true, &tee_open_sessions);
+
+  res = copy_in_params(arg->params, num_params, &param, saved_attr);
   if (res != TEE_SUCCESS)
     goto out;
 
-  res = tee_ta_invoke_command(&err, sess, arg->func, &param);
+  res = tee_ta_invoke_command(&err, sess, func, &param);
 
-  copy_out_param(&param, arg->num_params, arg->params, saved_attr);
+  copy_out_param(&param, num_params, arg->params, saved_attr);
 
 out:
   arg->ret = res;
@@ -547,11 +580,15 @@ TEEC_Result tee_ioctl_close_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data
   struct tee_ta_session *sess;
   struct tee_ioctl_close_session_arg *arg;
 
-  if (buf_data->buf_len < sizeof(struct tee_ioctl_close_session_arg) ||
-      !nsec_check((void *)buf_data->buf_ptr, buf_data->buf_len, 1))
+  /* Snapshot buf_ptr/buf_len once, validate, then use the snapshot. */
+  uint32_t ptr = buf_data->buf_ptr;
+  uint32_t len = buf_data->buf_len;
+
+  if (len < sizeof(struct tee_ioctl_close_session_arg) ||
+      !nsec_check((void *)ptr, len, 1))
     return TEEC_ERROR_ACCESS_DENIED;
 
-  arg = (struct tee_ioctl_close_session_arg *)buf_data->buf_ptr;
+  arg = (struct tee_ioctl_close_session_arg *)ptr;
 
   sess = (struct tee_ta_session *)arg->session;
 
