@@ -75,6 +75,37 @@ TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
 TEEC_Result tee_ioctl_invoke(/*ctx,*/ struct tee_ioctl_buf_data *buf_data);
 TEEC_Result tee_ioctl_close_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data);
 
+/*
+ * nsec_check - verify that [p, p+len) lies entirely in Non-Secure memory.
+ *
+ * All pointers and lengths reaching this file originate in the Non-Secure
+ * world (the caller of the cmse_nonsecure_entry ioctl() below). Before the
+ * secure world dereferences any of them it must confirm the whole range is
+ * attributed Non-Secure, otherwise a malicious Non-Secure caller could point
+ * into secure RAM and have the secure world read/write it on its behalf.
+ *
+ * cmse_check_address_range() consults the SAU/IDAU for the given range and
+ * returns NULL if any part is not Non-Secure or if the range crosses an
+ * attribution boundary / overflows. Only CMSE_NONSECURE (AU attribution) is
+ * requested: the security-relevant property is "this is Non-Secure memory".
+ * CMSE_MPU_READ/READWRITE are intentionally NOT requested because the
+ * Non-Secure MPU is not configured in mTower, so a permission check could
+ * spuriously reject valid buffers. The 'write' argument is kept for a possible
+ * future tightening if a Non-Secure MPU is ever set up.
+ *
+ * Returns p on success, NULL on failure. A zero-length range is trivially OK
+ * (nothing is dereferenced).
+ */
+static void *nsec_check(void *p, size_t len, int write)
+{
+  (void)write;
+
+  if (len == 0)
+    return p;
+
+  return cmse_check_address_range(p, len, CMSE_NONSECURE);
+}
+
 /* Public Functions. */
 
 /* Secure functions exported to NonSecure application. Must place in Non-secure
@@ -91,6 +122,10 @@ __attribute__((cmse_nonsecure_entry))
 int32_t ioctl(uint32_t cmd, struct tee_ioctl_buf_data *buf_data)
 {
 //  printf("Secure ioctl: cmd = %x\n", cmd);
+
+  /* buf_data is itself a Non-Secure pointer: validate before any access. */
+  if (!nsec_check(buf_data, sizeof(*buf_data), 0))
+    return TEEC_ERROR_ACCESS_DENIED;
 
   switch (cmd) {
 //  case TEE_IOC_VERSION:
@@ -281,8 +316,19 @@ static TEE_Result copy_in_params(const struct optee_msg_param *params,
     case OPTEE_MSG_ATTR_TYPE_TMEM_INOUT:
       pt[n] = TEE_PARAM_TYPE_MEMREF_INPUT + attr -
         OPTEE_MSG_ATTR_TYPE_TMEM_INPUT;
-      ta_param->u[n].mem.buffer = (void *)params[n].u.tmem.buf_ptr;
-      ta_param->u[n].mem.size = params[n].u.tmem.size;
+      {
+        /* Non-Secure caller supplies buf_ptr/size: the whole buffer must be
+         * Non-Secure before it is handed to the TA. INPUT needs read access,
+         * OUTPUT/INOUT need write access. */
+        void *buf = (void *)params[n].u.tmem.buf_ptr;
+        uint32_t sz = params[n].u.tmem.size;
+        int wr = (attr != OPTEE_MSG_ATTR_TYPE_TMEM_INPUT);
+
+        if (!nsec_check(buf, sz, wr))
+          return TEE_ERROR_ACCESS_DENIED;
+        ta_param->u[n].mem.buffer = buf;
+        ta_param->u[n].mem.size = sz;
+      }
 //      res = assign_mobj_to_param_mem(params[n].u.tmem.buf_ptr,
 //                   params[n].u.tmem.size,
 //                   saved_attr[n],
@@ -296,9 +342,17 @@ static TEE_Result copy_in_params(const struct optee_msg_param *params,
     case OPTEE_MSG_ATTR_TYPE_RMEM_INOUT:
       pt[n] = TEE_PARAM_TYPE_MEMREF_INPUT + attr -
         OPTEE_MSG_ATTR_TYPE_RMEM_INPUT;
-      ta_param->u[n].mem.buffer = (void *)params[n].u.rmem.offs;
-//      printf("\n~~~~~RMEM params[n].u.rmem.offs = %p", params[n].u.rmem.offs);
-      ta_param->u[n].mem.size = params[n].u.tmem.size;
+      {
+        /* Same attribution check as the tmem case above. */
+        void *buf = (void *)params[n].u.rmem.offs;
+        uint32_t sz = params[n].u.rmem.size;
+        int wr = (attr != OPTEE_MSG_ATTR_TYPE_RMEM_INPUT);
+
+        if (!nsec_check(buf, sz, wr))
+          return TEE_ERROR_ACCESS_DENIED;
+        ta_param->u[n].mem.buffer = buf;
+        ta_param->u[n].mem.size = sz;
+      }
       //      printf("\n~~~~~RMEM params[%d].u.tmem.size = %d;\n",n,params[n].u.tmem.size);
 //      mem->offs = param->u.rmem.offs;
 //      mem->size = param->u.rmem.size;
@@ -350,6 +404,46 @@ static void copy_out_param(struct tee_ta_param *ta_param, uint32_t num_params,
   }
 }
 
+/*
+ * validate_param_memrefs - attribution-check the memref buffers inside a
+ * Non-Secure-supplied tee_ta_param.
+ *
+ * The open-session path passes the tee_ta_param that trails the arg header
+ * (arg + 1) straight to the TA WITHOUT going through copy_in_params(), so its
+ * memref buffer pointers are raw Non-Secure input. Validating the container is
+ * Non-Secure resident does NOT validate the pointers stored inside it, so each
+ * memref buffer/size range must be checked here before the TA dereferences it
+ * (mirrors the per-memref check copy_in_params() does on the invoke path).
+ *
+ * Returns TEEC_SUCCESS if every memref lies in Non-Secure memory, otherwise
+ * TEEC_ERROR_ACCESS_DENIED.
+ */
+static TEEC_Result validate_param_memrefs(const struct tee_ta_param *p)
+{
+  size_t n;
+
+  for (n = 0; n < TEE_NUM_PARAMS; n++) {
+    int wr;
+
+    switch (TEE_PARAM_TYPE_GET(p->types, n)) {
+    case TEE_PARAM_TYPE_MEMREF_INPUT:
+      wr = 0;
+      break;
+    case TEE_PARAM_TYPE_MEMREF_OUTPUT:
+    case TEE_PARAM_TYPE_MEMREF_INOUT:
+      wr = 1;
+      break;
+    default:
+      continue;
+    }
+
+    if (!nsec_check(p->u[n].mem.buffer, p->u[n].mem.size, wr))
+      return TEEC_ERROR_ACCESS_DENIED;
+  }
+
+  return TEEC_SUCCESS;
+}
+
 TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
 {
   TEE_Result res;
@@ -361,6 +455,17 @@ TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
   //struct tee_ioctl_param *params;
   TEE_UUID uuid;
 
+  /*
+   * The Non-Secure buffer must cover the header AND the trailing
+   * tee_ta_param that is dereferenced at (arg + 1) below. Validate the whole
+   * range (read/write - session/ret/ret_origin are written back) before
+   * touching any field. On failure, return without accessing the buffer.
+   */
+  if (buf_data->buf_len < sizeof(struct tee_ioctl_open_session_arg) +
+                          sizeof(struct tee_ta_param) ||
+      !nsec_check((void *)buf_data->buf_ptr, buf_data->buf_len, 1))
+    return TEEC_ERROR_ACCESS_DENIED;
+
   arg = (struct tee_ioctl_open_session_arg *)buf_data->buf_ptr;
   //params = (struct tee_ioctl_param *)(arg + 1);
 
@@ -370,6 +475,18 @@ TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
 //  tee_ta_context_register(arg->uuid);
 
   param = (struct tee_ta_param *)(arg + 1);
+
+  /*
+   * The memref buffer pointers inside this Non-Secure tee_ta_param are raw
+   * Non-Secure input and are passed straight to the TA (no copy_in_params on
+   * this path). Attribute-check them before the TA can dereference them.
+   */
+  {
+    TEEC_Result vres = validate_param_memrefs(param);
+
+    if (vres != TEEC_SUCCESS)
+      return vres;
+  }
 
   res = tee_ta_open_session(&err, &sess, &tee_open_sessions, &uuid, param);
 
@@ -398,6 +515,14 @@ TEEC_Result tee_ioctl_invoke(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
 
   uint32_t saved_attr[TEE_NUM_PARAMS];
 
+  /*
+   * Validate the whole optee_msg_arg (header + inline params[4]) is
+   * Non-Secure before reading any field or writing arg->ret back.
+   */
+  if (buf_data->buf_len < sizeof(struct optee_msg_arg) ||
+      !nsec_check((void *)buf_data->buf_ptr, buf_data->buf_len, 1))
+    return TEEC_ERROR_ACCESS_DENIED;
+
   arg = (struct optee_msg_arg *)buf_data->buf_ptr;
 
   sess = tee_ta_get_session(arg->session, true, &tee_open_sessions);
@@ -421,6 +546,10 @@ TEEC_Result tee_ioctl_close_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data
   TEE_Result res;
   struct tee_ta_session *sess;
   struct tee_ioctl_close_session_arg *arg;
+
+  if (buf_data->buf_len < sizeof(struct tee_ioctl_close_session_arg) ||
+      !nsec_check((void *)buf_data->buf_ptr, buf_data->buf_len, 1))
+    return TEEC_ERROR_ACCESS_DENIED;
 
   arg = (struct tee_ioctl_close_session_arg *)buf_data->buf_ptr;
 
