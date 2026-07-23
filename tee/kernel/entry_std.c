@@ -406,6 +406,19 @@ TEEC_Result tee_ioctl_invoke(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
   if (res != TEE_SUCCESS)
     goto out;
 
+  if (!sess) {
+    /*
+     * A Non-Secure caller can supply an invalid/zero/stale session id.
+     * find_session() then returns NULL and, since the guards in
+     * tee_ta_invoke_command() are disabled, the secure world would
+     * dereference NULL (sess->ctx->...) -> secure-world crash/DoS.
+     * Reject before invoking. Placed after copy_in_params so a malformed
+     * request still gets the more specific error from parameter validation.
+     */
+    res = TEEC_ERROR_BAD_PARAMETERS;
+    goto out;
+  }
+
   res = tee_ta_invoke_command(&err, sess, arg->func, &param);
 
   copy_out_param(&param, arg->num_params, arg->params, saved_attr);
