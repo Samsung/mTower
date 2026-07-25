@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-      - uses: cpp-linter/cpp-linter-action@cfd08bb3bd5d5611bbbf63cfbfec2643b2da9fea  
+      - uses: cpp-linter/cpp-linter-action@0b93f5833680005fbb233652d0e3d8835b3cc2f3  
         id: linter
         continue-on-error: true
         env:
