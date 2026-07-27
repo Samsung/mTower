@@ -637,6 +637,15 @@ TEE_Result tee_ta_invoke_command(TEE_ErrorOrigin *err,
 {
 	TEE_Result res;
 
+	/*
+	 * Defense in depth: never dereference a NULL session. Callers (e.g. the
+	 * Non-Secure ioctl veneer) obtain sess from tee_ta_get_session(), which
+	 * returns NULL for an unknown session id; without this guard the line
+	 * below would fault in the secure world.
+	 */
+	if (!sess)
+		return TEE_ERROR_BAD_PARAMETERS;
+
 //	if (check_client(sess, clnt_id) != TEE_SUCCESS)
 //		return TEE_ERROR_BAD_PARAMETERS; /* intentional generic error */
 //
