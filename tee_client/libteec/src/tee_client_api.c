@@ -532,6 +532,7 @@ TEEC_Result TEEC_OpenSession(TEEC_Context *ctx, TEEC_Session *session,
 	if (rc) {
 //		EMSG("TEE_IOC_OPEN_SESSION failed");
 		eorig = TEEC_ORIGIN_COMMS;
+		res = rc;
 //		res = ioctl_errno_to_res(errno);
 		goto out_free_temp_refs;
 	}
