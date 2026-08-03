@@ -68,3 +68,7 @@ endif
 ifeq ($(CONFIG_APPS_TEST),y)
 CHIP_CSRCS_S += ../../../../../../apps/test/ta/test_ta.c
 endif
+
+ifeq ($(CONFIG_APPS_ACCESS_RIGHTS_TEST),y)
+CHIP_CSRCS_S += ../../../../../../apps/access_rights_test/access_rights_test.c
+endif

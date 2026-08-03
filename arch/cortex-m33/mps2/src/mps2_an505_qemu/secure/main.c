@@ -81,6 +81,10 @@ void menu_security_exception_example(void);
 
 extern TEE_Result tee_cryp_init(void);
 
+#ifdef CONFIG_APPS_ACCESS_RIGHTS_TEST
+extern void tee_access_rights_test(void);
+#endif
+
 ///* Private Functions. */
 //
 ///**
@@ -685,6 +689,10 @@ int main(void)
 #endif
 
  tee_cryp_init();
+
+#ifdef CONFIG_APPS_ACCESS_RIGHTS_TEST
+  tee_access_rights_test();
+#endif
 //
 //  Boot_Init(CONFIG_START_ADDRESS_BL33);
 
