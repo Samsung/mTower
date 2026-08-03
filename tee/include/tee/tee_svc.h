@@ -88,6 +88,11 @@ TEE_Result syscall_invoke_ta_command(unsigned long sess,
 TEE_Result syscall_check_access_rights(unsigned long flags, const void *buf,
 				       size_t len);
 
+struct user_ta_ctx;
+
+TEE_Result tee_mmu_check_access_rights(struct user_ta_ctx *utc, uint32_t flags,
+				       uaddr_t uaddr, size_t len);
+
 TEE_Result tee_svc_copy_from_user(void *kaddr, const void *uaddr, size_t len);
 TEE_Result tee_svc_copy_to_user(void *uaddr, const void *kaddr, size_t len);
 

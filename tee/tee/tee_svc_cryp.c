@@ -1337,15 +1337,19 @@ static TEE_Result copy_in_attrs(struct user_ta_ctx *utc,
 			const struct utee_attribute *usr_attrs,
 			uint32_t attr_count, TEE_Attribute *attrs)
 {
-//	TEE_Result res;
+	TEE_Result res;
 	uint32_t n;
-  (void) utc;
-//	res = tee_mmu_check_access_rights(utc,
-//			TEE_MEMORY_ACCESS_READ | TEE_MEMORY_ACCESS_ANY_OWNER,
-//			(uaddr_t)usr_attrs,
-//			attr_count * sizeof(struct utee_attribute));
-//	if (res != TEE_SUCCESS)
-//		return res;
+	size_t attrs_size;
+
+	/* Guard the range length against a 32-bit multiply wrap. */
+	if (MUL_OVERFLOW(attr_count, sizeof(struct utee_attribute), &attrs_size))
+		return TEE_ERROR_OVERFLOW;
+
+	res = tee_mmu_check_access_rights(utc,
+			TEE_MEMORY_ACCESS_READ | TEE_MEMORY_ACCESS_ANY_OWNER,
+			(uaddr_t)usr_attrs, attrs_size);
+	if (res != TEE_SUCCESS)
+		return res;
 
 	for (n = 0; n < attr_count; n++) {
 		attrs[n].attributeID = usr_attrs[n].attribute_id;
@@ -1356,11 +1360,11 @@ static TEE_Result copy_in_attrs(struct user_ta_ctx *utc,
 			uintptr_t buf = usr_attrs[n].a;
 			size_t len = usr_attrs[n].b;
 
-//			res = tee_mmu_check_access_rights(utc,
-//				TEE_MEMORY_ACCESS_READ |
-//				TEE_MEMORY_ACCESS_ANY_OWNER, buf, len);
-//			if (res != TEE_SUCCESS)
-//				return res;
+			res = tee_mmu_check_access_rights(utc,
+				TEE_MEMORY_ACCESS_READ |
+				TEE_MEMORY_ACCESS_ANY_OWNER, buf, len);
+			if (res != TEE_SUCCESS)
+				return res;
 			attrs[n].content.ref.buffer = (void *)buf;
 			attrs[n].content.ref.length = len;
 		}
@@ -2231,12 +2235,12 @@ TEE_Result utee_hash_update(unsigned long state, const void *chunk,
 	if (res != TEE_SUCCESS)
 		return res;
 
-//	res = tee_mmu_check_access_rights(to_user_ta_ctx(sess->ctx),
-//					  TEE_MEMORY_ACCESS_READ |
-//					  TEE_MEMORY_ACCESS_ANY_OWNER,
-//					  (uaddr_t)chunk, chunk_size);
-//	if (res != TEE_SUCCESS)
-//		return res;
+	res = tee_mmu_check_access_rights(to_user_ta_ctx(sess->ctx),
+					  TEE_MEMORY_ACCESS_READ |
+					  TEE_MEMORY_ACCESS_ANY_OWNER,
+					  (uaddr_t)chunk, chunk_size);
+	if (res != TEE_SUCCESS)
+		return res;
 
 	res = tee_svc_cryp_get_state(sess, tee_svc_uref_to_vaddr(state), &cs);
 	if (res != TEE_SUCCESS)
@@ -2277,24 +2281,24 @@ TEE_Result utee_hash_final(unsigned long state, const void *chunk,
 	if (res != TEE_SUCCESS)
 		return res;
 
-//	res = tee_mmu_check_access_rights(to_user_ta_ctx(sess->ctx),
-//					  TEE_MEMORY_ACCESS_READ |
-//					  TEE_MEMORY_ACCESS_ANY_OWNER,
-//					  (uaddr_t)chunk, chunk_size);
-//	if (res != TEE_SUCCESS)
-//		return res;
+	res = tee_mmu_check_access_rights(to_user_ta_ctx(sess->ctx),
+					  TEE_MEMORY_ACCESS_READ |
+					  TEE_MEMORY_ACCESS_ANY_OWNER,
+					  (uaddr_t)chunk, chunk_size);
+	if (res != TEE_SUCCESS)
+		return res;
 
 	res = tee_svc_copy_from_user(&hlen, hash_len, sizeof(hlen));
 	if (res != TEE_SUCCESS)
 		return res;
 
-//	res = tee_mmu_check_access_rights(to_user_ta_ctx(sess->ctx),
-//					  TEE_MEMORY_ACCESS_READ |
-//					  TEE_MEMORY_ACCESS_WRITE |
-//					  TEE_MEMORY_ACCESS_ANY_OWNER,
-//					  (uaddr_t)hash, hlen);
-//	if (res != TEE_SUCCESS)
-//		return res;
+	res = tee_mmu_check_access_rights(to_user_ta_ctx(sess->ctx),
+					  TEE_MEMORY_ACCESS_READ |
+					  TEE_MEMORY_ACCESS_WRITE |
+					  TEE_MEMORY_ACCESS_ANY_OWNER,
+					  (uaddr_t)hash, hlen);
+	if (res != TEE_SUCCESS)
+		return res;
 
 	res = tee_svc_cryp_get_state(sess, tee_svc_uref_to_vaddr(state), &cs);
 	if (res != TEE_SUCCESS)
@@ -2373,13 +2377,13 @@ TEE_Result utee_cipher_init(unsigned long state, const void *iv,
 	if (res != TEE_SUCCESS)
 		return res;
 
-//	res = tee_mmu_check_access_rights(utc,
-//					  TEE_MEMORY_ACCESS_READ |
-//					  TEE_MEMORY_ACCESS_ANY_OWNER,
-//					  (uaddr_t) iv, iv_len);
-//	if (res != TEE_SUCCESS)
-//		return res;
-//
+	res = tee_mmu_check_access_rights(utc,
+					  TEE_MEMORY_ACCESS_READ |
+					  TEE_MEMORY_ACCESS_ANY_OWNER,
+					  (uaddr_t) iv, iv_len);
+	if (res != TEE_SUCCESS)
+		return res;
+
 	res = tee_obj_get(utc, cs->key1, &o);
 	if (res != TEE_SUCCESS)
 		return res;
@@ -2427,12 +2431,12 @@ static TEE_Result tee_svc_cipher_update_helper(unsigned long state,
 	if (res != TEE_SUCCESS)
 		return res;
 
-//	res = tee_mmu_check_access_rights(to_user_ta_ctx(sess->ctx),
-//					  TEE_MEMORY_ACCESS_READ |
-//					  TEE_MEMORY_ACCESS_ANY_OWNER,
-//					  (uaddr_t)src, src_len);
-//	if (res != TEE_SUCCESS)
-//		return res;
+	res = tee_mmu_check_access_rights(to_user_ta_ctx(sess->ctx),
+					  TEE_MEMORY_ACCESS_READ |
+					  TEE_MEMORY_ACCESS_ANY_OWNER,
+					  (uaddr_t)src, src_len);
+	if (res != TEE_SUCCESS)
+		return res;
 
 	if (!dst_len) {
 		dlen = 0;
@@ -2441,13 +2445,13 @@ static TEE_Result tee_svc_cipher_update_helper(unsigned long state,
 		if (res != TEE_SUCCESS)
 			return res;
 
-//		res = tee_mmu_check_access_rights(to_user_ta_ctx(sess->ctx),
-//						  TEE_MEMORY_ACCESS_READ |
-//						  TEE_MEMORY_ACCESS_WRITE |
-//						  TEE_MEMORY_ACCESS_ANY_OWNER,
-//						  (uaddr_t)dst, dlen);
-//		if (res != TEE_SUCCESS)
-//			return res;
+		res = tee_mmu_check_access_rights(to_user_ta_ctx(sess->ctx),
+						  TEE_MEMORY_ACCESS_READ |
+						  TEE_MEMORY_ACCESS_WRITE |
+						  TEE_MEMORY_ACCESS_ANY_OWNER,
+						  (uaddr_t)dst, dlen);
+		if (res != TEE_SUCCESS)
+			return res;
 	}
 
 	if (dlen < src_len) {

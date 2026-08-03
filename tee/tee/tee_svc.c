@@ -926,41 +926,74 @@ vaddr_t tee_svc_uref_base = 0;
 //					   (uaddr_t)buf, len);
 //}
 //
+/*
+ * tee_mmu_check_access_rights - validate a TA-supplied pointer range.
+ *
+ * In this ARMv8-M port TAs are statically linked into the secure image and run
+ * privileged in a single flat address space: there is no per-TA MMU/MPU context
+ * or region table (utc->mmu is not populated), so the OP-TEE-style ownership and
+ * secure/non-secure attribution this signature was designed for have no backing
+ * state. Every live caller requests TEE_MEMORY_ACCESS_ANY_OWNER, i.e. "do not
+ * enforce per-TA ownership, just accessibility", so this validates the property
+ * that is actually meaningful here: the range is a real, non-wrapping range. This
+ * mirrors the wrap/overflow guard cmse_check_address_range() performs on the
+ * non-secure boundary and rejects the dangerous primitive of an attacker- or
+ * bug-supplied length that would drive an out-of-bounds copy.
+ */
+TEE_Result tee_mmu_check_access_rights(struct user_ta_ctx *utc, uint32_t flags,
+				       uaddr_t uaddr, size_t len)
+{
+	(void)utc;	/* unused: no per-TA region data here; callers pass NULL */
+	(void)flags;	/* ANY_OWNER: ownership is not (and can not be) enforced */
+
+	if (!len)
+		return TEE_SUCCESS;		/* zero-length range is trivially OK */
+	if (!uaddr)
+		return TEE_ERROR_ACCESS_DENIED;
+	/*
+	 * Reject a range that wraps the address space. len is non-zero here, so
+	 * the last byte is at uaddr + len - 1; if that is below uaddr the range
+	 * overflowed. Matches cmse_check_address_range()'s end-of-range test and
+	 * still accepts a range whose last byte sits at the top of memory.
+	 */
+	if (uaddr + len - 1 < uaddr)
+		return TEE_ERROR_ACCESS_DENIED;
+
+	return TEE_SUCCESS;
+}
+
 TEE_Result tee_svc_copy_from_user(void *kaddr, const void *uaddr, size_t len)
 {
-//	TEE_Result res;
-//	struct tee_ta_session *s;
-//
-//	res = tee_ta_get_current_session(&s);
-//	if (res != TEE_SUCCESS)
-//		return res;
-//
-//	res = tee_mmu_check_access_rights(to_user_ta_ctx(s->ctx),
-//					TEE_MEMORY_ACCESS_READ |
-//					TEE_MEMORY_ACCESS_ANY_OWNER,
-//					(uaddr_t)uaddr, len);
-//	if (res != TEE_SUCCESS)
-//		return res;
-//
+	TEE_Result res;
+
+	/*
+	 * No session lookup here: tee_mmu_check_access_rights() ignores the utc
+	 * in this port, and tee_ta_get_current_session() returns TEE_SUCCESS with
+	 * a NULL current_session when no TA session is active, so dereferencing
+	 * it (to_user_ta_ctx(s->ctx)) would fault instead of failing gracefully.
+	 */
+	res = tee_mmu_check_access_rights(NULL,
+					TEE_MEMORY_ACCESS_READ |
+					TEE_MEMORY_ACCESS_ANY_OWNER,
+					(uaddr_t)uaddr, len);
+	if (res != TEE_SUCCESS)
+		return res;
+
 	memcpy(kaddr, uaddr, len);
 	return TEE_SUCCESS;
 }
 
 TEE_Result tee_svc_copy_to_user(void *uaddr, const void *kaddr, size_t len)
 {
-//	TEE_Result res;
-//	struct tee_ta_session *s;
-//
-//	res = tee_ta_get_current_session(&s);
-//	if (res != TEE_SUCCESS)
-//		return res;
-//
-//	res = tee_mmu_check_access_rights(to_user_ta_ctx(s->ctx),
-//					TEE_MEMORY_ACCESS_WRITE |
-//					TEE_MEMORY_ACCESS_ANY_OWNER,
-//					(uaddr_t)uaddr, len);
-//	if (res != TEE_SUCCESS)
-//		return res;
+	TEE_Result res;
+
+	/* See tee_svc_copy_from_user() on why no session is looked up here. */
+	res = tee_mmu_check_access_rights(NULL,
+					TEE_MEMORY_ACCESS_WRITE |
+					TEE_MEMORY_ACCESS_ANY_OWNER,
+					(uaddr_t)uaddr, len);
+	if (res != TEE_SUCCESS)
+		return res;
 
 	memcpy(uaddr, kaddr, len);
 	return TEE_SUCCESS;
