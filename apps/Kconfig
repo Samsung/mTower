@@ -34,16 +34,6 @@ config APPS_TEST
 	---help---
 		"GP TEE Client API and TEE Internal API test suite."
 
-config APPS_ACCESS_RIGHTS_TEST
-	bool "TA->secure-kernel pointer-access guard test (temporary)"
-	default n
-	---help---
-		"Temporary negative test that drives tee_mmu_check_access_rights()
-		with malformed TA-supplied pointer ranges (NULL+len, wrapping range)
-		and checks that they are rejected with TEE_ERROR_ACCESS_DENIED while a
-		valid buffer is accepted. Remove once the access-rights fix is
-		verified."
-
 comment "H/W Security exception:"
 
 config APPS_HW_SECURITY_EXCEPTION_EXAMPLE
