@@ -144,12 +144,36 @@ static TEE_Result register_shared_key(uint32_t param_types, TEE_Param params[4])
 		return TEE_ERROR_BAD_PARAMETERS;
 	}
 
+	/*
+	 * params[0] comes from the Non-Secure world: both the buffer pointer and
+	 * the size are attacker-controlled. The secure-world boundary only
+	 * guarantees the source range is Non-Secure resident -- it says nothing
+	 * about how much of it fits in K, so the size must be bounded here
+	 * before it is used as a memcpy() length. Reject rather than truncate: a
+	 * silently shortened HMAC key would be a cryptographic bug of its own.
+	 */
+	if (!params[0].memref.buffer)
+		return TEE_ERROR_BAD_PARAMETERS;
+
+	if (params[0].memref.size < MIN_KEY_SIZE ||
+	    params[0].memref.size > sizeof(K)) {
+		EMSG("Bad key size %u, expect %u..%u bytes",
+		     (unsigned int)params[0].memref.size,
+		     (unsigned int)MIN_KEY_SIZE, (unsigned int)sizeof(K));
+		return TEE_ERROR_BAD_PARAMETERS;
+	}
+
 	memset(counter, 0, sizeof(counter));
 	memset(K, 0, sizeof(K));
 	memcpy(K, params[0].memref.buffer, params[0].memref.size);
 
 	K_len = params[0].memref.size;
-	DMSG("Got shared key %s (%u bytes).", K, params[0].memref.size);
+	/*
+	 * Do not trace K itself: it is the HMAC shared secret, and a key of
+	 * exactly sizeof(K) bytes leaves no NUL for the "%s" to stop at.
+	 */
+	DMSG("Registered shared key (%u bytes).",
+	     (unsigned int)params[0].memref.size);
 
 	return res;
 }
@@ -173,6 +197,10 @@ static TEE_Result get_hotp(uint32_t param_types, TEE_Param params[4])
 	}
 
 	res = hmac_sha1(K, K_len, counter, sizeof(counter), mac, &mac_len);
+	if (res != TEE_SUCCESS) {
+		EMSG("hmac_sha1 failed: 0x%x", res);
+		return res;
+	}
 
 	/* Increment the counter. */
 	for (i = sizeof(counter) - 1; i >= 0; i--) {
