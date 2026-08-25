@@ -93,15 +93,20 @@ TEEC_Result tee_ioctl_close_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data
  * spuriously reject valid buffers. The 'write' argument is kept for a possible
  * future tightening if a Non-Secure MPU is ever set up.
  *
- * Returns p on success, NULL on failure. A zero-length range is trivially OK
- * (nothing is dereferenced).
+ * Returns p on success, NULL on failure.
+ *
+ * A zero-length range dereferences nothing, but the pointer still reaches the
+ * TA, and a TA that ignores the size would dereference it. A NULL pointer is
+ * accepted (there is nothing to attribute); a non-NULL one is attribution-
+ * checked a byte at a time so a *secure* pointer cannot ride through on
+ * size == 0.
  */
 static void *nsec_check(void *p, size_t len, int write)
 {
   (void)write;
 
   if (len == 0)
-    return p;
+    return p ? cmse_check_address_range(p, 1, CMSE_NONSECURE) : p;
 
   return cmse_check_address_range(p, len, CMSE_NONSECURE);
 }
@@ -283,7 +288,13 @@ static TEE_Result copy_in_params(const struct optee_msg_param *params,
 {
 //  TEE_Result res;
   size_t n;
-  uint8_t pt[TEE_NUM_PARAMS];
+  /*
+   * num_params is Non-Secure controlled and may be < TEE_NUM_PARAMS, but all
+   * four entries are read below when building ta_param->types. Initialise to
+   * TEE_PARAM_TYPE_NONE (0) so the unwritten slots cannot expose stale secure
+   * stack contents to the TA as parameter types.
+   */
+  uint8_t pt[TEE_NUM_PARAMS] = { 0 };
 
   if (num_params > TEE_NUM_PARAMS)
     return TEE_ERROR_BAD_PARAMETERS;
@@ -577,7 +588,7 @@ TEEC_Result tee_ioctl_invoke(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
     goto out;
   }
 
-  res = tee_ta_invoke_command(&err, sess, arg->func, &param);
+  res = tee_ta_invoke_command(&err, sess, func, &param);
 
   copy_out_param(&param, num_params, arg->params, saved_attr);
 
