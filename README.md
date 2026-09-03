@@ -20,9 +20,20 @@
 
 ## 1. Introduction
 The `mTower` is a new Trusted Execution Environment (TEE) specially designed
-to protect size-constrained IoT devices based on Cortex-m23 MCU. Usage mTower
-pre-embedded into the microcontroller, a module developer can use a simple SDK
-that based on Global Platform API standards to add security to their solution.
+to protect size-constrained IoT devices based on Cortex-M23 and RISC-V MCUs.
+Usage mTower pre-embedded into the microcontroller, a module developer can use
+a simple SDK that based on Global Platform API standards to add security to
+their solution.
+
+> **Important Notice:** This project is created for **research purposes**
+> to explore security systems and software solutions for ARM and RISC-V
+> microcontrollers. The project is in **active development stage**.
+>
+> **Security research is welcome:** vulnerability analysis, reports, and
+> fix suggestions are highly appreciated.
+>
+> **Disclaimer:** Code is provided "as is" without warranties. Users assume
+> all risks. Project is for research, educational, and experimental purposes.
 
 ---
 ## 2. License
@@ -45,11 +56,11 @@ between platforms, a `PLATFORM` flag has been introduced.
 
 | Platform                  | Composite PLATFORM flag            | Maintained |
 |---------------------------|------------------------------------|------------|
-| [NuMaker-PFM-M2351]       |`PLATFORM=numaker_pfm_m2351`        | v0.6.0     |
-| [M2351-Badge]             |`PLATFORM=m2351_badge`              | v0.6.0     |
-| [V2M-MPS2]                |`PLATFORM=mps2_an505_qemu`          | v0.6.0     |
-| [SparkFun RED-V RedBoard] |`PLATFORM=sparkfun_redboard`        | v0.6.0     |
-| [Pine64 Ox64]             |`PLATFORM=pine64_ox64`              | v0.6.0     |
+| [NuMaker-PFM-M2351]       |`PLATFORM=numaker_pfm_m2351`        | v0.6.1     |
+| [M2351-Badge]             |`PLATFORM=m2351_badge`              | v0.6.1     |
+| [V2M-MPS2]                |`PLATFORM=mps2_an505_qemu`          | v0.6.1     |
+| [SparkFun RED-V RedBoard] |`PLATFORM=sparkfun_redboard`        | v0.6.1     |
+| [Pine64 Ox64]             |`PLATFORM=pine64_ox64`              | v0.6.1     |
 
 For information on adding a new platform see the [how to add a platform].
 
