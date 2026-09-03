@@ -16,6 +16,8 @@ We are releasing patches to eliminate vulnerabilities, you can see below:
 | 0.4.1       | Fixed        |                    | CVE-2022-36621, CVE-2022-36622, CVE-2022-38155,|
 |             |              |                    | CVE-2022-40762, CVE-2022-40759, CVE-2022-40761,|
 |             |              |                    | CVE-2022-35858, CVE-2022-40760                 |
+| 0.6.1       | Fixed        | CVE-2026-82926,    |                                                |
+|             |              | CVE-2026-82927     |                                                |
 
 ---
 
