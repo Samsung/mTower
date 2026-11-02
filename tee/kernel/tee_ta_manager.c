@@ -293,27 +293,138 @@ static void tee_ta_unlink_session(struct tee_ta_session *s,
 //  return NULL;
 //}
 
-///* check if requester (client ID) matches session initial client */
-//static TEE_Result check_client(struct tee_ta_session *s, const TEE_Identity *id)
-//{
-//	if (id == KERN_IDENTITY)
-//		return TEE_SUCCESS;
-//
-//	if (id == NSAPP_IDENTITY) {
-//		if (s->clnt_id.login == TEE_LOGIN_TRUSTED_APP) {
-//			DMSG("nsec tries to hijack TA session");
-//			return TEE_ERROR_ACCESS_DENIED;
-//		}
-//		return TEE_SUCCESS;
-//	}
-//
-//	if (memcmp(&s->clnt_id, id, sizeof(TEE_Identity)) != 0) {
-//		DMSG("client id mismatch");
-//		return TEE_ERROR_ACCESS_DENIED;
-//	}
-//	return TEE_SUCCESS;
-//}
-//
+/*
+ * Threat model and client-identity policy (see docs/client-identity-acl.md)
+ * ------------------------------------------------------------------------
+ * mTower treats the entire Normal World as a single trust domain: the TEE
+ * itself provides no inter-client separation between non-secure clients.
+ * To nevertheless restrict which login methods may reach which Trusted
+ * Applications, a compile-time Access Control List is enforced on the
+ * session-open path. It is intentionally hardcoded in the TEE core
+ * (Normal World cannot add, remove or alter entries at runtime).
+ */
+struct ta_acl_entry {
+	const TEE_UUID ta_uuid;
+	const uint32_t allowed_login_methods;
+};
+
+/*
+ * ta_acl - hardcoded per-TA access control list.
+ *
+ * Each entry maps a TA UUID to the set of client login methods that are
+ * permitted to open a session to it. A login method is allowed when the
+ * corresponding TEE_IOCTL_LOGIN_* bit (value 1 << login) is set in
+ * allowed_login_methods. TEE_LOGIN_PUBLIC is 0x0, so PUBLIC access is
+ * implied by any entry that does not set TEE_ACL_DENY_PUBLIC.
+ *
+ * !!! IMPORTANT !!! This table is a HARD CODED restriction. To grant a
+ * client access to a TA, add or edit an entry here and rebuild the secure
+ * world. Entries are matched by full 16-byte UUID comparison; TAs not
+ * listed are DENIED for ALL non-secure clients (default-deny).
+ *
+ * Current policy:
+ *   - hello_world, AES, HOTP: only TEEC_LOGIN_APPLICATION (the intended
+ *     demo/test client applications). LOGIN_PUBLIC is rejected.
+ *   - test TA: public (CI/test suite convenience).
+ */
+#define TEE_ACL_LOGIN_PUBLIC_BIT		(1u << 0)	/* login == 0 */
+#define TEE_ACL_LOGIN_USER_BIT		(1u << 1)
+#define TEE_ACL_LOGIN_GROUP_BIT		(1u << 2)
+#define TEE_ACL_LOGIN_APPLICATION_BIT	(1u << 4)
+#define TEE_ACL_LOGIN_USER_APP_BIT	(1u << 5)
+#define TEE_ACL_LOGIN_GROUP_APP_BIT	(1u << 6)
+
+/* TEE_LOGIN_USER_APPLICATION / TEE_LOGIN_GROUP_APPLICATION are not defined
+ * in the in-tree tee_api_defines.h; use their GP-defined numeric values. */
+#ifndef TEE_LOGIN_USER_APPLICATION
+#define TEE_LOGIN_USER_APPLICATION	0x00000005
+#endif
+#ifndef TEE_LOGIN_GROUP_APPLICATION
+#define TEE_LOGIN_GROUP_APPLICATION	0x00000006
+#endif
+
+static const struct ta_acl_entry ta_acl[] = {
+	/* TA_HELLO_WORLD_UUID { 8aaaf200-2450-11e4-abe2-0002a5d5c51b } */
+	{
+		{ 0x8aaaf200, 0x2450, 0x11e4,
+			{ 0xab, 0xe2, 0x00, 0x02, 0xa5, 0xd5, 0xc5, 0x1b } },
+		TEE_ACL_LOGIN_APPLICATION_BIT,
+	},
+	/* TA_AES_UUID { 5dbac793-f574-4871-8ad3-0433 1ec17f24 } */
+	{
+		{ 0x5dbac793, 0xf574, 0x4871,
+			{ 0x8a, 0xd3, 0x04, 0x33, 0x1e, 0xc1, 0x7f, 0x24 } },
+		TEE_ACL_LOGIN_APPLICATION_BIT,
+	},
+	/* TA_HOTP_UUID { 484d4143-2d53-4841-3120-4a6f636b6542 } */
+	{
+		{ 0x484d4143, 0x2d53, 0x4841,
+			{ 0x31, 0x20, 0x4a, 0x6f, 0x63, 0x6b, 0x65, 0x42 } },
+		TEE_ACL_LOGIN_APPLICATION_BIT,
+	},
+	/* TA_TEST_UUID { 5dbac744-f574-4871-8ad3-0433 1ec17f24 } */
+	{
+		{ 0x5dbac744, 0xf574, 0x4871,
+			{ 0x8a, 0xd3, 0x04, 0x33, 0x1e, 0xc1, 0x7f, 0x24 } },
+		TEE_ACL_LOGIN_PUBLIC_BIT,
+	},
+};
+
+/*
+ * ta_acl_allowed - is a session-open by login method 'login' to the TA
+ * identified by 'uuid' permitted?
+ *
+ * Note: the login value is the GP TEEC_LOGIN_* / TEE_IOCTL_LOGIN_* constant
+ * (0 == PUBLIC, 1 == USER, ...). TEE_LOGIN_PUBLIC (0) maps to
+ * TEE_ACL_LOGIN_PUBLIC_BIT (1u << 0), so the bit index is the login value
+ * for all GP-defined login methods (0, 1, 2, 4, 5, 6).
+ *
+ * Returns true if allowed, false if denied (default-deny for unlisted TAs).
+ */
+static bool ta_acl_allowed(const TEE_UUID *ta_uuid, uint32_t login)
+{
+	size_t i;
+	uint32_t bit;
+
+	/* Unknown login methods are always denied. */
+	if (login != TEE_LOGIN_PUBLIC && login != TEE_LOGIN_USER &&
+	    login != TEE_LOGIN_GROUP && login != TEE_LOGIN_APPLICATION &&
+	    login != TEE_LOGIN_USER_APPLICATION &&
+	    login != TEE_LOGIN_GROUP_APPLICATION)
+		return false;
+
+	bit = 1u << login;
+
+	for (i = 0; i < sizeof(ta_acl) / sizeof(ta_acl[0]); i++) {
+		if (memcmp(&ta_acl[i].ta_uuid, ta_uuid, sizeof(TEE_UUID)) == 0)
+			return (ta_acl[i].allowed_login_methods & bit) != 0;
+	}
+
+	/* Default-deny: TA not in the ACL table. */
+	return false;
+}
+
+//* check if requester (client ID) matches session initial client */
+static TEE_Result check_client(struct tee_ta_session *s, const TEE_Identity *id)
+{
+	if (id == KERN_IDENTITY)
+		return TEE_SUCCESS;
+
+	if (id == NSAPP_IDENTITY) {
+		if (s->clnt_id.login == TEE_LOGIN_TRUSTED_APP) {
+			DMSG("nsec tries to hijack TA session");
+			return TEE_ERROR_ACCESS_DENIED;
+		}
+		return TEE_SUCCESS;
+	}
+
+	if (memcmp(&s->clnt_id, id, sizeof(TEE_Identity)) != 0) {
+		DMSG("client id mismatch");
+		return TEE_ERROR_ACCESS_DENIED;
+	}
+	return TEE_SUCCESS;
+}
+
 ///*
 // * Check if invocation parameters matches TA properties
 // *
@@ -409,10 +520,6 @@ TEE_Result tee_ta_close_session(struct tee_ta_session *csess,
 {
 	struct tee_ta_session *sess;
 	struct tee_ta_ctx *ctx;
-  (void) clnt_id;
-//	bool keep_alive;
-
-//	DMSG("tee_ta_close_session(0x%" PRIxVA ")",  (vaddr_t)csess);
 
 	if (!csess)
 		return TEE_ERROR_ITEM_NOT_FOUND;
@@ -420,54 +527,25 @@ TEE_Result tee_ta_close_session(struct tee_ta_session *csess,
 	sess = tee_ta_get_session((uint32_t)csess, true, open_sessions);
 
 	if (!sess) {
-//		EMSG("session 0x%" PRIxVA " to be removed is not found",
-//		     (vaddr_t)csess);
 		return TEE_ERROR_ITEM_NOT_FOUND;
 	}
 
-//	if (check_client(sess, clnt_id) != TEE_SUCCESS) {
-//		tee_ta_put_session(sess);
-//		return TEE_ERROR_BAD_PARAMETERS; /* intentional generic error */
-//	}
-//
+	/* Check that the caller is authorized to close this session */
+	if (check_client(sess, clnt_id) != TEE_SUCCESS) {
+		return TEE_ERROR_ACCESS_DENIED;
+	}
+
 	ctx = sess->ctx;
 	DMSG("Destroy session");
-//
-//	tee_ta_set_busy(ctx);
-//
-//	if (!ctx->panicked) {
-//		set_invoke_timeout(sess, TEE_TIMEOUT_INFINITE);
-		ctx->ops->enter_close_session(sess);
-//	}
+
+	ctx->ops->enter_close_session(sess);
 
 	tee_ta_unlink_session(sess, open_sessions);
-//#if defined(CFG_TA_GPROF_SUPPORT)
-//	free(sess->sbuf);
-//#endif
 	TEE_Free(sess);
 
-//	tee_ta_clear_busy(ctx);
-//
-//	mutex_lock(&tee_ta_mutex);
-//
-//	if (ctx->ref_count <= 0)
-//		panic();
-//
-//	ctx->ref_count--;
-//	keep_alive = (ctx->flags & TA_FLAG_INSTANCE_KEEP_ALIVE) &&
-//			(ctx->flags & TA_FLAG_SINGLE_INSTANCE);
-//	if (!ctx->ref_count && !keep_alive) {
-		DMSG("Destroy TA ctx");
-//
-		TAILQ_REMOVE(&tee_ctxes, ctx, link);
-//		mutex_unlock(&tee_ta_mutex);
-//
-//		condvar_destroy(&ctx->busy_cv);
-//
-//		pgt_flush_ctx(ctx);
-		ctx->ops->destroy(ctx);
-//	} else
-//		mutex_unlock(&tee_ta_mutex);
+	DMSG("Destroy TA ctx");
+	TAILQ_REMOVE(&tee_ctxes, ctx, link);
+	ctx->ops->destroy(ctx);
 
 	return TEE_SUCCESS;
 }
@@ -565,77 +643,96 @@ TEE_Result tee_ta_open_session(TEE_ErrorOrigin *err,
 			       struct tee_ta_session **sess,
 			       struct tee_ta_session_head *open_sessions,
 			       const TEE_UUID *uuid,
-//			       const TEE_Identity *clnt_id,
-//			       uint32_t cancel_req_to,
+			       const TEE_Identity *clnt_id,
+			       uint32_t cancel_req_to,
 			       struct tee_ta_param *param)
 {
 	TEE_Result res;
 	struct tee_ta_session *s = NULL;
 	struct tee_ta_ctx *ctx;
-//	bool panicked;
-//	bool was_busy = false;
-//
+	(void) cancel_req_to;
+
+	/*
+	 * Non-secure clients are subject to the hardcoded per-TA ACL
+	 * (ta_acl[], see docs/client-identity-acl.md): a session may only
+	 * be opened when the login method the client presented is listed
+	 * for the target TA. Default-deny for TAs not present in the table.
+	 * Teecore-internal callers (KERN_IDENTITY) and TA-to-TA requests
+	 * (a real TEE_Identity with TEE_LOGIN_TRUSTED_APP) are not subject
+	 * to this table.
+	 */
+	if (clnt_id == NSAPP_IDENTITY &&
+	    !ta_acl_allowed(uuid, TEE_LOGIN_PUBLIC)) {
+		DMSG("ACL: TEEC_LOGIN_PUBLIC denied for TA %pUl",
+		     (void *)uuid);
+		*err = TEE_ORIGIN_TEE;
+		return TEE_ERROR_ACCESS_DENIED;
+	} else if (clnt_id != NSAPP_IDENTITY && clnt_id != KERN_IDENTITY &&
+		   clnt_id->login != TEE_LOGIN_TRUSTED_APP &&
+		   !ta_acl_allowed(uuid, clnt_id->login)) {
+		DMSG("ACL: login method %u denied for TA %pUl",
+		     clnt_id->login, (void *)uuid);
+		*err = TEE_ORIGIN_TEE;
+		return TEE_ERROR_ACCESS_DENIED;
+	}
+
 	res = tee_ta_init_session(err, open_sessions, uuid, &s);
 	if (res != TEE_SUCCESS) {
 		DMSG("init session failed 0x%x", res);
 		return res;
 	}
-//
-//	if (!check_params(s, param))
-//		return TEE_ERROR_BAD_PARAMETERS;
-//
+
 	ctx = s->ctx;
-//
-//	if (ctx->panicked) {
-//		DMSG("panicked, call tee_ta_close_session()");
-//		tee_ta_close_session(s, open_sessions, KERN_IDENTITY);
-//		*err = TEE_ORIGIN_TEE;
-//		return TEE_ERROR_TARGET_DEAD;
-//	}
-//
+
+	/*
+	 * Save identity of the owner of the session.
+	 *
+	 * clnt_id may be a sentinel instead of a real TEE_Identity pointer and
+	 * must never be dereferenced in those cases:
+	 *  - NSAPP_IDENTITY (NULL): the caller is a Normal-World client. The
+	 *    Normal World is treated as a single trust domain (no inter-client
+	 *    separation is provided by the TEE), so every non-secure client
+	 *    shares one anonymous TEE_LOGIN_PUBLIC identity.
+	 *  - KERN_IDENTITY ((TEE_Identity *)-1): a teecore-internal request.
+	 *    Kernel-owned sessions must not be hijackable from the Normal
+	 *    World, so tag them TEE_LOGIN_TRUSTED_APP; check_client() then
+	 *    rejects NSAPP_IDENTITY access to them ("nsec tries to hijack TA
+	 *    session").
+	 */
+	if (clnt_id == NSAPP_IDENTITY) {
+		memset(&s->clnt_id, 0, sizeof(s->clnt_id));
+		s->clnt_id.login = TEE_LOGIN_PUBLIC;
+	} else if (clnt_id == KERN_IDENTITY) {
+		memset(&s->clnt_id, 0, sizeof(s->clnt_id));
+		s->clnt_id.login = TEE_LOGIN_TRUSTED_APP;
+	} else {
+		s->clnt_id = *clnt_id;
+	}
+
 	*sess = s;
-//	/* Save identity of the owner of the session */
-//	s->clnt_id = *clnt_id;
-//
-//	if (tee_ta_try_set_busy(ctx)) {
-//		set_invoke_timeout(s, cancel_req_to);
-		res = ctx->ops->enter_open_session(s, param, err);
-//		tee_ta_clear_busy(ctx);
-//	} else {
-//		/* Deadlock avoided */
-//		res = TEE_ERROR_BUSY;
-//		was_busy = true;
-//	}
-//
-//	panicked = ctx->panicked;
-//
-//	tee_ta_put_session(s);
-//	if (panicked || (res != TEE_SUCCESS))
-//		tee_ta_close_session(s, open_sessions, KERN_IDENTITY);
-//
-//	/*
-//	 * Origin error equal to TEE_ORIGIN_TRUSTED_APP for "regular" error,
-//	 * apart from panicking.
-//	 */
-//	if (panicked || was_busy)
-//		*err = TEE_ORIGIN_TEE;
-//	else
-//		*err = TEE_ORIGIN_TRUSTED_APP;
-//
-//	if (res != TEE_SUCCESS)
-//		EMSG("Failed. Return error 0x%x", res);
-//
+
+	res = ctx->ops->enter_open_session(s, param, err);
+
+	if (res != TEE_SUCCESS)
+		tee_ta_close_session(s, open_sessions, KERN_IDENTITY);
+
+	*err = TEE_ORIGIN_TRUSTED_APP;
+
+	if (res != TEE_SUCCESS)
+		DMSG("Failed. Return error 0x%x", res);
+
 	return res;
 }
 
 TEE_Result tee_ta_invoke_command(TEE_ErrorOrigin *err,
 				 struct tee_ta_session *sess,
-//				 const TEE_Identity *clnt_id,
-//				 uint32_t cancel_req_to,
+				 const TEE_Identity *clnt_id,
+				 uint32_t cancel_req_to,
 				 uint32_t cmd,
 				 struct tee_ta_param *param)
 {
 	TEE_Result res;
+	(void) cancel_req_to;
 
 	/*
 	 * Defense in depth: never dereference a NULL session. Callers (e.g. the
@@ -646,34 +743,11 @@ TEE_Result tee_ta_invoke_command(TEE_ErrorOrigin *err,
 	if (!sess)
 		return TEE_ERROR_BAD_PARAMETERS;
 
-//	if (check_client(sess, clnt_id) != TEE_SUCCESS)
-//		return TEE_ERROR_BAD_PARAMETERS; /* intentional generic error */
-//
-//	if (!check_params(sess, param))
-//		return TEE_ERROR_BAD_PARAMETERS;
-//
-//	if (sess->ctx->panicked) {
-//		DMSG("Panicked !");
-//		*err = TEE_ORIGIN_TEE;
-//		return TEE_ERROR_TARGET_DEAD;
-//	}
-//
-//	tee_ta_set_busy(sess->ctx);
-//
-//	set_invoke_timeout(sess, cancel_req_to);
-  res = sess->ctx->ops->enter_invoke_cmd(sess, cmd, param, err);
-//  res = sess->ctx->ops->enter_invoke_cmd(sess, cmd, param->types, param->u);
+	/* Check that the caller is authorized to use this session */
+	if (check_client(sess, clnt_id) != TEE_SUCCESS)
+		return TEE_ERROR_ACCESS_DENIED;
 
-//	if (sess->ctx->panicked) {
-//		*err = TEE_ORIGIN_TEE;
-//		res = TEE_ERROR_TARGET_DEAD;
-//	}
-//
-//	tee_ta_clear_busy(sess->ctx);
-//
-//	/* Short buffer is not an effective error case */
-//	if (res != TEE_SUCCESS && res != TEE_ERROR_SHORT_BUFFER)
-//		DMSG("Error: %x of %d\n", res, *err);
+	res = sess->ctx->ops->enter_invoke_cmd(sess, cmd, param, err);
 
 	return res;
 }

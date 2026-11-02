@@ -55,7 +55,13 @@ int tee_hello_world(void)
 	 * world!" in the log when the session is created.
 	 */
 	res = TEEC_OpenSession(&ctx, &sess, &uuid,
-			       TEEC_LOGIN_PUBLIC, NULL, NULL, &err_origin);
+			       /*
+				* TEEC_LOGIN_APPLICATION: mTower enforces a
+				* hardcoded per-TA ACL (tee_ta_manager.c,
+				* ta_acl[]) and rejects LOGIN_PUBLIC for this
+				* TA. See docs/client-identity-acl.md.
+				*/
+			       TEEC_LOGIN_APPLICATION, NULL, NULL, &err_origin);
 	if (res != TEEC_SUCCESS)
 		errx(1, "TEEC_Opensession failed with code 0x%x origin 0x%x",
 			res, err_origin);

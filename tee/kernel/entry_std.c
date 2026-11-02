@@ -507,7 +507,32 @@ TEEC_Result tee_ioctl_open_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
   if (validate_param_memrefs(&param_copy) != TEEC_SUCCESS)
     return TEEC_ERROR_ACCESS_DENIED;
 
-  res = tee_ta_open_session(&err, &sess, &tee_open_sessions, &uuid, &param_copy);
+  /*
+   * Build the client identity from the Non-Secure request instead of
+   * collapsing every caller to the anonymous NSAPP_IDENTITY.
+   *
+   * IMPORTANT: clnt_login/clnt_uuid are ATTACKER-CONTROLLED values - the
+   * Normal World is a single trust domain, so any non-secure application
+   * can claim any login method / UUID it wants. They are therefore NOT an
+   * authentication boundary; they are only the ACL selector input for the
+   * hardcoded per-TA access control table in tee_ta_manager.c (ta_acl[]).
+   * The session-open path enforces that table via tee_ta_open_session().
+   *
+   * Note: this struct is read from the snapshot-validated NS buffer, but
+   * clnt_uuid is a byte array inside it; it is copied to a secure local
+   * (clnt_id) before tee_ta_open_session() dereferences it, so a
+   * preempting NS interrupt cannot TOCTOU the identity between the ACL
+   * check and the session-ownership store.
+   */
+  {
+    TEE_Identity clnt_id;
+
+    clnt_id.login = arg->clnt_login;
+    tee_uuid_from_octets(&clnt_id.uuid, arg->clnt_uuid);
+
+    res = tee_ta_open_session(&err, &sess, &tee_open_sessions, &uuid,
+                              &clnt_id, 0, &param_copy);
+  }
 
   /*
    * Propagate TA output params back to the validated Non-Secure buffer:
@@ -578,17 +603,18 @@ TEEC_Result tee_ioctl_invoke(/*ctx,*/ struct tee_ioctl_buf_data *buf_data)
   if (!sess) {
     /*
      * A Non-Secure caller can supply an invalid/zero/stale session id.
-     * find_session() then returns NULL and, since the guards in
-     * tee_ta_invoke_command() are disabled, the secure world would
-     * dereference NULL (sess->ctx->...) -> secure-world crash/DoS.
-     * Reject before invoking. Placed after copy_in_params so a malformed
-     * request still gets the more specific error from parameter validation.
+     * find_session() then returns NULL; tee_ta_invoke_command() guards
+     * against a NULL session as defense in depth, but the request is
+     * rejected here anyway so the caller gets a specific error before
+     * any TA context is touched. Placed after copy_in_params so a
+     * malformed request still gets the more specific error from
+     * parameter validation.
      */
     res = TEEC_ERROR_BAD_PARAMETERS;
     goto out;
   }
 
-  res = tee_ta_invoke_command(&err, sess, func, &param);
+  res = tee_ta_invoke_command(&err, sess, NSAPP_IDENTITY, 0, func, &param);
 
   copy_out_param(&param, num_params, arg->params, saved_attr);
 
@@ -616,7 +642,13 @@ TEEC_Result tee_ioctl_close_session(/*ctx,*/ struct tee_ioctl_buf_data *buf_data
 
   sess = (struct tee_ta_session *)arg->session;
 
-  res = tee_ta_close_session(sess, &tee_open_sessions, NULL /* NSAPP_IDENTITY*/);
+  /*
+   * The Normal World is a single trust domain: every non-secure client
+   * shares the NSAPP_IDENTITY. check_client() therefore permits closing
+   * only sessions owned by non-secure clients and rejects attempts to
+   * close TEE-internal (TEE_LOGIN_TRUSTED_APP-owned) sessions.
+   */
+  res = tee_ta_close_session(sess, &tee_open_sessions, NSAPP_IDENTITY);
 
 //  arg->ret = res;
 //  arg->ret_origin = TEE_ORIGIN_TEE;

@@ -1,7 +1,8 @@
 # Security policy
-1. [Supported Versions](#1-supported-versions)  
-2. [Vulnerability Report](#2-vulnerability-report)  
-3. [Security Disclosure](#3-security-disclosure)  
+1. [Supported Versions](#1-supported-versions)
+2. [Vulnerability Report](#2-vulnerability-report)
+3. [Security Disclosure](#3-security-disclosure)
+4. [Security Architecture Notes](#4-security-architecture-notes)
 
 ---
 
@@ -45,5 +46,28 @@ We suggest the following format when disclosing vulnerabilities:
 
   * Your name and email.
   * Include scope of vulnerability. Let us know who could use this exploit.
-  * Document steps to identify the vulnerability. It is important that we can reproduce your findings. 
+  * Document steps to identify the vulnerability. It is important that we can reproduce your findings.
   * How to exploit vulnerability, give us an attack scenario.
+
+---
+
+## 4. Security Architecture Notes
+
+### Trust domains and client identity
+
+mTower treats the entire Normal World as a **single trust domain**: the TEE
+provides no inter-client separation between non-secure applications. Client
+identity fields (`TEEC_LoginMethod`, client UUID) forwarded with a
+session-open request are self-asserted by the Normal World and must not be
+treated as an authentication boundary by Trusted Applications.
+
+To restrict which client login methods may open a session to which Trusted
+Application, the secure world enforces a **hardcoded per-TA Access Control
+List** (`ta_acl[]` in `tee/kernel/tee_ta_manager.c`). The ACL is
+compile-time only: the Normal World cannot add, remove or alter entries at
+runtime, and TAs absent from the table are denied for all non-secure
+clients (default-deny). Changing access rights requires editing the table
+and rebuilding/reflashing the secure world.
+
+Full threat model, decision rules and maintenance procedure:
+[docs/client-identity-acl.md](../docs/client-identity-acl.md).

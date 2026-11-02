@@ -116,8 +116,8 @@ struct tee_ta_session {
 	TAILQ_ENTRY(tee_ta_session) link;
 	TAILQ_ENTRY(tee_ta_session) link_tsd;
 	struct tee_ta_ctx *ctx;	/* TA context */
-//	TEE_Identity clnt_id;	/* Identify of client */
-//	bool cancel;		/* True if TAF is cancelled */
+	TEE_Identity clnt_id;	/* Identity of client */
+	bool cancel;		/* True if TAF is cancelled */
 //	bool cancel_mask;	/* True if cancel is masked */
 //	TEE_Time cancel_time;	/* Time when to cancel the TAF */
 	void *user_ctx;		/* ??? */
@@ -140,14 +140,14 @@ TEE_Result tee_ta_open_session(TEE_ErrorOrigin *err,
 			       struct tee_ta_session **sess,
   		       struct tee_ta_session_head *open_sessions,
 			       const TEE_UUID *uuid,
-//			       const TEE_Identity *clnt_id,
-//			       uint32_t cancel_req_to,
+			       const TEE_Identity *clnt_id,
+			       uint32_t cancel_req_to,
 			       struct tee_ta_param *param);
 
 TEE_Result tee_ta_invoke_command(TEE_ErrorOrigin *err,
 				 struct tee_ta_session *sess,
-//				 const TEE_Identity *clnt_id,
-//				 uint32_t cancel_req_to,
+				 const TEE_Identity *clnt_id,
+				 uint32_t cancel_req_to,
          uint32_t cmd,
 				 struct tee_ta_param *param);
 
